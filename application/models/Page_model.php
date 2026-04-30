@@ -118,6 +118,7 @@ public function insert_user($clinic_id = null){
     'username' => $this->input->post('username'),
     'password' => $hash,
     'position' => $this->input->post('position'),
+    'specialty_id' => $this->input->post('specialty_id') ? $this->input->post('specialty_id') : NULL,
     ); 
 
     return $this->db->insert('users', $data);
@@ -136,6 +137,7 @@ public function insert_diagnose(){
     'treatment' => $this->input->post('treatment'), 
     'remarks' => $this->input->post('remarks'), 
     'user_id' => $this->input->post('user_id'), 
+    'specialty_id' => $this->input->post('specialty_id') ? $this->input->post('specialty_id') : NULL,
     'payment_status' => 0, 
     'date' => date('Y-m-d')
     ); 
@@ -216,6 +218,7 @@ public function update_user(){
     'last_name' => $this->input->post('lname'), 
     'username' => $this->input->post('username'),
     'position' => $this->input->post('position'),
+    'specialty_id' => $this->input->post('specialty_id') ? $this->input->post('specialty_id') : NULL,
     );
 
     $this->db->where('id', $id);

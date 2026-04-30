@@ -160,8 +160,8 @@
                 <input required type="text" class="form-control" name="first_name" placeholder="Enter first name" />
             </div>
             <div class="form-group col-md-4">
-                <label class="required">Middle Name</label>
-                <input required type="text" class="form-control" name="middle_name" placeholder="Enter middle name" />
+                <label>Middle Name</label>
+                <input type="text" class="form-control" name="middle_name" placeholder="Enter middle name" />
             </div>
             <div class="form-group col-md-4">
                 <label class="required">Last Name</label>
@@ -172,11 +172,11 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">Birthday</label>
-                <input required type="date" id="datepicker" class="form-control" name="birthday" />
+                <input required type="date" id="datepicker" class="form-control" name="birthday" onchange="calculateAge()" />
             </div>
             <div class="form-group col-md-2">
                 <label class="required">Age</label>
-                <input required type="number" name="age" class="form-control" placeholder="Age" />
+                <input required type="number" id="age" name="age" class="form-control" placeholder="Age" readonly />
             </div>
             <div class="form-group col-md-3">
                 <label class="required">Gender</label>
@@ -281,5 +281,27 @@
 </div>
 
 </form>
+
+<script>
+function calculateAge() {
+    var birthday = document.getElementById('datepicker').value;
+    var ageField = document.getElementById('age');
+    
+    if (birthday) {
+        var birthDate = new Date(birthday);
+        var today = new Date();
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        
+        ageField.value = age;
+    } else {
+        ageField.value = '';
+    }
+}
+</script>
 
 </div>

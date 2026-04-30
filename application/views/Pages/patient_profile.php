@@ -331,6 +331,7 @@
                     <tr>
                         <th>DOA</th>
                         <th>Diagnosed By</th>
+                        <th>Specialty</th>
                         <th>Age</th>
                         <th>LMP</th>
                         <th>EDD</th>
@@ -355,6 +356,13 @@
                     <tr>
                         <td><?= strtoupper($row->date); ?></td>
                         <td><?= $user ? strtoupper($user->last_name.', '.$user->first_name.' '.substr($user->middle_name, 0, 1).'.') : 'N/A'; ?></td>
+                        <td>
+                            <?php if(isset($row->specialty_name)): ?>
+                                <span class="badge badge-info"><?= strtoupper($row->specialty_name); ?></span>
+                            <?php else: ?>
+                                <span class="text-muted">N/A</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?= strtoupper($app->age); ?></td>
                         <td><?= strtoupper($app->lmp); ?></td>
                         <td><?= strtoupper($app->date_of_delivery); ?></td>

@@ -70,6 +70,31 @@
                                                 </div>
                                         </div>
 
+                                        <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputSpecialty" class="col-form-label">Medical Specialty (Optional)</label>
+                                                    <select id="inputSpecialty" name="specialty_id" class="form-control">
+                                                        <option value="">-- No Specialty --</option>
+                                                        <?php if(isset($specialties)): ?>
+                                                            <?php 
+                                                            $current_category = '';
+                                                            foreach($specialties as $specialty):
+                                                                if($specialty->category != $current_category):
+                                                                    if($current_category != '') echo "</optgroup>";
+                                                                    $current_category = $specialty->category;
+                                                                    $category_label = ucwords(str_replace('_', ' ', $current_category));
+                                                                    echo "<optgroup label='$category_label'>";
+                                                                endif;
+                                                            ?>
+                                                                <option value="<?= $specialty->id; ?>" <?= isset($data->specialty_id) && $data->specialty_id == $specialty->id ? 'selected' : ''; ?>><?= $specialty->name; ?></option>
+                                                            <?php endforeach; ?>
+                                                            <?php if($current_category != '') echo "</optgroup>"; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                    <small class="form-text text-muted">Select medical specialty if applicable</small>
+                                                </div>
+                                        </div>
+
                                         <?php if(isset($is_superadmin) && $is_superadmin): ?>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">

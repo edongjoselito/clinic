@@ -25,6 +25,7 @@
                                                 <tr>
                                                     <th>Username</th>
                                                     <th>Position</th>
+                                                    <th>Specialty</th>
                                                     <?php if(isset($is_superadmin) && $is_superadmin): ?>
                                                     <th>Clinic</th>
                                                     <?php endif; ?>
@@ -37,6 +38,13 @@
                                                 <tr>
                                                     <td><?= $row->username; ?></td>
                                                     <td><?= $row->position; ?></td>
+                                                    <td>
+                                                        <?php if(isset($row->specialty_name)): ?>
+                                                            <span class="badge badge-info"><?= $row->specialty_name; ?></span>
+                                                        <?php else: ?>
+                                                            <span class="text-muted">None</span>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <?php if(isset($is_superadmin) && $is_superadmin): ?>
                                                     <td>
                                                         <?php if($row->is_superadmin): ?>

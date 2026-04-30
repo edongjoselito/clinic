@@ -199,9 +199,6 @@
     <a href="<?= base_url(); ?>Pages/patient_add" class="action-btn action-btn-primary">
         <i class="mdi mdi-account-plus"></i> New Patient
     </a>
-    <a href="<?= base_url(); ?>Pages/appointments" class="action-btn action-btn-success">
-        <i class="mdi mdi-calendar-check"></i> New Appointment
-    </a>
     <a href="<?= base_url(); ?>Pages/pay" class="action-btn action-btn-info">
         <i class="mdi mdi-cash-register"></i> Process Payment
     </a>

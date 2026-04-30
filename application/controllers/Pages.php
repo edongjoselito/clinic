@@ -376,6 +376,10 @@ class Pages extends CI_Controller{
         
         $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$param);
 
+        // Get all specialties for selection
+        $this->db->order_by('category, name');
+        $data['specialties'] = $this->db->get('specialties')->result();
+
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -401,6 +405,10 @@ class Pages extends CI_Controller{
         $data['title'] = "Edit Diagnose"; 
 
         $data['d'] = $this->Page_model->one_cond_get_single_row('diagnose','id',$this->uri->segment(3));
+
+        // Get all specialties for selection
+        $this->db->order_by('category, name');
+        $data['specialties'] = $this->db->get('specialties')->result();
 
         if($this->input->post('submit')){
 
@@ -763,6 +771,10 @@ class Pages extends CI_Controller{
 
         $data['title'] = "Add New User";
         
+        // Get all specialties for selection
+        $this->db->order_by('category, name');
+        $data['specialties'] = $this->db->get('specialties')->result();
+        
         // If superadmin, get all clinics for selection
         if (is_superadmin()) {
             $data['is_superadmin'] = true;
@@ -806,6 +818,10 @@ class Pages extends CI_Controller{
 
             $data['title'] = "Update User";
             $data['data'] = $this->Page_model->one_cond_get_single_row('users','id',$param);
+
+            // Get all specialties for selection
+            $this->db->order_by('category, name');
+            $data['specialties'] = $this->db->get('specialties')->result();
 
             // If superadmin, get all clinics for selection
             if (is_superadmin()) {

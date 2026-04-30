@@ -25,6 +25,9 @@
                         <li><a href="<?= base_url(); ?>Pages/stock_code" class="waves-effect">Purchases</a></li>
                         <li><a href="<?= base_url(); ?>Pages/expenses_list" class="waves-effect">Expenses</a></li>
                         <li><a href="<?= base_url(); ?>Pages/users_list" class="waves-effect">Users</a></li>
+                        <?php if(is_superadmin()): ?>
+                        <li><a href="<?= base_url(); ?>Pages/clinic_list" class="waves-effect text-primary"><i class="mdi mdi-hospital-building mr-1"></i><strong>Clinic Management</strong></a></li>
+                        <?php endif; ?>
                     </ul>
                 </li>
                 <li>

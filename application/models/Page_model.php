@@ -14,6 +14,7 @@ class Page_model extends CI_Model{
     public function insert_items(){
 
         $data = array(
+        'clinic_id' => current_clinic_id(),
         'description' => $this->input->post('description'), 
         'price' => $this->input->post('price'), 
         'quantity' => $this->input->post('quantity'), 
@@ -35,13 +36,15 @@ class Page_model extends CI_Model{
         ); 
     
         $this->db->where('id', $id);
-    return $this->db->update('items', $data);
+        $this->db->where('clinic_id', current_clinic_id());
+        return $this->db->update('items', $data);
         
     }
 
     public function insert_referral(){
 
         $data = array(
+        'clinic_id' => current_clinic_id(),
         'company' => $this->input->post('company'), 
         'address' => $this->input->post('address'), 
         'contact' => $this->input->post('contact')
@@ -69,6 +72,7 @@ class Page_model extends CI_Model{
     public function insert_expenses(){
 
         $data = array(
+        'clinic_id' => current_clinic_id(),
         'description' => $this->input->post('description'), 
         'or_no' => $this->input->post('or_no'), 
         'amount' => $this->input->post('amount'), 
@@ -95,13 +99,19 @@ class Page_model extends CI_Model{
     }
 
 
-public function insert_user(){
+public function insert_user($clinic_id = null){
 
     $password = $this->input->post('password');
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
+    // If superadmin is creating user, use provided clinic_id
+    // Otherwise use current user's clinic
+    if ($clinic_id === null) {
+        $clinic_id = current_clinic_id();
+    }
     
     $data = array(
+    'clinic_id' => $clinic_id,
     'first_name' => $this->input->post('fname'), 
     'middle_name' => $this->input->post('mname'), 
     'last_name' => $this->input->post('lname'), 
@@ -118,6 +128,7 @@ public function insert_diagnose(){
     date_default_timezone_set('Asia/Manila'); # add your city to set local time zone
 
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'appointment_id' => $this->input->post('appointment_id'), 
     'patient_id' => $this->input->post('patient_id'), 
     'lab' => $this->input->post('lab'), 
@@ -263,6 +274,7 @@ public function insert_patient(){
     $lname = $this->input->post('last_name');
     
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'first_name' =>  $fname,
     'middle_name' => $mname, 
     'last_name' => $lname, 
@@ -288,6 +300,7 @@ public function insert_appointment(){
     date_default_timezone_set('Asia/Manila'); # add your city to set local time zone
     
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'patient_id' => $this->input->post('p_id'), 
     'bp' => $this->input->post('bp'), 
     'weight' => $this->input->post('weight'), 
@@ -345,6 +358,7 @@ public function update_appointment(){
 }
 public function insert_sales(){
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'item_id' => $this->input->post('item_id'), 
     'price' => $this->input->post('price'), 
     'reciept_code' => $this->input->post('sales_code'), 
@@ -362,6 +376,7 @@ public function insert_sales_summary(){
     $time = date('h:i:s a', time());
 
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'reciept_code' => $_SESSION['sc'], 
     'patient_id' => $this->input->post('p_id'), 
     'total_retail' => $this->input->post('total_retail'), 
@@ -405,11 +420,13 @@ public function update_profile_image(){
 public function search($search){
     $this->db->select('*');
     $this->db->from('patients');
+    $this->db->where('clinic_id', current_clinic_id());
+    $this->db->group_start();
     $this->db->like('first_name',$search);
     $this->db->or_like('last_name',$search);
     $this->db->or_like('middle_name',$search);
     $this->db->or_like('fullname',$search);
-    //$this->db->query("SELECT * FROM film WHERE film.title LIKE '%$query%'");
+    $this->db->group_end();
     $query = $this->db->get();
     return $query->result();
 }
@@ -435,6 +452,7 @@ public function stock_code($b){
 }
 public function insert_stocks(){
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'item_id' => $this->input->post('item_id'), 
     'purchases_price' => $this->input->post('price'), 
     'reciept_code' => $this->input->post('sales_code'), 
@@ -464,6 +482,7 @@ public function insert_stock_summary(){
     date_default_timezone_set('Asia/Manila');
     $time = date('h:i:s a', time());
     $data = array(
+    'clinic_id' => current_clinic_id(),
     'reciept_code' => '2023-10-000129942-STO',  
     'total_retail' => $this->input->post('price'), 
     'amount_due' => $this->input->post('total'), 
@@ -479,7 +498,8 @@ public function insert_stock_summary(){
 
 
 public function items() {
-    $query = $this->db->query("SELECT * FROM items");
+    $clinic_id = current_clinic_id();
+    $query = $this->db->query("SELECT * FROM items WHERE clinic_id = ?", array($clinic_id));
     return $query->result();
 }
 
@@ -547,14 +567,65 @@ public function check_dup_user($fname,$lname,$username){
 
 
 
-// common functions loop
+// common functions loop with clinic isolation
 
 public function no_cond_loop($table){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    $this->db->order_by('id', 'DESC');
     $query = $this->db->get($table);
     return $query->result();
 }
 
+public function get_paginated_patients($per_page, $offset){
+    $this->db->select('id, first_name, middle_name, last_name, sitio, barangay, city_mun, province');
+    if (table_has_clinic_id('patients')) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    $this->db->order_by('id', 'DESC');
+    $this->db->limit($per_page, $offset);
+    $query = $this->db->get('patients');
+    return $query->result();
+}
+
+public function count_patients(){
+    if (table_has_clinic_id('patients')) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    return $this->db->count_all_results('patients');
+}
+
+public function get_all_patients_optimized(){
+    $this->db->select('id, first_name, middle_name, last_name, sitio, barangay, city_mun, province');
+    if (table_has_clinic_id('patients')) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    $this->db->order_by('id', 'DESC');
+    $this->db->limit(500);
+    $query = $this->db->get('patients');
+    return $query->result();
+}
+
+public function search_patients($search_term){
+    $this->db->select('id, first_name, middle_name, last_name, sitio, barangay, city_mun, province');
+    if (table_has_clinic_id('patients')) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    $this->db->group_start();
+    $this->db->like('first_name', $search_term);
+    $this->db->or_like('middle_name', $search_term);
+    $this->db->or_like('last_name', $search_term);
+    $this->db->group_end();
+    $this->db->order_by('id', 'DESC');
+    $query = $this->db->get('patients');
+    return $query->result();
+}
+
 public function no_cond_loop_with_limit($table,$limit){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->limit($limit);
     $this->db->order_by('id', 'DESC');
     $query = $this->db->get($table);
@@ -562,18 +633,27 @@ public function no_cond_loop_with_limit($table,$limit){
 }
 
 public function one_cond_loop($table,$col,$val){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col, $val);
     $query = $this->db->get($table);
     return $query->result();
 }
 
 public function two_cond_loop($table,$col,$val,$col2,$val2){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col, $val);
     $this->db->where($col2, $val2);
     $query = $this->db->get($table);
     return $query->result();
 }
 public function three_cond_loop($table,$col,$val,$col2,$val2,$col3,$val3){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col, $val);
     $this->db->where($col2, $val2);
     $this->db->where($col3, $val3);
@@ -582,6 +662,9 @@ public function three_cond_loop($table,$col,$val,$col2,$val2,$col3,$val3){
 }
 
 public function one_cond_loop_order_by($table,$col,$val,$orderby,$orderbyvalue){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col, $val);
     $this->db->order_by($orderby, $orderbyvalue);
     $query = $this->db->get($table);
@@ -589,6 +672,9 @@ public function one_cond_loop_order_by($table,$col,$val,$orderby,$orderbyvalue){
 }
 
 public function delete($table,$col,$val){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col,$val);
     $this->db->delete($table);
     return true;
@@ -597,6 +683,9 @@ public function delete($table,$col,$val){
 
 // common function single row
 public function one_cond_get_single_row($table, $col, $val){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where($col, $val);
     $result = $this->db->get($table)->row();
     return $result;
@@ -604,6 +693,9 @@ public function one_cond_get_single_row($table, $col, $val){
 
 // other queries
 public function get_limited_col($cols,$table){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $query = $this->db->select($cols)
         ->from($table)
         ->get();
@@ -611,6 +703,9 @@ public function get_limited_col($cols,$table){
 }
 
 public function summary_loop($table,$val,$val2){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where('date >=', $val);
     $this->db->where('date <=', $val2);
     $query = $this->db->get($table);
@@ -618,6 +713,9 @@ public function summary_loop($table,$val,$val2){
 }
 
 public function app_summary_loop($table,$val,$val2){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where('visit_date >=', $val);
     $this->db->where('visit_date <=', $val2);
     $query = $this->db->get($table);
@@ -626,6 +724,9 @@ public function app_summary_loop($table,$val,$val2){
 
 public function get_sum($table,$val,$val2,$col){
     $this->db->select('SUM('.$col.') as total');
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $this->db->where('date >=', $val);
     $this->db->where('date <=', $val2);
     $query = $this->db->get($table);
@@ -633,10 +734,17 @@ public function get_sum($table,$val,$val2,$col){
 }
 
 public function count_all($table){
+    // Only apply clinic filter if column exists
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $query = $this->db->get($table);
     return $query;
 }
 public function count_with_cond($table,$col,$val){
+    if (table_has_clinic_id($table)) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     $query = $this->db->get_where($table,array($col => $val));
     return $query;
 }

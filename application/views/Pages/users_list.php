@@ -2,6 +2,7 @@
                        <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box">
+                                <h4><i class="mdi mdi-account-group mr-2"></i>Users Management</h4>
                                 <a class="btn btn-success" href="<?= base_url(); ?>Pages/user_add">New User</a>
                                 
                                     <div class="clearfix"></div>
@@ -24,6 +25,9 @@
                                                 <tr>
                                                     <th>Username</th>
                                                     <th>Position</th>
+                                                    <?php if(isset($is_superadmin) && $is_superadmin): ?>
+                                                    <th>Clinic</th>
+                                                    <?php endif; ?>
                                                     <th>Manage</th>
                                                 </tr>
                                             </thead>
@@ -33,6 +37,15 @@
                                                 <tr>
                                                     <td><?= $row->username; ?></td>
                                                     <td><?= $row->position; ?></td>
+                                                    <?php if(isset($is_superadmin) && $is_superadmin): ?>
+                                                    <td>
+                                                        <?php if($row->is_superadmin): ?>
+                                                            <span class="badge badge-warning">Superadmin</span>
+                                                        <?php else: ?>
+                                                            <?= $row->clinic_name ?: '<span class="text-danger">Not Assigned</span>'; ?>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <?php endif; ?>
                                                     <td>
                                                         <a data-toggle="modal" class="open-AddBookDialog btn btn-warning btn-sm" href="#edit<?= $row->id; ?>">Change Password</a>
                                                         <a href="user_update/<?= $row->id; ?>" class="btn btn-success">Edit</a>&nbsp;&nbsp;&nbsp;

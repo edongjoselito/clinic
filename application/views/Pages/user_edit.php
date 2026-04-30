@@ -54,9 +54,9 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="inputPosition" class="col-form-label">Position</label>
                                                     <select id="inputState" name="position" class="form-control">
-                                                    <?php 
+                                                    <?php
                                                         $user_position = array("Admin", "secretary");
-                                                         foreach($user_position as $row){ 
+                                                         foreach($user_position as $row){
                                                           echo "<option ";
                                                           if($data->position == $row){echo ' selected ';}
                                                           echo " value='";
@@ -64,11 +64,28 @@
                                                           echo "'>";
                                                           echo $row."</option>\n";
                                                          }
-                                                      ?> 
-                                                    
+                                                      ?>
+
                                                     </select>
-                                                </div> 
-                                        </div>        
+                                                </div>
+                                        </div>
+
+                                        <?php if(isset($is_superadmin) && $is_superadmin): ?>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputClinic" class="col-form-label">Assign to Clinic</label>
+                                                <select id="inputClinic" name="clinic_id" class="form-control">
+                                                    <option value="">-- Select Clinic --</option>
+                                                    <?php foreach($clinics as $clinic): ?>
+                                                        <option value="<?= $clinic->id; ?>" <?= $data->clinic_id == $clinic->id ? 'selected' : ''; ?>>
+                                                            <?= $clinic->name; ?> (<?= $clinic->code; ?>)
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <small class="form-text text-muted">Change which clinic this user belongs to</small>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
 
                                         <div class="form-group">
                                                     <input type="submit" name="submit" value="Update User" class="btn btn-primary waves-effect waves-light mr-1" />

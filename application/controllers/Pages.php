@@ -22,8 +22,6 @@ class Pages extends CI_Controller{
 
     public function users_list(){
 
-        
-
         $page = "users_list";
 
         if(!file_exists(APPPATH.'views/Pages/'.$page.'.php')){
@@ -36,7 +34,18 @@ class Pages extends CI_Controller{
             redirect(base_url().'Pages/users_list');
         }
 
-        $data['data'] = $this->Page_model->no_cond_loop('users');
+        // If superadmin, show all users with their clinics
+        if (is_superadmin()) {
+            $this->db->select('users.*, clinics.name as clinic_name');
+            $this->db->from('users');
+            $this->db->join('clinics', 'users.clinic_id = clinics.id', 'left');
+            $data['data'] = $this->db->get()->result();
+            $data['is_superadmin'] = true;
+            $data['clinics'] = $this->db->get('clinics')->result();
+        } else {
+            $data['data'] = $this->Page_model->no_cond_loop('users');
+            $data['is_superadmin'] = false;
+        }
 
        $this->load->view('templates/header');
        $this->load->view('templates/menu');
@@ -47,8 +56,7 @@ class Pages extends CI_Controller{
     public function patient_list(){
 
         $page = "patient_list";
-        //$data['data'] = $this->Page_model->get_limited_col('id, first_name, middle_name, last_name, sitio, barangay, city_mun, province','patients');
-        $data['data'] = $this->Page_model->no_cond_loop_with_limit('patients',100);
+        $data['data'] = $this->Page_model->get_all_patients_optimized();
 
     $this->load->view('templates/header');
     $this->load->view('templates/menu');
@@ -306,9 +314,9 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Search Patient"; 
+        $data['title'] = "Search Patient";
         $search = $this->input->post('search');
-        $data['data'] =  $this->Page_model->search($search);
+        $data['data'] =  $this->Page_model->search_patients($search);
 
 
         $this->load->view('templates/header');
@@ -753,7 +761,15 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Add New User"; 
+        $data['title'] = "Add New User";
+        
+        // If superadmin, get all clinics for selection
+        if (is_superadmin()) {
+            $data['is_superadmin'] = true;
+            $data['clinics'] = $this->db->get('clinics')->result();
+        } else {
+            $data['is_superadmin'] = false;
+        }
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -762,7 +778,13 @@ class Pages extends CI_Controller{
 
         }else{
 
-            $this->Page_model->insert_user();
+            // If superadmin and clinic_id is selected, use it
+            if (is_superadmin() && $this->input->post('clinic_id')) {
+                $clinic_id = $this->input->post('clinic_id');
+                $this->Page_model->insert_user($clinic_id);
+            } else {
+                $this->Page_model->insert_user();
+            }
             $this->session->set_flashdata('success', ' Successfully saved.');
             redirect(base_url().'Pages/users_list');
         
@@ -785,6 +807,13 @@ class Pages extends CI_Controller{
             $data['title'] = "Update User";
             $data['data'] = $this->Page_model->one_cond_get_single_row('users','id',$param);
 
+            // If superadmin, get all clinics for selection
+            if (is_superadmin()) {
+                $data['is_superadmin'] = true;
+                $data['clinics'] = $this->db->get('clinics')->result();
+            } else {
+                $data['is_superadmin'] = false;
+            }
 
             $this->load->view('templates/header');
             $this->load->view('templates/menu');
@@ -794,6 +823,13 @@ class Pages extends CI_Controller{
             }else{
 
                 $this->Page_model->update_user();
+                
+                // If superadmin and clinic_id is posted, update user's clinic
+                if (is_superadmin() && $this->input->post('clinic_id') !== null) {
+                    $this->db->where('id', $this->input->post('id'));
+                    $this->db->update('users', array('clinic_id' => $this->input->post('clinic_id')));
+                }
+                
                 $this->session->set_flashdata('save', 'Successfully Updated');
                 redirect(base_url().'Pages/users_list');
 
@@ -954,6 +990,186 @@ class Pages extends CI_Controller{
     
     }
     
+    // ==================== DATABASE FIX ====================
+
+    public function fix_database(){
+        echo "<h2>Adding clinic_id columns...</h2>";
+
+        // SQL statements to add columns (ignore errors if columns already exist)
+        $tables = ['appointment', 'users', 'patients', 'items', 'referrals', 'expenses', 'diagnose', 'sales', 'stocks'];
+
+        foreach ($tables as $table) {
+            // Try to add clinic_id column
+            $sql = "ALTER TABLE `$table` ADD COLUMN `clinic_id` INT(11) UNSIGNED NULL AFTER `id`";
+            $this->db->query($sql);
+        }
+
+        // Add is_superadmin to users
+        $this->db->query("ALTER TABLE `users` ADD COLUMN `is_superadmin` TINYINT(1) DEFAULT 0 AFTER `clinic_id`");
+
+        // Create clinics table
+        $this->db->query("CREATE TABLE IF NOT EXISTS `clinics` (
+          `id` INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          `name` VARCHAR(255) NOT NULL,
+          `code` VARCHAR(50) NOT NULL UNIQUE,
+          `address` TEXT NULL,
+          `contact_number` VARCHAR(50) NULL,
+          `email` VARCHAR(100) NULL,
+          `status` TINYINT(1) DEFAULT 1,
+          `created_at` DATETIME NULL,
+          `updated_at` DATETIME NULL
+        )");
+
+        echo "✓ Columns added (if not existed)<br>";
+
+        // Check if default clinic exists
+        $clinic = $this->db->get_where('clinics', array('code' => 'DEFAULT'))->row();
+        if (!$clinic) {
+            $this->db->insert('clinics', array(
+                'name' => 'Default Clinic',
+                'code' => 'DEFAULT',
+                'address' => 'Default Address',
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s')
+            ));
+            $default_clinic_id = $this->db->insert_id();
+            echo "✓ Default clinic created with ID: $default_clinic_id<br>";
+        } else {
+            $default_clinic_id = $clinic->id;
+            echo "✓ Default clinic exists with ID: $default_clinic_id<br>";
+        }
+
+        // Update existing records
+        echo "<h2>Updating existing records...</h2>";
+
+        $this->db->query("UPDATE `users` SET `clinic_id` = $default_clinic_id, `is_superadmin` = 1 WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `patients` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `appointment` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `items` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `referrals` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `expenses` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `diagnose` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `sales` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+        $this->db->query("UPDATE `stocks` SET `clinic_id` = $default_clinic_id WHERE `clinic_id` IS NULL OR `clinic_id` = 0");
+
+        echo "✓ All records updated<br>";
+        echo "<h2 style='color: green;'>✓ Database fix completed!</h2>";
+        echo "<p>You can now <a href='".base_url()."Pages/log_in'>login to the system</a>.</p>";
+        echo "<p><strong>Run this only once. Refreshing will re-run the fix (safe to do).</strong></p>";
+    }
+
+    // ==================== SUPERADMIN CLINIC MANAGEMENT ====================
+
+    public function clinic_list(){
+        // Only superadmin can access
+        require_superadmin();
+
+        $page = "clinic_list";
+
+        if(!file_exists(APPPATH.'views/Pages/'.$page.'.php')){
+            show_404();
+        }
+
+        $data['clinics'] = $this->db->get('clinics')->result();
+
+        $this->load->view('templates/header');
+        $this->load->view('templates/menu');
+        $this->load->view('Pages/'.$page, $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function clinic_new(){
+        // Only superadmin can access
+        require_superadmin();
+
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        ','</div>');
+        $this->form_validation->set_rules('name', 'Clinic Name', 'required');
+        $this->form_validation->set_rules('code', 'Clinic Code', 'required|is_unique[clinics.code]');
+
+        $page = "clinic_new";
+
+        if($this->form_validation->run() == FALSE){
+            if(!file_exists(APPPATH.'views/Pages/'.$page.'.php')){
+                show_404();
+            }
+
+            $this->load->view('templates/header');
+            $this->load->view('templates/menu');
+            $this->load->view('Pages/'.$page);
+            $this->load->view('templates/footer');
+        } else {
+            $data = array(
+                'name' => $this->input->post('name'),
+                'code' => $this->input->post('code'),
+                'address' => $this->input->post('address'),
+                'contact_number' => $this->input->post('contact_number'),
+                'email' => $this->input->post('email'),
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s')
+            );
+
+            $this->db->insert('clinics', $data);
+            $this->session->set_flashdata('success', 'Clinic created successfully.');
+            redirect(base_url().'Pages/clinic_list');
+        }
+    }
+
+    public function clinic_edit($id){
+        // Only superadmin can access
+        require_superadmin();
+
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        ','</div>');
+        $this->form_validation->set_rules('name', 'Clinic Name', 'required');
+
+        $page = "clinic_edit";
+
+        if($this->form_validation->run() == FALSE){
+            if(!file_exists(APPPATH.'views/Pages/'.$page.'.php')){
+                show_404();
+            }
+
+            $data['clinic'] = $this->db->get_where('clinics', array('id' => $id))->row();
+
+            $this->load->view('templates/header');
+            $this->load->view('templates/menu');
+            $this->load->view('Pages/'.$page, $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = array(
+                'name' => $this->input->post('name'),
+                'code' => $this->input->post('code'),
+                'address' => $this->input->post('address'),
+                'contact_number' => $this->input->post('contact_number'),
+                'email' => $this->input->post('email'),
+                'status' => $this->input->post('status'),
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+
+            $this->db->where('id', $id);
+            $this->db->update('clinics', $data);
+            $this->session->set_flashdata('success', 'Clinic updated successfully.');
+            redirect(base_url().'Pages/clinic_list');
+        }
+    }
+
+    public function clinic_delete($id){
+        // Only superadmin can access
+        require_superadmin();
+
+        // Soft delete - just set status to inactive
+        $this->db->where('id', $id);
+        $this->db->update('clinics', array('status' => 0));
+
+        $this->session->set_flashdata('success', 'Clinic deactivated successfully.');
+        redirect(base_url().'Pages/clinic_list');
+    }
+
+    // ==================== LOGIN ====================
+
     public function log_in(){
 
         $this->form_validation->set_error_delimiters('<div class="error">','</div>');
@@ -975,18 +1191,25 @@ class Pages extends CI_Controller{
                 $user_id = $this->Page_model->login(); 
 
                 if($user_id){
+                    // Check if user has clinic assigned or is superadmin
+                    if (empty($user_id['clinic_id']) && empty($user_id['is_superadmin'])) {
+                        $this->session->set_flashdata('failed', 'Your account is not assigned to any clinic. Please contact administrator.');
+                        redirect(base_url().'Pages/log_in');
+                    }
 
                     $user_data = array(
                         'username' => $user_id['username'],
                         'position' => $user_id['position'],
                         'id' => $user_id['id'],
+                        'clinic_id' => $user_id['clinic_id'],
+                        'is_superadmin' => $user_id['is_superadmin'],
                         'logged_in' => true
 
                     );
                 
                     $this->session->set_userdata($user_data);
                     $this->session->set_flashdata('user_log', 'You are now loged in as '
-                    .$this->session->position);
+                    .$this->session->position . ' at ' . clinic_name());
                     redirect(base_url());
                 }else{
                     $this->session->set_flashdata('failed', 'Username/Password not match');
@@ -1048,6 +1271,8 @@ class Pages extends CI_Controller{
         $this->session->unset_userdata('id');
         $this->session->unset_userdata('username');
         $this->session->unset_userdata('position');
+        $this->session->unset_userdata('clinic_id');
+        $this->session->unset_userdata('is_superadmin');
         $this->session->unset_userdata('logged_in');
 
         $this->session->set_flashdata('failed', 'You are logged out.');

@@ -259,7 +259,9 @@ public function update_patient(){
     'city_mun' => $this->input->post('city_mun'), 
     'province' => $this->input->post('province'), 
     'civil_status' => $this->input->post('civil_status'), 
-    'contact' => $this->input->post('contact'), 
+    'contact' => $this->input->post('contact'),
+    'email' => $this->input->post('email'),
+    'portal_access' => $this->input->post('portal_access') ? 1 : 0,
     'company' => $this->input->post('company'),  
     'fullname' => $fname.' '.$mname.' '.$lname,
     ); 
@@ -270,7 +272,7 @@ public function update_patient(){
     
 }
 
-public function insert_patient(){
+public function insert_patient($plain_password = null){
     
     $fname = $this->input->post('first_name');
     $mname = $this->input->post('middle_name');
@@ -291,6 +293,9 @@ public function insert_patient(){
     'province' => $this->input->post('province'), 
     'civil_status' => $this->input->post('civil_status'), 
     'contact' => $this->input->post('contact'), 
+    'email' => $this->input->post('email'),
+    'portal_access' => $this->input->post('portal_access') ? 1 : 0,
+    'password' => $plain_password !== null ? password_hash($plain_password, PASSWORD_DEFAULT) : null,
     'company' => $this->input->post('company'),  
     'fullname' => $fname.' '.$mname.' '.$lname,
     ); 
@@ -307,21 +312,21 @@ public function insert_appointment(){
     'patient_id' => $this->input->post('p_id'), 
     'bp' => $this->input->post('bp'), 
     'weight' => $this->input->post('weight'), 
-    'lmp' => $this->input->post('lmp'), 
-    'date_of_delivery' => $this->input->post('date_of_delivery'), 
-    'gravida' => $this->input->post('gravida'), 
-    'abortion' => $this->input->post('abortion'), 
-    'parity' => $this->input->post('parity'), 
-    'living' => $this->input->post('living'), 
-    'no_of_weeks' => $this->input->post('no_of_weeks'), 
-    'no_of_days' => $this->input->post('no_of_days'), 
+    'lmp' => $this->input->post('lmp') ?: '', 
+    'date_of_delivery' => $this->input->post('date_of_delivery') ?: '', 
+    'gravida' => $this->input->post('gravida') ?: '', 
+    'abortion' => $this->input->post('abortion') ?: '', 
+    'parity' => $this->input->post('parity') ?: '', 
+    'living' => $this->input->post('living') ?: '', 
+    'no_of_weeks' => $this->input->post('no_of_weeks') ?: '', 
+    'no_of_days' => $this->input->post('no_of_days') ?: '', 
     'transaction' => $this->input->post('transaction'), 
     'visit_date' => date('Y-m-d'),
     'age' => $this->input->post('age'),  
     'referral_status' => $this->input->post('ref'), 
-    'referral_id' => $this->input->post('ref'),
-    'term' => $this->input->post('term'),
-    'preterm' => $this->input->post('preterm')
+    'referral_id' => $this->input->post('ref_id') ? $this->input->post('ref_id') : '',
+    'term' => $this->input->post('term') ?: '',
+    'preterm' => $this->input->post('preterm') ?: ''
     ); 
    
 

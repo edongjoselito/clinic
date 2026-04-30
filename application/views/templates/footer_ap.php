@@ -47,38 +47,30 @@ function refer() {
             <script language=javascript src="../js/common.js"></script>
 
             <script type='text/javascript'>
-            $(function(){
-                $('#datepic1').datepicker( { yearRange:'1995:2050',changeYear: true, dateFormat: 'mm/dd/yy', });    
-            });
-
-            //var moname=new Array('January','February','March','April','May','June','July','August','September','October','November','December');
             var moname=new Array('01','02','03','04','05','06','07','08','09','10','11','12');
 
             function checnum(as)
                 {   
                     var a = as.value;
                     as.value= a.replace(/[^\d]/g, '');       
-                } 
+                }
+
             function calculate()
             {
                 var datePic1=$('#datepic1').val();
                 var cl=$('#cyVal').val();
                 if((datePic1=='')||(cl==''))
                 {
-                    alert('Give all valid inputs')
+                    alert('Please select LMP date and enter cycle length')
                 }
                 else
                 {
-                    dtVal=datePic1.split('/');
-                    mm=dtVal[0];
-                    dd=dtVal[1];
-                    yy=dtVal[2];
-                    
-                    mm=mm-1;    
-                    if(yy<50)
-                    {
-                        yy=yy+2000;
-                    }
+                    dtVal=datePic1.split('-');
+                    yy=parseInt(dtVal[0]);
+                    mm=parseInt(dtVal[1]);
+                    dd=parseInt(dtVal[2]);
+
+                    mm=mm-1;
                     var cl=$('#cyVal').val();
                     var lmpDate=new Date(yy,mm,dd);
                     lmpDateVal=lmpDate.getTime();
@@ -93,11 +85,11 @@ function refer() {
                     lmpWkVal=parseInt(lmpWkVal);
                     var lmpDyVal=curGestVal%7;
                     lmpDateVal=lmpDate.setTime(lmpDateVal);
-                    var mon1=lmpDate.getMonth(); 
+                    var mon1=lmpDate.getMonth();
                     $('#esDate').val(lmpDate.getDate()+'/'+moname[mon1]+'/'+lmpDate.getFullYear());
                     $('#dayVal').val(lmpDyVal);
                     $('#weekVal').val(lmpWkVal);
-                } 
+                }
             }
 
             </script>

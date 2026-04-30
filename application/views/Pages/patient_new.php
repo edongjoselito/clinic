@@ -206,13 +206,34 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label class="required">Occupation</label>
                 <input required type="text" class="form-control" name="occupation" placeholder="Enter occupation" />
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>Contact Number</label>
                 <input type="text" class="form-control" name="contact" placeholder="Enter contact number" />
+            </div>
+            <div class="form-group col-md-4">
+                <label class="required">Email Address</label>
+                <input required type="email" class="form-control" name="email" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label class="required">Patient Portal Access</label>
+                <div class="mt-2">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" value="1" id="portalEnabled" name="portal_access" class="custom-control-input" required>
+                        <label class="custom-control-label" for="portalEnabled">Enable Portal Access</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" value="0" id="portalDisabled" name="portal_access" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="portalDisabled">Disable Portal Access</label>
+                    </div>
+                </div>
+                <small class="text-muted">When enabled, a random password will be generated and sent to the patient's email.</small>
             </div>
         </div>
     </div>

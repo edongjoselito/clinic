@@ -120,7 +120,27 @@
                                                     <label for="inputUsername" class="col-form-label">contact</label>
                                                     <input type="text" class="form-control" value="<?= $p->contact; ?>" name="contact" placeholder="contact" />
                                                 </div>
-                                        </div>   
+                                        </div>
+
+                                        <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputUsername" class="col-form-label">Email Address</label>
+                                                    <input required type="email" class="form-control" value="<?= isset($p->email) ? $p->email : ''; ?>" name="email" placeholder="Email Address" />
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Patient Portal Access</label>
+                                                    <div class="mt-2">
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <input type="radio" <?= (isset($p->portal_access) && $p->portal_access == 1) ? 'checked' : ''; ?> id="portalEnabled" value="1" name="portal_access" class="custom-control-input">
+                                                            <label class="custom-control-label" for="portalEnabled">Enabled</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <input type="radio" <?= (!isset($p->portal_access) || $p->portal_access == 0) ? 'checked' : ''; ?> id="portalDisabled" value="0" name="portal_access" class="custom-control-input">
+                                                            <label class="custom-control-label" for="portalDisabled">Disabled</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
 
                                         <div class="form-row">
                                                 <div class="form-group col-md-12">

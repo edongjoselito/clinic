@@ -70,6 +70,7 @@ class Pages extends CI_Controller{
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         ','</div>');
         $this->form_validation->set_rules('first_name', 'First Name', 'required');
+        $this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[patients.email]');
         //$this->form_validation->set_rules('termPeriodto', 'Term Period To', 'required');
 
         $page = "patient_new";
@@ -89,12 +90,72 @@ class Pages extends CI_Controller{
 
         }else{
 
-            $this->Page_model->insert_patient();
-            $this->session->set_flashdata('success', ' Successfully saved.');
+            // Generate random password if portal access is enabled
+            $plain_password = null;
+            if($this->input->post('portal_access') == 1){
+                $plain_password = $this->generate_random_password(10);
+                $this->session->set_flashdata('plain_password', $plain_password);
+            }
+
+            $this->Page_model->insert_patient($plain_password);
+
+            // Send email notification if portal access is enabled
+            if($this->input->post('portal_access') == 1 && $plain_password !== null){
+                $this->send_patient_portal_email(
+                    $this->input->post('email'),
+                    $this->input->post('first_name'),
+                    $this->input->post('last_name'),
+                    $plain_password
+                );
+            }
+
+            $this->session->set_flashdata('success', ' Successfully saved.' . ($this->input->post('portal_access') == 1 ? ' Portal access credentials sent to patient email.' : ''));
             redirect(base_url().'Pages/patient_list');
         
             
         } 
+    }
+
+    private function generate_random_password($length = 10){
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $password = '';
+        $char_length = strlen($characters);
+        for($i = 0; $i < $length; $i++){
+            $password .= $characters[rand(0, $char_length - 1)];
+        }
+        return $password;
+    }
+
+    private function send_patient_portal_email($email, $first_name, $last_name, $password){
+        $this->load->library('email');
+
+        $subject = 'Your Patient Portal Access - Clinic Management System';
+        $message = '
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h2 style="color: #1e88e5;">Welcome to Our Clinic Portal</h2>
+                    <p>Hello <strong>' . htmlspecialchars($first_name . ' ' . $last_name) . '</strong>,</p>
+                    <p>Your patient portal account has been created. You can now access your medical records and appointments online.</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <p style="margin: 0;"><strong>Portal Login Credentials:</strong></p>
+                        <p style="margin: 5px 0;"><strong>Username:</strong> ' . htmlspecialchars($email) . '</p>
+                        <p style="margin: 5px 0;"><strong>Password:</strong> ' . htmlspecialchars($password) . '</p>
+                    </div>
+                    <p>Please log in at: <a href="' . base_url() . '">' . base_url() . '</a></p>
+                    <p style="color: #e53935;"><strong>For security reasons, please change your password after your first login.</strong></p>
+                    <p>Thank you,<br>Clinic Management Team</p>
+                </div>
+            </body>
+            </html>
+        ';
+
+        $this->email->from('no-reply@depeddavor.com', 'Clinic Management System');
+        $this->email->to($email);
+        $this->email->subject($subject);
+        $this->email->message($message);
+
+        $this->email->send();
     }
     
     public function patient_profile($param){
@@ -126,6 +187,7 @@ class Pages extends CI_Controller{
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         ','</div>');
         $this->form_validation->set_rules('first_name', 'First Name', 'required');
+        $this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
         //$this->form_validation->set_rules('termPeriodto', 'Term Period To', 'required');
 
         $page = "patient_update";
@@ -356,11 +418,21 @@ class Pages extends CI_Controller{
     }
 
     public function app_add(){
-        $this->Page_model->insert_appointment();
-        $this->session->set_flashdata('success', ' Successfully saved.');
-        redirect(base_url().'Pages/patient_queue');
-    
-}
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        ','</div>');
+        $this->form_validation->set_rules('bp', 'Blood Pressure', 'required');
+        $this->form_validation->set_rules('weight', 'Weight', 'required');
+
+        if($this->form_validation->run() == FALSE){
+            $this->session->set_flashdata('danger', validation_errors());
+            redirect(base_url().'Pages/ap/'.$this->input->post('p_id'));
+        } else {
+            $this->Page_model->insert_appointment();
+            $this->session->set_flashdata('success', ' Appointment successfully saved.');
+            redirect(base_url().'Pages/patient_queue');
+        }
+    }
 
     public function diagnose($param){
 

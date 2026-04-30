@@ -54,3 +54,11 @@ ALTER TABLE `diagnose` ADD COLUMN IF NOT EXISTS `specialty_id` int(11) unsigned 
 
 -- Add foreign key constraint for diagnose.specialty_id
 ALTER TABLE `diagnose` ADD CONSTRAINT `fk_diagnose_specialty` FOREIGN KEY (`specialty_id`) REFERENCES `specialties` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- Add patient portal access columns to patients table
+ALTER TABLE `patients` ADD COLUMN IF NOT EXISTS `email` varchar(150) DEFAULT NULL AFTER `contact`;
+ALTER TABLE `patients` ADD COLUMN IF NOT EXISTS `portal_access` tinyint(1) NOT NULL DEFAULT 0 AFTER `email`;
+ALTER TABLE `patients` ADD COLUMN IF NOT EXISTS `password` varchar(255) DEFAULT NULL AFTER `portal_access`;
+
+-- Add unique index on email
+ALTER TABLE `patients` ADD UNIQUE INDEX IF NOT EXISTS `idx_patients_email` (`email`);

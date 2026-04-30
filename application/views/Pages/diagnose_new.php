@@ -349,22 +349,22 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Laboratory Results</label>
-                        <textarea class="form-control" rows="5" name="lab" placeholder="Enter laboratory findings..."></textarea>
+                        <textarea class="form-control" rows="5" name="lab"></textarea>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Diagnosis</label>
-                        <textarea class="form-control" rows="5" name="diagnosis" placeholder="Enter diagnosis..."></textarea>
+                        <textarea class="form-control" rows="5" name="diagnosis"></textarea>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Treatment Plan</label>
-                        <textarea class="form-control" rows="5" name="treatment" placeholder="Enter treatment plan..."></textarea>
+                        <textarea class="form-control" rows="5" name="treatment"></textarea>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Remarks</label>
-                        <textarea class="form-control" rows="5" name="remarks" placeholder="Enter additional remarks..."></textarea>
+                        <textarea class="form-control" rows="5" name="remarks"></textarea>
                     </div>
                 </div>
 

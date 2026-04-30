@@ -1,8 +1,10 @@
-<?php 
-    $p = $this->Page_model->one_cond_get_single_row('patients','id',$d->patient_id);
-    $data = $this->Page_model->one_cond_loop('appointment','patient_id',$p->id);
-        
-    $a = $this->Page_model->one_cond_get_single_row('appointment','id',$d->appointment_id);
+<?php
+    // Variables $d, $p, $a are passed from controller
+    // $d = diagnosis record, $p = patient, $a = appointment
+    if(empty($d)){
+        echo '<div class="alert alert-danger">Diagnosis record not found.</div>';
+        return;
+    }
 ?>
 
 <style>
@@ -185,6 +187,101 @@ textarea.form-control {
     background: #eeeeee;
     color: #424242;
 }
+.btn-print-prescription {
+    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+    border: none;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+.btn-print-prescription:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(67, 160, 71, 0.4);
+    color: white;
+}
+
+/* Printable Prescription Styles */
+.prescription-printable {
+    display: none;
+    font-family: 'Times New Roman', serif;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .prescription-printable,
+    .prescription-printable * {
+        visibility: visible;
+    }
+    .prescription-printable {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 20mm;
+        background: white;
+    }
+    .no-print {
+        display: none !important;
+    }
+}
+.prescription-header {
+    text-align: center;
+    border-bottom: 2px solid #1565c0;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+.prescription-header h2 {
+    color: #1565c0;
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+}
+.prescription-header p {
+    color: #424242;
+    margin: 5px 0;
+    font-size: 14px;
+}
+.prescription-body {
+    margin: 30px 0;
+}
+.prescription-row {
+    margin-bottom: 20px;
+}
+.prescription-label {
+    font-weight: bold;
+    color: #1565c0;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.prescription-value {
+    font-size: 16px;
+    color: #212121;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px 0;
+    min-height: 30px;
+}
+.prescription-value.treatment {
+    min-height: 100px;
+    white-space: pre-wrap;
+}
+.prescription-footer {
+    margin-top: 50px;
+    text-align: right;
+}
+.prescription-signature {
+    border-top: 1px solid #424242;
+    width: 250px;
+    display: inline-block;
+    padding-top: 10px;
+    text-align: center;
+}
 </style>
 
 <div class="diagnose-wrapper">
@@ -364,10 +461,72 @@ textarea.form-control {
                 <button type="submit" name="submit" class="btn btn-update-diagnosis">
                     <i class="mdi mdi-content-save mr-1"></i>Update Diagnosis
                 </button>
+                <button type="button" class="btn btn-print-prescription" onclick="printPrescription()">
+                    <i class="mdi mdi-file-document mr-1"></i>Print Prescription
+                </button>
             </div>
         </div>
         </form>
     </div>
 </div>
+
+<!-- Printable Prescription Template -->
+<div class="prescription-printable" id="prescription-print">
+    <div class="prescription-header">
+        <h2>CLINIC MANAGEMENT SYSTEM</h2>
+        <p>Medical Prescription</p>
+        <p style="font-size: 12px; color: #757575;">Date: <?= date('F d, Y'); ?></p>
+    </div>
+    
+    <div class="prescription-body">
+        <div class="prescription-row">
+            <div class="prescription-label">Patient Name:</div>
+            <div class="prescription-value"><?= mb_strtoupper($p->last_name.', '.$p->first_name.' '.$p->middle_name, 'UTF-8'); ?></div>
+        </div>
+        
+        <div class="prescription-row">
+            <div class="prescription-label">Address:</div>
+            <div class="prescription-value"><?= strtoupper($p->sitio.' '.$p->barangay.' '.$p->city_mun.' '.$p->province); ?></div>
+        </div>
+        
+        <div class="prescription-row">
+            <div class="prescription-label">Age:</div>
+            <div class="prescription-value"><?= $a->age; ?> years old</div>
+        </div>
+        
+        <div class="prescription-row">
+            <div class="prescription-label">Diagnosis:</div>
+            <div class="prescription-value"><?= nl2br(htmlspecialchars($d->diagnosis)); ?></div>
+        </div>
+        
+        <div class="prescription-row">
+            <div class="prescription-label">Treatment / Medications:</div>
+            <div class="prescription-value treatment"><?= nl2br(htmlspecialchars($d->treatment)); ?></div>
+        </div>
+        
+        <div class="prescription-row">
+            <div class="prescription-label">Remarks:</div>
+            <div class="prescription-value"><?= nl2br(htmlspecialchars($d->remarks)); ?></div>
+        </div>
+    </div>
+    
+    <div class="prescription-footer">
+        <div class="prescription-signature">
+            <?php 
+            $doctor = $this->Page_model->one_cond_get_single_row('users','id',$d->user_id);
+            if(isset($doctor->id)):
+            ?>
+            <div style="font-weight: bold; font-size: 16px;"><?= $doctor->first_name.' '.$doctor->middle_name.' '.$doctor->last_name; ?></div>
+            <div style="font-size: 12px; color: #757575;">Attending Physician</div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<script>
+function printPrescription() {
+    window.print();
+}
+</script>
 
 </div>

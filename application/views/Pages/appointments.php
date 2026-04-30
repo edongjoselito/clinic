@@ -256,7 +256,7 @@ foreach($diag as $row){
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label style="font-weight: 500; color: #424242; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Transaction Notes</label>
-                <textarea class="form-control" rows="5" id="example-textarea" name="transaction" placeholder="Enter diagnosis, treatment, and other notes..." style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 15px; font-size: 14px; resize: vertical;"></textarea>   
+                <textarea class="form-control" rows="5" id="example-textarea" name="transaction" style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 15px; font-size: 14px; resize: vertical;"></textarea>   
             </div>
         </div>  
 

@@ -94,7 +94,7 @@
     color: #1565c0;
 }
 .data-card .card-body {
-    padding: 0;
+    padding: 0 15px;
 }
 .patient-table {
     margin-bottom: 0;
@@ -109,11 +109,11 @@
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 12px 12px;
+    padding: 12px 18px;
     white-space: nowrap;
 }
 .patient-table tbody td {
-    padding: 14px 12px;
+    padding: 14px 18px;
     border-color: #f5f5f5;
     vertical-align: middle;
 }
@@ -141,18 +141,82 @@
     .patient-address {
         max-width: 200px;
     }
+    .stats-bar .stat-item {
+        margin-right: 15px;
+    }
+    .stats-bar .stat-count {
+        font-size: 20px;
+    }
 }
 @media (max-width: 576px) {
-    .patient-table thead th:nth-child(2),
-    .patient-table tbody td:nth-child(2) {
-        display: none;
+    .patient-list-wrapper {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .list-hero {
+        padding: 20px;
+        text-align: center;
+    }
+    .list-hero h2 {
+        font-size: 20px;
+    }
+    .list-hero .col-md-4.text-md-right {
+        text-align: center !important;
+        margin-top: 15px;
+    }
+    .search-card .card-body {
+        padding: 15px;
+    }
+    .search-card .row.align-items-end > div {
+        margin-bottom: 10px;
+    }
+    .search-card .row.align-items-end > div:last-child {
+        margin-bottom: 0;
+    }
+    .btn-search, .btn-new-patient {
+        width: 100%;
+        display: block;
+        margin: 5px 0;
+    }
+    .stats-bar {
+        text-align: center;
+    }
+    .stats-bar .stat-item {
+        margin-right: 0;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+    .data-card .card-header {
+        padding: 12px 15px;
+    }
+    .patient-table thead th {
+        font-size: 11px;
+        padding: 10px 8px;
+    }
+    .patient-table tbody td {
+        padding: 10px 8px;
+    }
+    .patient-name {
+        font-size: 14px;
+    }
+    .patient-address {
+        max-width: 150px;
+        font-size: 12px;
     }
     .action-buttons {
         flex-direction: column;
-        width: 100%;
+        gap: 5px;
     }
     .action-buttons .btn {
         width: 100%;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+@media (max-width: 480px) {
+    .patient-address {
+        max-width: 120px;
     }
 }
 .btn-view {
@@ -299,7 +363,7 @@
     <div class="card-header">
         <h5><i class="mdi mdi-format-list-bulleted mr-2"></i>Patient Records</h5>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="padding: 15px;">
         <div class="table-responsive">
             <table id="datatable" class="table patient-table">
                 <thead>
@@ -353,3 +417,33 @@
 </div>
 
 </div>
+
+<script>
+$(document).ready(function() {
+    // Destroy existing DataTable if initialized by datatables.init.js
+    if ($.fn.DataTable.isDataTable('#datatable')) {
+        $('#datatable').DataTable().destroy();
+    }
+    // Reinitialize with responsive features
+    $('#datatable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        language: {
+            search: '',
+            searchPlaceholder: 'Search patients...',
+            lengthMenu: 'Show _MENU_ patients',
+            info: 'Showing _START_ to _END_ of _TOTAL_ patients',
+            infoEmpty: 'No patients found',
+            paginate: {
+                first: 'First',
+                last: 'Last',
+                next: 'Next',
+                previous: 'Prev'
+            }
+        },
+        ordering: true,
+        order: [[0, 'asc']]
+    });
+});
+</script>

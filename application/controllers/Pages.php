@@ -169,10 +169,15 @@ class Pages extends CI_Controller{
         }
 
         $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$param);
-        $data['app'] = $this->Page_model->one_cond_get_single_row('appointment','patient_id',$param);
+        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$param);
 
         $data['diag'] = $this->Page_model->one_cond_loop('diagnose','patient_id',$param);
 
+        if($data['diag'] ?? null){
+            $data['d'] = $data['diag'][0];
+        } else {
+            $data['d'] = null;
+        }
 
        $this->load->view('templates/header');
        $this->load->view('templates/menu');
@@ -474,9 +479,22 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Edit Diagnose"; 
+        $data['title'] = "Edit Diagnose";
 
         $data['d'] = $this->Page_model->one_cond_get_single_row('diagnose','id',$this->uri->segment(3));
+
+        // Check if diagnose record exists
+        if(empty($data['d'])){
+            $this->session->set_flashdata('danger', 'Diagnosis record not found.');
+            redirect(base_url().'Pages/patient_queue');
+        }
+
+        // Get patient and appointment data
+        $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$data['d']->patient_id ?? 0);
+        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$data['d']->appointment_id ?? 0);
+
+        // Get appointment history for the patient
+        $data['data'] = $this->Page_model->one_cond_loop('appointment','patient_id',$data['d']->patient_id ?? 0);
 
         // Get all specialties for selection
         $this->db->order_by('category, name');
@@ -1362,22 +1380,19 @@ class Pages extends CI_Controller{
         $this->session->unset_userdata('clinic_id');
         $this->session->unset_userdata('is_superadmin');
         $this->session->unset_userdata('logged_in');
-
-        $this->session->set_flashdata('failed', 'You are logged out.');
-        redirect(base_url().'Pages/log_in');
-
-    }
-    public function lock(){
-        $this->session->unset_userdata('id');
-        $this->session->unset_userdata('position');
-        $this->session->unset_userdata('office');
-        $this->session->unset_userdata('logged_in');
-
-        $this->session->set_flashdata('danger', 'You are now Lock Screen Mode');
-        redirect(base_url().'lock_user_screen');
-
+        redirect(base_url().'Pages/login');
     }
 
+    public function db_migrate_add_specialty(){
+        // Check if column exists
+        $result = $this->db->query("SHOW COLUMNS FROM diagnose LIKE 'specialty_id'")->result();
+        if(count($result) == 0){
+            $this->db->query("ALTER TABLE diagnose ADD COLUMN specialty_id INT NULL AFTER user_id");
+            echo "Migration complete: specialty_id column added to diagnose table";
+        } else {
+            echo "Column specialty_id already exists in diagnose table";
+        }
+    }
 
 }
 

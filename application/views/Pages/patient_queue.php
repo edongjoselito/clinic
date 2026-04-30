@@ -84,7 +84,7 @@
     font-weight: 500;
 }
 .queue-card .card-body {
-    padding: 0;
+    padding: 15px;
 }
 .queue-table {
     margin-bottom: 0;
@@ -99,11 +99,11 @@
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 12px 10px;
+    padding: 12px 18px;
     white-space: nowrap;
 }
 .queue-table tbody td {
-    padding: 14px 10px;
+    padding: 14px 18px;
     border-color: #f5f5f5;
     vertical-align: middle;
     font-size: 13px;
@@ -255,36 +255,10 @@
             <p>Manage waiting patients and diagnosed cases</p>
         </div>
         <div class="col-md-4 text-md-right">
-            <span class="text-white-50"><?= date('l, F j, Y'); ?></span>
+            <a href="<?= base_url(); ?>Pages/patient_add" class="btn" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; padding: 12px 25px; border-radius: 8px; font-weight: 500;">
+                <i class="mdi mdi-account-plus mr-1"></i>New Patient
+            </a>
         </div>
-    </div>
-</div>
-
-<!-- Search Section -->
-<div class="card search-card">
-    <div class="card-body">
-        <?= form_open('pages/appointment'); ?>
-        <div class="row align-items-end">
-            <div class="col-md-8">
-                <label style="font-weight: 600; color: #1565c0; font-size: 14px; margin-bottom: 10px;">
-                    <i class="mdi mdi-magnify mr-1"></i>Search Patient
-                </label>
-                <div id="prefetch">
-                    <div class="input-group">
-                        <input type="text" name="name" id="search_box" class="form-control input-lg typeahead search-input" placeholder="Type patient name to search..." />
-                        <div class="input-group-append">
-                            <input type="submit" name="submit" class="btn btn-search-queue" value="Search" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 text-md-right">
-                <a href="<?= base_url(); ?>Pages/patient_add" class="btn" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; padding: 12px 25px; border-radius: 8px; font-weight: 500;">
-                    <i class="mdi mdi-account-plus mr-1"></i>New Patient
-                </a>
-            </div>
-        </div>
-        </form>
     </div>
 </div>
 
@@ -328,16 +302,8 @@
                         <th>DOA</th>
                         <th>Patient Name</th>
                         <th>Age</th>
-                        <th>EDD</th>
-                        <th>LMP</th>
                         <th>BP</th>
                         <th>WT</th>
-                        <th>G</th>
-                        <th>P</th>
-                        <th>T</th>
-                        <th>P</th>
-                        <th>A</th>
-                        <th>L</th>
                         <th>Type</th>
                         <th>Actions</th>
                     </tr>
@@ -354,16 +320,8 @@
                             </div>
                         </td>
                         <td><?= $row->age; ?></td>
-                        <td><?= $row->date_of_delivery ? date('M d', strtotime($row->date_of_delivery)) : '-'; ?></td>
-                        <td><?= $row->lmp ? date('M d', strtotime($row->lmp)) : '-'; ?></td>
                         <td><?= strtoupper($row->bp); ?></td>
                         <td><?= strtoupper($row->weight); ?></td>
-                        <td><?= strtoupper($row->gravida); ?></td>
-                        <td><?= strtoupper($row->parity); ?></td>
-                        <td><?= strtoupper($row->term); ?></td>
-                        <td><?= strtoupper($row->preterm); ?></td>
-                        <td><?= strtoupper($row->abortion); ?></td>
-                        <td><?= strtoupper($row->living); ?></td>
                         <td><?= strtoupper($row->transaction); ?></td>
                         <td>
                             <a href="diagnose/<?= $row->id; ?>" class="btn btn-diagnose mr-1">
@@ -380,7 +338,7 @@
                     <?php } ?>
                     <?php if(empty($data)): ?>
                     <tr>
-                        <td colspan="15">
+                        <td colspan="7">
                             <div class="empty-queue">
                                 <i class="mdi mdi-check-circle-outline"></i>
                                 <p>No patients in waiting list</p>
@@ -409,16 +367,8 @@
                         <th>DOA</th>
                         <th>Patient Name</th>
                         <th>Age</th>
-                        <th>EDD</th>
-                        <th>LMP</th>
                         <th>BP</th>
                         <th>WT</th>
-                        <th>G</th>
-                        <th>P</th>
-                        <th>T</th>
-                        <th>P</th>
-                        <th>A</th>
-                        <th>L</th>
                         <th>Type</th>
                         <th>Lab</th>
                         <th>Diagnosis</th>
@@ -446,16 +396,8 @@
                             </div>
                         </td>
                         <td><?= $app->age; ?></td>
-                        <td><?= $app->date_of_delivery ? date('M d', strtotime($app->date_of_delivery)) : '-'; ?></td>
-                        <td><?= $app->lmp ? date('M d', strtotime($app->lmp)) : '-'; ?></td>
                         <td><?= strtoupper($app->bp); ?></td>
                         <td><?= strtoupper($app->weight); ?></td>
-                        <td><?= strtoupper($app->gravida); ?></td>
-                        <td><?= strtoupper($app->parity); ?></td>
-                        <td><?= strtoupper($app->term); ?></td>
-                        <td><?= strtoupper($app->preterm); ?></td>
-                        <td><?= strtoupper($app->abortion); ?></td>
-                        <td><?= strtoupper($app->living); ?></td>
                         <td><?= strtoupper($app->transaction); ?></td>
                         <td><?= strtoupper($row->lab); ?></td>
                         <td>
@@ -477,7 +419,7 @@
                     <?php } ?>
                     <?php if(empty($dp)): ?>
                     <tr>
-                        <td colspan="20">
+                        <td colspan="12">
                             <div class="empty-queue">
                                 <i class="mdi mdi-clipboard-text-outline"></i>
                                 <p>No diagnosed patients yet</p>
@@ -495,24 +437,54 @@
 
 <script>
 $(document).ready(function(){
-  var sample_data = new Bloodhound({
-   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-   queryTokenizer: Bloodhound.tokenizers.whitespace,
-   prefetch:'<?php echo base_url(); ?>pages/fetch',
-   remote:{
-    url:'<?php echo base_url(); ?>pages/fetch/%QUERY',
-    wildcard:'%QUERY'
-   }
-  });
+    // Initialize DataTables with responsive support
+    if ($.fn.DataTable.isDataTable('#datatable')) {
+        $('#datatable').DataTable().destroy();
+    }
+    $('#datatable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        language: {
+            search: '',
+            searchPlaceholder: 'Search waiting list...',
+            lengthMenu: 'Show _MENU_ patients',
+            info: 'Showing _START_ to _END_ of _TOTAL_ patients',
+            infoEmpty: 'No patients found',
+            paginate: {
+                first: 'First',
+                last: 'Last',
+                next: 'Next',
+                previous: 'Prev'
+            }
+        },
+        ordering: true,
+        order: [[0, 'asc']]
+    });
 
-  $('#prefetch .typeahead').typeahead(null, {
-   name: 'sample_data',
-   display: 'name',
-   source:sample_data,
-   limit:1000,
-   templates:{
-    suggestion:Handlebars.compile('<div class="row"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}</div></div>')
-   }
-  });
+    // Initialize second table for diagnosed patients
+    if ($.fn.DataTable.isDataTable('#selection-datatable')) {
+        $('#selection-datatable').DataTable().destroy();
+    }
+    $('#selection-datatable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        language: {
+            search: '',
+            searchPlaceholder: 'Search diagnosed...',
+            lengthMenu: 'Show _MENU_ patients',
+            info: 'Showing _START_ to _END_ of _TOTAL_ patients',
+            infoEmpty: 'No patients found',
+            paginate: {
+                first: 'First',
+                last: 'Last',
+                next: 'Next',
+                previous: 'Prev'
+            }
+        },
+        ordering: true,
+        order: [[1, 'desc']]
+    });
 });
 </script>

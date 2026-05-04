@@ -252,9 +252,20 @@
     <div class="row align-items-center">
         <div class="col-md-8">
             <h2><i class="mdi mdi-format-list-checks mr-2"></i>Patient Queue</h2>
-            <p>Manage waiting patients and diagnosed cases</p>
+            <p>
+                <?php if(!empty($filter_date)): ?>
+                    Showing appointments for <strong><?= date('F j, Y', strtotime($filter_date)); ?></strong>
+                <?php else: ?>
+                    Manage waiting patients and diagnosed cases
+                <?php endif; ?>
+            </p>
         </div>
         <div class="col-md-4 text-md-right">
+            <?php if(!empty($filter_date)): ?>
+                <a href="<?= base_url(); ?>Pages/patient_queue" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 500; margin-right: 8px;">
+                    <i class="mdi mdi-close mr-1"></i>Clear Filter
+                </a>
+            <?php endif; ?>
             <a href="<?= base_url(); ?>Pages/patient_add" class="btn" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; padding: 12px 25px; border-radius: 8px; font-weight: 500;">
                 <i class="mdi mdi-account-plus mr-1"></i>New Patient
             </a>

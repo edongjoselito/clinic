@@ -1,4 +1,9 @@
 <?php
+// CLI-only migration script for security
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden: This script can only be run from the command line.');
+}
 // Database configuration from config/database.php
 $host = '127.0.0.1';
 $user = 'root';

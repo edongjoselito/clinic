@@ -1,6 +1,11 @@
 <?php
-// Simple migration runner
-// Access via: http://localhost/clinic/run_migrations.php
+// Simple migration runner - CLI ONLY for security
+// Run via: php run_migrations.php
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden: This script can only be run from the command line.');
+}
 
 $host = 'localhost';
 $user = 'root';

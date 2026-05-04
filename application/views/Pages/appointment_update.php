@@ -1,99 +1,3 @@
-<div class="row mt-4">
-                            <div class="col-sm-12">
-                                <div class="card p-0">
-                                    <div class="card-body p-0">
-                                        <ul class=" nav nav-tabs tabs-bordered nav-justified">
-                                            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#projects">HISTORY</a></li>
-                                        </ul>
-
-                                        <div class="tab-content m-0 p-4">
-
-                                            <div id="aboutme" class="tab-pane active">
-
-                                                <!-- profile -->
-                                                <div id="projects" class="tab-pane">
-                                                    <div class="row m-t-10">
-                                                        <div class="col-md-12">
-                                                            <div class="portlet"><!-- /primary heading -->
-                                                                <div id="portlet2" class="panel-collapse collapse show">
-                                                                    <div class="portlet-body">
-                                                                        <div class="table-responsive">
-                                                                        <table class="table table-striped mb-0">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                    <tr>
-                                                                                        <th>DIAGNOSED BY:</th>
-                                                                                        <th>DOA</th> 		
-                                                                                        <th>AGE</th> 	
-                                                                                        <th>EDD</th> 	
-                                                                                        <th>LMP</th> 	
-                                                                                        <th>B P</th> 	
-                                                                                        <th>WEIGHT</th> 	
-                                                                                        <th>G</th> 	
-                                                                                        <th>P</th> 	
-                                                                                        <th>T</th> 	
-                                                                                        <th>P</th>
-                                                                                        <th>A</th>
-                                                                                        <th>L</th> 	
-                                                                                        <th>TRANSACTION</th> 
-                                                                                        <th>LABORATORY</th>
-                                                                                        <th>DIAGNOSIS</th>
-                                                                                        <th>TREATMENT</th>
-                                                                                        <th>REMARKS</th>	
-                                                                                    </tr>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-
-                                                                                <?php 
-                                                                                $diag = $this->Page_model->one_cond_loop('diagnose','patient_id',$data->id);
-                                                                                foreach($diag as $row){
-                                                                                    $app = $this->Page_model->one_cond_get_single_row('appointment','id',$row->appointment_id);
-                                                                                    $user = $this->Page_model->one_cond_get_single_row('users','id',$row->user_id);
-                                                                                ?>
-                                                                                    <tr>
-                                                                                        <td><?php if(isset($user->id)){echo htmlentities($user->last_name.', '.$user->first_name.' '.substr($user->middle_name, 0, 1).'.');} ?></td>
-                                                                                        <td><?= strtoupper($app->visit_date); ?></td>
-                                                                                        <td><?= strtoupper($app->age); ?></td>
-                                                                                        <td><?= strtoupper($app->date_of_delivery); ?></td>
-                                                                                        <td><?= strtoupper($app->lmp); ?></td>
-                                                                                        <td><?= strtoupper($app->bp); ?></td>
-                                                                                        <td><?= strtoupper($app->weight); ?></td>
-                                                                                        <td><?= strtoupper($app->gravida); ?></td>
-                                                                                        <td><?= strtoupper($app->parity); ?></td>
-                                                                                        <td><?= strtoupper($app->term); ?></td>
-                                                                                        <td><?= strtoupper($app->preterm); ?></td>
-                                                                                        <td><?= strtoupper($app->abortion); ?></td>
-                                                                                        <td><?= strtoupper($app->living); ?></td>
-                                                                                        <td><?= strtoupper($app->transaction); ?></td>
-                                                                                        <td><?= strtoupper($row->lab); ?></td>
-                                                                                        <td><?= strtoupper($row->diagnosis); ?></td>
-                                                                                        <td><?= strtoupper($row->treatment); ?></td>
-                                                                                        <td><?= strtoupper($row->remarks); ?></td>
-                                                                                    </tr>
-                                                                                <?php } ?>    
-
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div> <!-- /Portlet -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div> 
-                                    </div>
-                                </div>
-                            <!-- end page title -->
-
-                        </div>
-                        <!-- end row -->
-                        
-                        
-                        
                         <!-- start page title -->
                         <div class="row">
                             <div class="col-12">
@@ -280,7 +184,91 @@
                         </div>
                         <!-- end row -->
 
-                        
+<div class="row mt-4">
+                            <div class="col-sm-12">
+                                <div class="card p-0">
+                                    <div class="card-body p-0">
+                                        <ul class=" nav nav-tabs tabs-bordered nav-justified">
+                                            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#projects">HISTORY</a></li>
+                                        </ul>
 
-                        
+                                        <div class="tab-content m-0 p-4">
+
+                                            <div id="aboutme" class="tab-pane active">
+
+                                                <!-- profile -->
+                                                <div id="projects" class="tab-pane">
+                                                    <div class="row m-t-10">
+                                                        <div class="col-md-12">
+                                                            <div class="portlet"><!-- /primary heading -->
+                                                                <div id="portlet2" class="panel-collapse collapse show">
+                                                                    <div class="portlet-body">
+                                                                        <div class="table-responsive">
+                                                                        <table class="table table-striped mb-0">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>DIAGNOSED BY:</th>
+                                                                                        <th>DOA</th>
+                                                                                        <th>AGE</th>
+                                                                                        <th>EDD</th>
+                                                                                        <th>LMP</th>
+                                                                                        <th>B P</th>
+                                                                                        <th>WEIGHT</th>
+                                                                                        <th>G</th>
+                                                                                        <th>P</th>
+                                                                                        <th>T</th>
+                                                                                        <th>P</th>
+                                                                                        <th>A</th>
+                                                                                        <th>L</th>
+                                                                                        <th>TRANSACTION</th>
+                                                                                        <th>LABORATORY</th>
+                                                                                        <th>DIAGNOSIS</th>
+                                                                                        <th>TREATMENT</th>
+                                                                                        <th>REMARKS</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                <?php
+                                                                                $diag = $this->Page_model->one_cond_loop('diagnose','patient_id',$data->id);
+                                                                                foreach($diag as $row){
+                                                                                    $app = $this->Page_model->one_cond_get_single_row('appointment','id',$row->appointment_id);
+                                                                                    $user = $this->Page_model->one_cond_get_single_row('users','id',$row->user_id);
+                                                                                ?>
+                                                                                    <tr>
+                                                                                        <td><?php if(isset($user->id)){echo htmlentities($user->last_name.', '.$user->first_name.' '.substr($user->middle_name, 0, 1).'.');} ?></td>
+                                                                                        <td><?= strtoupper($app->visit_date ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->age ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->date_of_delivery ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->lmp ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->bp ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->weight ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->gravida ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->parity ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->term ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->preterm ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->abortion ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->living ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($app->transaction ?? ''); ?></td>
+                                                                                        <td><?= strtoupper($row->lab); ?></td>
+                                                                                        <td><?= strtoupper($row->diagnosis); ?></td>
+                                                                                        <td><?= strtoupper($row->treatment); ?></td>
+                                                                                        <td><?= strtoupper($row->remarks); ?></td>
+                                                                                    </tr>
+                                                                                <?php } ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                        

@@ -321,7 +321,7 @@ public function insert_appointment(){
     'no_of_weeks' => $this->input->post('no_of_weeks') ?: '', 
     'no_of_days' => $this->input->post('no_of_days') ?: '', 
     'transaction' => $this->input->post('transaction'), 
-    'visit_date' => date('Y-m-d'),
+    'visit_date' => $this->input->post('visit_date') ?: date('Y-m-d'),
     'age' => $this->input->post('age'),  
     'referral_status' => $this->input->post('ref'), 
     'referral_id' => $this->input->post('ref_id') ? $this->input->post('ref_id') : '',

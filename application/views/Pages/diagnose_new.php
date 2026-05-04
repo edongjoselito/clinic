@@ -170,90 +170,6 @@
     </div>
 </div>
 
-<!-- Diagnosis History -->
-<div class="row">
-    <div class="col-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-history"></i></span>Diagnosis History</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-modern">
-                        <thead>
-                            <tr>
-                                <th>Diagnosed By</th>
-                                <th>DOA</th>
-                                <th>Age</th>
-                                <th>EDD</th>
-                                <th>LMP</th>
-                                <th>BP</th>
-                                <th>WT</th>
-                                <th>G</th>
-                                <th>P</th>
-                                <th>T</th>
-                                <th>P</th>
-                                <th>A</th>
-                                <th>L</th>
-                                <th>Transaction</th>
-                                <th>Lab</th>
-                                <th>Diagnosis</th>
-                                <th>Treatment</th>
-                                <th>Remarks</th>
-                                <th>Manage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $data = $this->Page_model->one_cond_loop('diagnose','patient_id',$a->patient_id);
-                            if(count($data) > 0):
-                                foreach($data as $row){
-                                    $app = $this->Page_model->one_cond_get_single_row('appointment','id',$row->appointment_id);
-                                    $user = $this->Page_model->one_cond_get_single_row('users','id',$row->user_id);
-                            ?>
-                                <tr>
-                                    <td><strong><?php if(isset($user->id)){echo htmlentities($user->last_name.', '.$user->first_name.' '.substr($user->middle_name, 0, 1).'.');} ?></strong></td>
-                                    <td><?= strtoupper($app->visit_date); ?></td>
-                                    <td><?= strtoupper($app->age); ?></td>
-                                    <td><?= strtoupper($app->date_of_delivery); ?></td>
-                                    <td><?= strtoupper($app->lmp); ?></td>
-                                    <td><?= strtoupper($app->bp); ?></td>
-                                    <td><?= strtoupper($app->weight); ?></td>
-                                    <td><?= strtoupper($app->gravida); ?></td>
-                                    <td><?= strtoupper($app->parity); ?></td>
-                                    <td><?= strtoupper($app->term); ?></td>
-                                    <td><?= strtoupper($app->preterm); ?></td>
-                                    <td><?= strtoupper($app->abortion); ?></td>
-                                    <td><?= strtoupper($app->living); ?></td>
-                                    <td><?= strtoupper($app->transaction); ?></td>
-                                    <td><span style="color: #1565c0; font-weight: 500;"><?= strtoupper($row->lab); ?></span></td>
-                                    <td><span style="color: #1565c0; font-weight: 500;"><?= strtoupper($row->diagnosis); ?></span></td>
-                                    <td><span style="color: #43a047; font-weight: 500;"><?= strtoupper($row->treatment); ?></span></td>
-                                    <td><?= strtoupper($row->remarks); ?></td>
-                                    <td>
-                                        <a href="<?=base_url(); ?>Pages/diagnose_edit/<?= $row->id; ?>" class="btn btn-success btn-action">
-                                            <i class="mdi mdi-pencil mr-1"></i>Edit
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php }
-                            else:
-                            ?>
-                                <tr>
-                                    <td colspan="19" class="text-center text-muted py-4">
-                                        <i class="mdi mdi-clipboard-text-outline" style="font-size: 24px; color: #bdbdbd;"></i>
-                                        <p class="mt-2 mb-0">No previous diagnosis records found.</p>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Patient Vitals -->
 <div class="row">
     <div class="col-md-4">
@@ -375,6 +291,90 @@
                     <a href="<?= base_url(); ?>Pages/patient_queue" class="btn" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #616161; padding: 14px 30px; border-radius: 8px; font-weight: 500; font-size: 15px; margin-left: 10px;">Cancel</a>
                 </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diagnosis History -->
+<div class="row">
+    <div class="col-12">
+        <div class="card table-card">
+            <div class="card-header">
+                <h5><span class="section-icon"><i class="mdi mdi-history"></i></span>Diagnosis History</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-modern">
+                        <thead>
+                            <tr>
+                                <th>Diagnosed By</th>
+                                <th>DOA</th>
+                                <th>Age</th>
+                                <th>EDD</th>
+                                <th>LMP</th>
+                                <th>BP</th>
+                                <th>WT</th>
+                                <th>G</th>
+                                <th>P</th>
+                                <th>T</th>
+                                <th>P</th>
+                                <th>A</th>
+                                <th>L</th>
+                                <th>Transaction</th>
+                                <th>Lab</th>
+                                <th>Diagnosis</th>
+                                <th>Treatment</th>
+                                <th>Remarks</th>
+                                <th>Manage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $data = $this->Page_model->one_cond_loop('diagnose','patient_id',$a->patient_id);
+                            if(count($data) > 0):
+                                foreach($data as $row){
+                                    $app = $this->Page_model->one_cond_get_single_row('appointment','id',$row->appointment_id);
+                                    $user = $this->Page_model->one_cond_get_single_row('users','id',$row->user_id);
+                            ?>
+                                <tr>
+                                    <td><strong><?php if(isset($user->id)){echo htmlentities($user->last_name.', '.$user->first_name.' '.substr($user->middle_name, 0, 1).'.');} ?></strong></td>
+                                    <td><?= strtoupper($app->visit_date); ?></td>
+                                    <td><?= strtoupper($app->age); ?></td>
+                                    <td><?= strtoupper($app->date_of_delivery); ?></td>
+                                    <td><?= strtoupper($app->lmp); ?></td>
+                                    <td><?= strtoupper($app->bp); ?></td>
+                                    <td><?= strtoupper($app->weight); ?></td>
+                                    <td><?= strtoupper($app->gravida); ?></td>
+                                    <td><?= strtoupper($app->parity); ?></td>
+                                    <td><?= strtoupper($app->term); ?></td>
+                                    <td><?= strtoupper($app->preterm); ?></td>
+                                    <td><?= strtoupper($app->abortion); ?></td>
+                                    <td><?= strtoupper($app->living); ?></td>
+                                    <td><?= strtoupper($app->transaction); ?></td>
+                                    <td><span style="color: #1565c0; font-weight: 500;"><?= strtoupper($row->lab); ?></span></td>
+                                    <td><span style="color: #1565c0; font-weight: 500;"><?= strtoupper($row->diagnosis); ?></span></td>
+                                    <td><span style="color: #43a047; font-weight: 500;"><?= strtoupper($row->treatment); ?></span></td>
+                                    <td><?= strtoupper($row->remarks); ?></td>
+                                    <td>
+                                        <a href="<?=base_url(); ?>Pages/diagnose_edit/<?= $row->id; ?>" class="btn btn-success btn-action">
+                                            <i class="mdi mdi-pencil mr-1"></i>Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php }
+                            else:
+                            ?>
+                                <tr>
+                                    <td colspan="19" class="text-center text-muted py-4">
+                                        <i class="mdi mdi-clipboard-text-outline" style="font-size: 24px; color: #bdbdbd;"></i>
+                                        <p class="mt-2 mb-0">No previous diagnosis records found.</p>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

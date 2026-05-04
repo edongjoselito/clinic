@@ -1,7 +1,42 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pages extends CI_Controller{
-    
+
+    /**
+     * Methods accessible without authentication.
+     * All other methods require a valid logged-in session.
+     */
+    private $public_methods = array(
+        'log_in',
+        'logout',
+    );
+
+    public function __construct(){
+        parent::__construct();
+
+        // Determine the requested method (router segment 2 falls back to 'index')
+        $method = $this->router->fetch_method();
+
+        if (!in_array($method, $this->public_methods, true)) {
+            if (!$this->session->userdata('logged_in')) {
+                // Preserve flash message for UX
+                $this->session->set_flashdata('failed', 'Please log in to continue.');
+
+                // For AJAX/JSON requests, return 401 instead of redirect
+                if ($this->input->is_ajax_request()) {
+                    $this->output
+                        ->set_status_header(401)
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(array('error' => 'Unauthorized')));
+                    return;
+                }
+
+                redirect(base_url().'Pages/log_in');
+                exit;
+            }
+        }
+    }
 
     public function view(){
 
@@ -11,7 +46,28 @@ class Pages extends CI_Controller{
              $data['user'] = $this->Page_model->count_all('users');
              $data['item'] = $this->Page_model->count_all('items');
              $data['ref'] = $this->Page_model->count_all('referrals');
-             
+
+             // Calendar month/year (from URL or current)
+             $cal_month = (int) ($this->input->get('m') ?: date('n'));
+             $cal_year  = (int) ($this->input->get('y') ?: date('Y'));
+             if($cal_month < 1 || $cal_month > 12){ $cal_month = (int) date('n'); }
+
+             // Appointment counts for this month grouped by visit_date
+             $start = sprintf('%04d-%02d-01', $cal_year, $cal_month);
+             $end   = date('Y-m-t', strtotime($start));
+             $this->db->select("DATE(visit_date) AS d, COUNT(*) AS c", false);
+             if (table_has_clinic_id('appointment')) {
+                 $this->db->where('clinic_id', current_clinic_id());
+             }
+             $this->db->where('DATE(visit_date) >=', $start);
+             $this->db->where('DATE(visit_date) <=', $end);
+             $this->db->group_by('DATE(visit_date)');
+             $rows = $this->db->get('appointment')->result();
+             $counts = array();
+             foreach($rows as $r){ $counts[$r->d] = (int) $r->c; }
+             $data['appointment_counts'] = $counts;
+             $data['cal_month'] = $cal_month;
+             $data['cal_year']  = $cal_year;
 
             $this->load->view('templates/header');
             $this->load->view('templates/menu');
@@ -225,10 +281,29 @@ class Pages extends CI_Controller{
         date_default_timezone_set('Asia/Manila'); # add your city to set local time zone
 
         $page = "patient_queue";
-        $data['data'] = $this->Page_model->one_cond_loop('appointment','visible',0);
-        $data['patient'] = $this->Page_model->get_limited_col('id, first_name, middle_name, last_name','patients');
 
-        $data['dp'] = $this->Page_model->one_cond_loop('diagnose','date',date('Y-m-d'));
+        // Optional date filter: ?date=YYYY-MM-DD
+        $filter_date = $this->input->get('date');
+        if($filter_date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $filter_date)){
+            if (table_has_clinic_id('appointment')) {
+                $this->db->where('clinic_id', current_clinic_id());
+            }
+            $this->db->where('DATE(visit_date)', $filter_date);
+            $data['data'] = $this->db->get('appointment')->result();
+
+            if (table_has_clinic_id('diagnose')) {
+                $this->db->where('clinic_id', current_clinic_id());
+            }
+            $this->db->where('date', $filter_date);
+            $data['dp'] = $this->db->get('diagnose')->result();
+
+            $data['filter_date'] = $filter_date;
+        } else {
+            $data['data'] = $this->Page_model->one_cond_loop('appointment','visible',0);
+            $data['dp'] = $this->Page_model->one_cond_loop('diagnose','date',date('Y-m-d'));
+        }
+
+        $data['patient'] = $this->Page_model->get_limited_col('id, first_name, middle_name, last_name','patients');
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -1380,10 +1455,14 @@ class Pages extends CI_Controller{
         $this->session->unset_userdata('clinic_id');
         $this->session->unset_userdata('is_superadmin');
         $this->session->unset_userdata('logged_in');
-        redirect(base_url().'Pages/login');
+        $this->session->sess_destroy();
+        redirect(base_url().'Pages/log_in');
     }
 
     public function db_migrate_add_specialty(){
+        // Only superadmin can run migrations
+        require_superadmin();
+
         // Check if column exists
         $result = $this->db->query("SHOW COLUMNS FROM diagnose LIKE 'specialty_id'")->result();
         if(count($result) == 0){

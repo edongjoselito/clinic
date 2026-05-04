@@ -45,6 +45,8 @@ foreach($diag as $row){
         break;
     }
 }
+
+ob_start();
 ?>
 
 <!-- Medical History -->
@@ -120,6 +122,8 @@ foreach($diag as $row){
     </div>
 </div>
 
+<?php $medical_history_html = ob_get_clean(); ?>
+
 <!-- Appointment Form -->
 <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 25px;">
     <div class="card-header" style="background: white; border-bottom: 2px solid #e3f2fd; padding: 20px 25px; border-radius: 12px 12px 0 0;">
@@ -151,6 +155,13 @@ foreach($diag as $row){
             <div style="background: #f8fbff; padding: 15px; border-radius: 8px; border-left: 3px solid #1e88e5;">
                 <div style="font-size: 12px; color: #757575; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Address</div>
                 <div style="font-weight: 600; color: #212121; font-size: 15px;"><?= strtoupper($data->sitio.' '.$data->barangay.' '.$data->city_mun.' '.$data->province); ?></div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label style="font-weight: 500; color: #424242; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Date of Appointment</label>
+                <input type="date" required class="form-control" name="visit_date" value="<?= date('Y-m-d'); ?>" style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 15px; font-size: 14px;" />
             </div>
         </div>
 
@@ -269,6 +280,8 @@ foreach($diag as $row){
         </form>
     </div>
 </div>
+
+<?= $medical_history_html; ?>
 
 <script>
 function togglePregnancySection() {

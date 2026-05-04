@@ -352,6 +352,7 @@
                 <tbody>
                     <?php foreach($diag as $row){
                         $user = $this->Page_model->one_cond_get_single_row('users','id',$row->user_id);
+                        $app  = $this->Page_model->one_cond_get_single_row('appointment','id',$row->appointment_id);
                     ?>
                     <tr>
                         <td><?= strtoupper($row->date); ?></td>
@@ -363,16 +364,16 @@
                                 <span class="text-muted">N/A</span>
                             <?php endif; ?>
                         </td>
-                        <td><?= strtoupper($app->age); ?></td>
-                        <td><?= strtoupper($app->lmp); ?></td>
-                        <td><?= strtoupper($app->date_of_delivery); ?></td>
-                        <td><?= strtoupper($app->bp); ?></td>
-                        <td><?= strtoupper($app->weight); ?></td>
-                        <td><?= strtoupper($app->gravida); ?></td>
-                        <td><?= strtoupper($app->abortion); ?></td>
-                        <td><?= strtoupper($app->parity); ?></td>
-                        <td><?= strtoupper($app->living); ?></td>
-                        <td><?= strtoupper($app->transaction); ?></td>
+                        <td><?= strtoupper($app->age ?? ''); ?></td>
+                        <td><?= strtoupper($app->lmp ?? ''); ?></td>
+                        <td><?= strtoupper($app->date_of_delivery ?? ''); ?></td>
+                        <td><?= strtoupper($app->bp ?? ''); ?></td>
+                        <td><?= strtoupper($app->weight ?? ''); ?></td>
+                        <td><?= strtoupper($app->gravida ?? ''); ?></td>
+                        <td><?= strtoupper($app->abortion ?? ''); ?></td>
+                        <td><?= strtoupper($app->parity ?? ''); ?></td>
+                        <td><?= strtoupper($app->living ?? ''); ?></td>
+                        <td><?= strtoupper($app->transaction ?? ''); ?></td>
                         <td><?= strtoupper($row->lab); ?></td>
                         <td>
                             <div class="diagnosis-text"><?= strtoupper($row->diagnosis); ?></div>

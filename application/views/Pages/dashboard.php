@@ -173,6 +173,96 @@
 .badge-soft-primary { background: rgba(30, 136, 229, 0.15); color: #1e88e5; }
 .badge-soft-success { background: rgba(17, 153, 142, 0.15); color: #11998e; }
 .badge-soft-warning { background: rgba(254, 225, 64, 0.15); color: #f39c12; }
+
+/* Calendar Widget */
+.calendar-widget .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cal-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.cal-nav a {
+    color: #1e88e5;
+    background: #e3f2fd;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all .2s;
+}
+.cal-nav a:hover { background: #1e88e5; color: white; }
+.cal-nav .cal-title { font-weight: 600; color: #2c3e50; min-width: 140px; text-align: center; }
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+.cal-dow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0;
+}
+.cal-day {
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    background: #f8fbff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #424242;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all .2s;
+    min-height: 56px;
+}
+.cal-day:hover { background: #e3f2fd; color: #0d47a1; text-decoration: none; transform: translateY(-2px); }
+.cal-day.empty { background: transparent; pointer-events: none; }
+.cal-day.today { border-color: #1e88e5; background: #fff; color: #1e88e5; font-weight: 700; }
+.cal-day.has-apts { background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%); color: white; }
+.cal-day.has-apts:hover { color: white; box-shadow: 0 5px 15px rgba(30,136,229,0.35); }
+.cal-day .cal-count {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #fff;
+    color: #1565c0;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.cal-day.today .cal-count { background: #1e88e5; color: #fff; }
+.cal-legend {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #7f8c8d;
+    flex-wrap: wrap;
+}
+.cal-legend .dot {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
 </style>
 
 <div class="dashboard-wrapper">
@@ -253,6 +343,68 @@
                 </div>
                 <div class="stat-number" data-plugin="counterup"><?= $user->num_rows(); ?></div>
                 <div class="stat-label"><a href="<?= base_url(); ?>Pages/users_list" class="stat-link">System Users</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointments Calendar -->
+<?php
+    $cal_month = isset($cal_month) ? (int) $cal_month : (int) date('n');
+    $cal_year  = isset($cal_year)  ? (int) $cal_year  : (int) date('Y');
+    $appointment_counts = isset($appointment_counts) ? $appointment_counts : array();
+    $first_ts    = mktime(0,0,0,$cal_month,1,$cal_year);
+    $days_in_mo  = (int) date('t', $first_ts);
+    $first_dow   = (int) date('w', $first_ts); // 0=Sun
+    $month_name  = date('F Y', $first_ts);
+    $prev_m = $cal_month - 1; $prev_y = $cal_year; if($prev_m < 1){ $prev_m = 12; $prev_y--; }
+    $next_m = $cal_month + 1; $next_y = $cal_year; if($next_m > 12){ $next_m = 1; $next_y++; }
+    $today_str = date('Y-m-d');
+?>
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card widget-card calendar-widget">
+            <div class="card-header">
+                <h5><i class="mdi mdi-calendar-month mr-2"></i>Appointments Calendar</h5>
+                <div class="cal-nav">
+                    <a href="?m=<?= $prev_m; ?>&y=<?= $prev_y; ?>" title="Previous Month"><i class="mdi mdi-chevron-left"></i></a>
+                    <span class="cal-title"><?= $month_name; ?></span>
+                    <a href="?m=<?= $next_m; ?>&y=<?= $next_y; ?>" title="Next Month"><i class="mdi mdi-chevron-right"></i></a>
+                    <a href="<?= base_url(); ?>" title="Today" style="width:auto; padding:0 12px; font-size:12px; font-weight:600;">Today</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="cal-grid">
+                    <div class="cal-dow">Sun</div>
+                    <div class="cal-dow">Mon</div>
+                    <div class="cal-dow">Tue</div>
+                    <div class="cal-dow">Wed</div>
+                    <div class="cal-dow">Thu</div>
+                    <div class="cal-dow">Fri</div>
+                    <div class="cal-dow">Sat</div>
+                    <?php for($i = 0; $i < $first_dow; $i++): ?>
+                        <div class="cal-day empty"></div>
+                    <?php endfor; ?>
+                    <?php for($day = 1; $day <= $days_in_mo; $day++):
+                        $date_str = sprintf('%04d-%02d-%02d', $cal_year, $cal_month, $day);
+                        $count    = isset($appointment_counts[$date_str]) ? $appointment_counts[$date_str] : 0;
+                        $classes  = 'cal-day';
+                        if($count > 0){ $classes .= ' has-apts'; }
+                        if($date_str === $today_str){ $classes .= ' today'; }
+                    ?>
+                        <a href="<?= base_url(); ?>Pages/patient_queue?date=<?= $date_str; ?>" class="<?= $classes; ?>" title="<?= $count; ?> appointment<?= $count==1?'':'s'; ?>">
+                            <span><?= $day; ?></span>
+                            <?php if($count > 0): ?>
+                                <span class="cal-count"><?= $count; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
+                <div class="cal-legend">
+                    <span><span class="dot" style="background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);"></span>Has Appointments</span>
+                    <span><span class="dot" style="background:#fff; border:2px solid #1e88e5;"></span>Today</span>
+                    <span><span class="dot" style="background:#f8fbff;"></span>No Appointments</span>
+                </div>
             </div>
         </div>
     </div>

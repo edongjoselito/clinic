@@ -157,15 +157,15 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">First Name</label>
-                <input required type="text" class="form-control" name="first_name" placeholder="Enter first name" />
+                <input required type="text" class="form-control" name="first_name" />
             </div>
             <div class="form-group col-md-4">
                 <label>Middle Name</label>
-                <input type="text" class="form-control" name="middle_name" placeholder="Enter middle name" />
+                <input type="text" class="form-control" name="middle_name" />
             </div>
             <div class="form-group col-md-4">
                 <label class="required">Last Name</label>
-                <input required type="text" class="form-control" name="last_name" placeholder="Enter last name" />
+                <input required type="text" class="form-control" name="last_name" />
             </div>
         </div>
 
@@ -176,7 +176,7 @@
             </div>
             <div class="form-group col-md-2">
                 <label class="required">Age</label>
-                <input required type="number" id="age" name="age" class="form-control" placeholder="Age" readonly />
+                <input required type="number" id="age" name="age" class="form-control" readonly />
             </div>
             <div class="form-group col-md-3">
                 <label class="required">Gender</label>
@@ -208,11 +208,11 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">Occupation</label>
-                <input required type="text" class="form-control" name="occupation" placeholder="Enter occupation" />
+                <input required type="text" class="form-control" name="occupation" />
             </div>
             <div class="form-group col-md-4">
                 <label>Contact Number</label>
-                <input type="text" class="form-control" name="contact" placeholder="Enter contact number" />
+                <input type="text" class="form-control" name="contact" />
             </div>
             <div class="form-group col-md-4">
                 <label class="required">Email Address</label>
@@ -234,8 +234,6 @@
                     </div>
                 </div>
                 <small class="text-muted">When enabled, a random password will be generated and sent to the patient's email.</small>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -246,24 +244,35 @@
     </div>
     <div class="card-body">
         <div class="form-row">
-            <div class="form-group col-md-6">
-                <label class="required">Sitio</label>
-                <input required type="text" class="form-control" name="sitio" placeholder="Enter sitio" />
+            <div class="form-group col-md-4">
+                <label class="required">Province</label>
+                <select required id="province_select" name="province" class="form-control">
+                    <option value="">Select Province</option>
+                    <?php if(isset($provinces)): ?>
+                        <?php foreach($provinces as $province): ?>
+                            <option value="<?= $province->province; ?>"><?= $province->province; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label class="required">City/Municipality</label>
+                <select required id="city_select" name="city_mun" class="form-control" disabled>
+                    <option value="">Select City/Municipality</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
                 <label class="required">Barangay</label>
-                <input required type="text" class="form-control" name="barangay" placeholder="Enter barangay" />
+                <select required id="barangay_select" name="barangay" class="form-control" disabled>
+                    <option value="">Select Barangay</option>
+                </select>
             </div>
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-6">
-                <label class="required">City/Municipality</label>
-                <input required type="text" class="form-control" name="city_mun" placeholder="Enter city or municipality" />
-            </div>
-            <div class="form-group col-md-6">
-                <label class="required">Province</label>
-                <input required type="text" class="form-control" name="province" placeholder="Enter province" />
+            <div class="form-group col-md-12">
+                <label class="required">Sitio</label>
+                <input required type="text" class="form-control" name="sitio" />
             </div>
         </div>
     </div>
@@ -278,7 +287,7 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label>Company/Employer</label>
-                <input type="text" class="form-control" name="company" placeholder="Enter company or employer name (optional)" />
+                <input type="text" class="form-control" name="company" />
             </div>
         </div>
     </div>
@@ -323,6 +332,79 @@ function calculateAge() {
         ageField.value = '';
     }
 }
+
+$(document).ready(function() {
+    // Province change handler
+    $('#province_select').on('change', function() {
+        var province = $(this).val();
+        var citySelect = $('#city_select');
+        var barangaySelect = $('#barangay_select');
+        
+        // Reset city and barangay dropdowns
+        citySelect.prop('disabled', true).html('<option value="">Select City/Municipality</option>');
+        barangaySelect.prop('disabled', true).html('<option value="">Select Barangay</option>');
+        
+        if (province) {
+            $.ajax({
+                url: '<?= base_url(); ?>Pages/get_cities',
+                type: 'GET',
+                data: { province: province },
+                dataType: 'json',
+                success: function(data) {
+                    citySelect.prop('disabled', false);
+                    citySelect.html('<option value="">Select City/Municipality</option>');
+                    
+                    if (data.length > 0) {
+                        $.each(data, function(index, city) {
+                            citySelect.append('<option value="' + city.city_mun + '">' + city.city_mun + '</option>');
+                        });
+                    } else {
+                        citySelect.append('<option value="" disabled>No cities found for this province</option>');
+                        citySelect.prop('disabled', true);
+                    }
+                },
+                error: function() {
+                    alert('Error loading cities. Please try again.');
+                }
+            });
+        }
+    });
+    
+    // City change handler
+    $('#city_select').on('change', function() {
+        var province = $('#province_select').val();
+        var cityMun = $(this).val();
+        var barangaySelect = $('#barangay_select');
+        
+        // Reset barangay dropdown
+        barangaySelect.prop('disabled', true).html('<option value="">Select Barangay</option>');
+        
+        if (province && cityMun) {
+            $.ajax({
+                url: '<?= base_url(); ?>Pages/get_barangays',
+                type: 'GET',
+                data: { province: province, city_mun: cityMun },
+                dataType: 'json',
+                success: function(data) {
+                    barangaySelect.prop('disabled', false);
+                    barangaySelect.html('<option value="">Select Barangay</option>');
+                    
+                    if (data.length > 0) {
+                        $.each(data, function(index, barangay) {
+                            barangaySelect.append('<option value="' + barangay.barangay + '">' + barangay.barangay + '</option>');
+                        });
+                    } else {
+                        barangaySelect.append('<option value="" disabled>No barangays found for this city</option>');
+                        barangaySelect.prop('disabled', true);
+                    }
+                },
+                error: function() {
+                    alert('Error loading barangays. Please try again.');
+                }
+            });
+        }
+    });
+});
 </script>
 
 </div>

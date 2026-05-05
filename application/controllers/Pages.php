@@ -138,6 +138,12 @@ class Pages extends CI_Controller{
         }
 
         $data['title'] = "Add New Patient"; 
+        
+        // Get provinces for cascading dropdown from settings_address
+        $this->db->select('province');
+        $this->db->distinct();
+        $this->db->order_by('province', 'ASC');
+        $data['provinces'] = $this->db->get('settings_address')->result();
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -755,12 +761,20 @@ class Pages extends CI_Controller{
     $this->load->view('Pages/'.$page,$data);
     $this->load->view('templates/footer');
 
-    } 
+    }
 
     public function sale($param){
 
         $page = "sales";
         $data['data'] = $this->Page_model->one_cond_get_single_row('diagnose','id',$param);
+        
+        // Check if diagnosis record exists
+        if($data['data'] === null){
+            $this->session->set_flashdata('danger', 'Diagnosis record not found. Please ensure you have a valid diagnosis ID.');
+            redirect(base_url().'Pages/patient_queue');
+            return;
+        }
+        
         $data['item'] = $this->Page_model->no_cond_loop('items');
         $data['sales'] = $this->Page_model->one_cond_loop('sales','reciept_code',$_SESSION['sc']);
 
@@ -788,7 +802,7 @@ class Pages extends CI_Controller{
         $this->load->view('Pages/'.$page,$data);
         $this->load->view('templates/footer');
     
-    } 
+    }
 
     public function sale_code(){
         $d = $this->uri->segment(3);
@@ -1470,6 +1484,51 @@ class Pages extends CI_Controller{
             echo "Migration complete: specialty_id column added to diagnose table";
         } else {
             echo "Column specialty_id already exists in diagnose table";
+        }
+    }
+
+    public function get_cities(){
+        $province = $this->input->get('province');
+        
+        if($province){
+            $this->db->where('province', $province);
+        }
+        
+        $this->db->select('city_mun');
+        $this->db->distinct();
+        $this->db->order_by('city_mun', 'ASC');
+        $query = $this->db->get('settings_address');
+        
+        if($query){
+            $cities = $query->result();
+            echo json_encode($cities);
+        } else {
+            echo json_encode(array('error' => $this->db->_error_message()));
+        }
+    }
+
+    public function get_barangays(){
+        $province = $this->input->get('province');
+        $city_mun = $this->input->get('city_mun');
+        
+        if($province){
+            $this->db->where('province', $province);
+        }
+        
+        if($city_mun){
+            $this->db->where('city_mun', $city_mun);
+        }
+        
+        $this->db->select('barangay');
+        $this->db->distinct();
+        $this->db->order_by('barangay', 'ASC');
+        $query = $this->db->get('settings_address');
+        
+        if($query){
+            $barangays = $query->result();
+            echo json_encode($barangays);
+        } else {
+            echo json_encode(array('error' => $this->db->_error_message()));
         }
     }
 

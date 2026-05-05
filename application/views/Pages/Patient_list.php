@@ -134,8 +134,13 @@
 }
 .action-buttons {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
+    align-items: center;
+}
+.action-buttons .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 @media (max-width: 768px) {
     .patient-address {
@@ -146,6 +151,9 @@
     }
     .stats-bar .stat-count {
         font-size: 20px;
+    }
+    .action-buttons {
+        flex-wrap: wrap;
     }
 }
 @media (max-width: 576px) {

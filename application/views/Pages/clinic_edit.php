@@ -174,12 +174,12 @@
 <div class="edit-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-hospital-building mr-2"></i>Edit Clinic</h2>
+            <h2><i class="ph ph-buildings mr-2"></i>Edit Clinic</h2>
             <p>Update clinic information and settings</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-light">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to List
+                <i class="ph ph-arrow-left"></i>Back to List
             </a>
         </div>
     </div>
@@ -192,7 +192,7 @@
     <div class="col-lg-8">
         <div class="card form-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-hospital-building"></i>Clinic Information</h5>
+                <h5><i class="ph ph-buildings"></i>Clinic Information</h5>
             </div>
             <div class="card-body">
                 
@@ -205,7 +205,7 @@
                 <div class="form-group">
                     <label>Clinic Code</label>
                     <input type="text" name="code" class="form-control" value="<?= set_value('code', $clinic->code); ?>" readonly>
-                    <small class="form-text text-muted"><i class="mdi mdi-information-outline mr-1"></i>Clinic Code cannot be changed once created</small>
+                    <small class="form-text text-muted"><i class="ph ph-info mr-1"></i>Clinic Code cannot be changed once created</small>
                 </div>
                 
                 <div class="form-group">
@@ -245,9 +245,9 @@
                 <span class="text-muted"><small><span class="text-danger">*</span> Required fields</small></span>
             </div>
             <div>
-                <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-cancel-edit mr-2">Cancel</a>
+                <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-cancel-edit mr-2"><i class="ph ph-x"></i>Cancel</a>
                 <button type="submit" class="btn btn-update">
-                    <i class="mdi mdi-content-save mr-1"></i>Update Clinic
+                    <i class="ph ph-floppy-disk"></i>Update Clinic
                 </button>
             </div>
         </div>
@@ -257,12 +257,12 @@
     <div class="col-lg-4">
         <div class="card info-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-information-outline mr-1"></i>Clinic Details</h5>
+                <h5><i class="ph ph-info mr-1"></i>Clinic Details</h5>
             </div>
             <div class="card-body">
                 
                 <div class="info-item">
-                    <i class="mdi mdi-identifier"></i>
+                    <i class="ph ph-identification-card"></i>
                     <div>
                         <div class="info-label">Clinic ID</div>
                         <div class="info-value">#<?= $clinic->id; ?></div>
@@ -270,7 +270,7 @@
                 </div>
                 
                 <div class="info-item">
-                    <i class="mdi mdi-calendar-plus"></i>
+                    <i class="ph ph-calendar-plus"></i>
                     <div>
                         <div class="info-label">Created</div>
                         <div class="info-value"><?= date('M d, Y', strtotime($clinic->created_at)); ?></div>
@@ -280,7 +280,7 @@
                 
                 <?php if($clinic->updated_at): ?>
                 <div class="info-item">
-                    <i class="mdi mdi-calendar-clock"></i>
+                    <i class="ph ph-calendar-dots"></i>
                     <div>
                         <div class="info-label">Last Updated</div>
                         <div class="info-value"><?= date('M d, Y', strtotime($clinic->updated_at)); ?></div>
@@ -290,14 +290,14 @@
                 <?php endif; ?>
                 
                 <div class="info-item">
-                    <i class="mdi mdi-toggle-switch"></i>
+                    <i class="ph ph-toggle-right"></i>
                     <div>
                         <div class="info-label">Current Status</div>
                         <div class="mt-1">
                             <?php if($clinic->status == 1): ?>
-                                <span class="status-badge status-active"><i class="mdi mdi-check-circle mr-1"></i>Active</span>
+                                <span class="status-badge status-active"><i class="ph ph-check-circle mr-1"></i>Active</span>
                             <?php else: ?>
-                                <span class="status-badge status-inactive"><i class="mdi mdi-close-circle mr-1"></i>Inactive</span>
+                                <span class="status-badge status-inactive"><i class="ph ph-x mr-1"></i>Inactive</span>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -309,14 +309,14 @@
         <!-- Tips Card -->
         <div class="card info-card mt-4">
             <div class="card-header">
-                <h5><i class="mdi mdi-lightbulb-outline mr-1"></i>Tips</h5>
+                <h5><i class="ph ph-info mr-1"></i>Tips</h5>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Keep clinic name accurate for reports</li>
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Update contact info when changed</li>
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Inactive clinics cannot be accessed</li>
-                    <li><i class="mdi mdi-check-circle text-success mr-2"></i>Changes affect all clinic users</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Keep clinic name accurate for reports</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Update contact info when changed</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Inactive clinics cannot be accessed</li>
+                    <li><i class="ph ph-check-circle text-success mr-2"></i>Changes affect all clinic users</li>
                 </ul>
             </div>
         </div>

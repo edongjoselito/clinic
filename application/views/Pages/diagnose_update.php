@@ -290,12 +290,12 @@ textarea.form-control {
 <div class="diagnose-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-pencil-box-outline mr-2"></i>Edit Diagnosis</h2>
+            <h2><i class="ph ph-note-pencil mr-2"></i>Edit Diagnosis</h2>
             <p><?= mb_strtoupper($p->first_name.' '.$p->middle_name.' '.$p->last_name, 'UTF-8'); ?></p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/patient_profile/<?= $p->id; ?>" class="btn btn-back">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to Profile
+                <i class="ph ph-arrow-left"></i>Back to Profile
             </a>
         </div>
     </div>
@@ -304,7 +304,7 @@ textarea.form-control {
 <!-- Patient Info Card -->
 <div class="card patient-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-account mr-2"></i>Patient Information</h5>
+        <h5><i class="ph ph-user mr-2"></i>Patient Information</h5>
     </div>
     <div class="card-body">
         <div class="info-grid">
@@ -331,7 +331,7 @@ textarea.form-control {
 <!-- Appointment History -->
 <div class="card patient-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-history mr-2"></i>Appointment History</h5>
+        <h5><i class="ph ph-files mr-2"></i>Appointment History</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -370,7 +370,7 @@ textarea.form-control {
                     <?php if(empty($data)): ?>
                     <tr>
                         <td colspan="11" class="text-center py-5">
-                            <i class="mdi mdi-calendar-blank-outline mdi-48px text-muted mb-3 d-block"></i>
+                            <i class="ph ph-calendar-dots text-muted mb-3 d-block" style="font-size: 48px;"></i>
                             <p class="text-muted">No appointment history found</p>
                         </td>
                     </tr>
@@ -384,7 +384,7 @@ textarea.form-control {
 <!-- Edit Diagnosis Form -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-stethoscope mr-2"></i><?= $title; ?></h5>
+        <h5><i class="ph ph-stethoscope mr-2"></i><?= $title; ?></h5>
     </div>
     <div class="card-body">
         <?php 
@@ -457,12 +457,12 @@ textarea.form-control {
 
         <div class="d-flex justify-content-between align-items-center mt-4">
             <div>
-                <a href="<?= base_url(); ?>Pages/patient_profile/<?= $p->id; ?>" class="btn btn-cancel-edit mr-2">Cancel</a>
+                <a href="<?= base_url(); ?>Pages/patient_profile/<?= $p->id; ?>" class="btn btn-cancel-edit mr-2"><i class="ph ph-x"></i>Cancel</a>
                 <button type="submit" name="submit" class="btn btn-update-diagnosis">
-                    <i class="mdi mdi-content-save mr-1"></i>Update Diagnosis
+                    <i class="ph ph-floppy-disk"></i>Update Diagnosis
                 </button>
                 <button type="button" class="btn btn-print-prescription" onclick="printPrescription()">
-                    <i class="mdi mdi-file-document mr-1"></i>Print Prescription
+                    <i class="ph ph-printer"></i>Print Prescription
                 </button>
             </div>
         </div>

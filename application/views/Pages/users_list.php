@@ -128,12 +128,12 @@
         <div class="form-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-account-group mr-2"></i>Users Management</h2>
+                    <h2><i class="ph ph-users-three mr-2"></i>Users Management</h2>
                     <p>Manage system users and their roles</p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a href="<?= base_url(); ?>Pages/user_add" class="btn btn-add">
-                        <i class="mdi mdi-account-plus mr-1"></i>New User
+                        <i class="ph ph-user-circle-plus"></i>New User
                     </a>
                 </div>
             </div>
@@ -146,7 +146,7 @@
     <div class="col-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-account-multiple"></i></span>System Users</h5>
+                <h5><span class="section-icon"><i class="ph ph-users-four"></i></span>System Users</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -189,13 +189,13 @@
                                 <?php endif; ?>
                                 <td>
                                     <a data-toggle="modal" class="open-AddBookDialog btn btn-warning btn-action" href="#edit<?= $row->id; ?>">
-                                        <i class="mdi mdi-lock-reset mr-1"></i>Password
+                                        <i class="ph ph-password"></i>Password
                                     </a>
                                     <a href="user_update/<?= $row->id; ?>" class="btn btn-success btn-action">
-                                        <i class="mdi mdi-pencil mr-1"></i>Edit
+                                        <i class="ph ph-pencil-simple"></i>Edit
                                     </a>
                                     <a href="user_delete/<?= $row->id; ?>" class="btn btn-danger btn-action" onclick="return confirm('Are you sure you want to delete this user?');">
-                                        <i class="mdi mdi-delete mr-1"></i>Delete
+                                        <i class="ph ph-trash"></i>Delete
                                     </a>
 
                                     <div id="edit<?= $row->id; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -216,8 +216,8 @@
                                                     
                                                     
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <input type="submit" name="edit" class="btn btn-primary" value="Update Password" />
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ph ph-x"></i>Cancel</button>
+                                                        <button type="submit" name="edit" class="btn btn-primary"><i class="ph ph-lock-key"></i>Update Password</button>
                                                     </div>
                                                     </form>
                                                 </div>

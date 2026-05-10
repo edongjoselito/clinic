@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-12"><br /><br />
     
-        &nbsp; &nbsp;&nbsp;<a class="btn btn-success" href="<?= base_url(); ?>Pages/patient_profile/<?= $this->uri->segment(3); ?>">Back Profile</a><br /><br />
+        &nbsp; &nbsp;&nbsp;<a class="btn btn-success" href="<?= base_url(); ?>Pages/patient_profile/<?= $this->uri->segment(3); ?>"><i class="ph ph-arrow-left"></i>Back Profile</a><br /><br />
 
         <script src="<?= base_url(); ?>assets/js/webcam.min.js"></script> 
         <div class="form-group">
                                         <div class="col-sm-3  col-md-offset-3 no-print">
                                             <!--<img src="<?php echo base_url(); ?>assets/images/blank.png" >-->
                                             <div class="clearfix" id="my_camera"></div><br>
-                                            <button type="button" class="btn btn-info" onClick="take_snapshot()"><i class="fa fa-camera fa-fw"></i>Capture</button>
+                                            <button type="button" class="btn btn-info" onClick="take_snapshot()"><i class="ph ph-camera"></i>Capture</button>
                                         </div>
                                         <div class="col-md-3 col-md-offset-1 imager" id="results">
                                             <!--<img src="<?php echo base_url(); ?>assets/images/user.png" class="thumbnail" >-->

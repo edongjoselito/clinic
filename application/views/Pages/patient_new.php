@@ -130,12 +130,12 @@
 <div class="form-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-account-plus mr-2"></i><?= $title; ?></h2>
+            <h2><i class="ph ph-user-plus mr-2"></i><?= $title; ?></h2>
             <p>Enter patient information to register a new patient</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-light">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to List
+                <i class="ph ph-arrow-left"></i>Back to List
             </a>
         </div>
     </div>
@@ -151,7 +151,7 @@
 <!-- Personal Information -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="mdi mdi-account"></i></span>Personal Information</h5>
+        <h5><span class="section-icon"><i class="ph ph-user"></i></span>Personal Information</h5>
     </div>
     <div class="card-body">
         <div class="form-row">
@@ -240,7 +240,7 @@
 <!-- Address Information -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="mdi mdi-map-marker"></i></span>Address Information</h5>
+        <h5><span class="section-icon"><i class="ph ph-map-pin"></i></span>Address Information</h5>
     </div>
     <div class="card-body">
         <div class="form-row">
@@ -281,7 +281,7 @@
 <!-- Work Information -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="mdi mdi-briefcase"></i></span>Work Information</h5>
+        <h5><span class="section-icon"><i class="ph ph-briefcase"></i></span>Work Information</h5>
     </div>
     <div class="card-body">
         <div class="form-row">
@@ -301,9 +301,9 @@
                 <span class="text-muted"><small><span class="text-danger">*</span> Required fields</small></span>
             </div>
             <div>
-                <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-cancel mr-2">Cancel</a>
+                <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-cancel mr-2"><i class="ph ph-x"></i>Cancel</a>
                 <button type="submit" name="submit" class="btn-submit">
-                    <i class="mdi mdi-content-save mr-1"></i>Save Patient
+                    <i class="ph ph-floppy-disk"></i>Save Patient
                 </button>
             </div>
         </div>

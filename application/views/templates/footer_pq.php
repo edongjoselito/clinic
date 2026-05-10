@@ -26,6 +26,8 @@
         </div>
         <!-- END wrapper -->
 
+        <!-- Vendor js -->
+        <script src="<?= base_url(); ?>assets/js/vendor.min.js"></script>
 
         <!-- Required datatable js -->
         <script src="<?= base_url(); ?>assets/libs/datatables/jquery.dataTables.min.js"></script>

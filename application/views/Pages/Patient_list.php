@@ -298,12 +298,12 @@
 <div class="list-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-account-group mr-2"></i>Patient Management</h2>
+            <h2><i class="ph ph-users-three mr-2"></i>Patient Management</h2>
             <p>View, search, and manage patient records</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/patient_add" class="btn btn-light">
-                <i class="mdi mdi-account-plus mr-1"></i>New Patient
+                <i class="ph ph-user-plus"></i>New Patient
             </a>
         </div>
     </div>
@@ -338,16 +338,16 @@
                     echo form_open('Pages/patient_search/', $attributes);
                 ?>
                 <div class="form-group mb-0">
-                    <label class="search-label"><i class="mdi mdi-magnify mr-1"></i>Search Patient</label>
+                    <label class="search-label"><i class="ph ph-magnifying-glass mr-1"></i>Search Patient</label>
                     <input type="text" class="form-control search-input" name="search" placeholder="Enter last name, first name, or middle name..." required />
                 </div>
             </div>
             <div class="col-md-4 text-md-right">
                 <button type="submit" name="submit" class="btn btn-search mr-2">
-                    <i class="mdi mdi-magnify mr-1"></i>Search
+                    <i class="ph ph-magnifying-glass"></i>Search
                 </button>
                 <a href="<?= base_url(); ?>Pages/patient_add" class="btn btn-new-patient">
-                    <i class="mdi mdi-plus mr-1"></i>Add New
+                    <i class="ph ph-plus"></i>Add New
                 </a>
                 </form>
             </div>
@@ -358,7 +358,7 @@
 <!-- Stats Bar -->
 <div class="stats-bar">
     <div class="stat-item">
-        <i class="mdi mdi-account-group"></i>
+        <i class="ph ph-users-three"></i>
         <div>
             <div class="stat-count"><?= count($data); ?></div>
             <div class="stat-text">Total Patients</div>
@@ -369,16 +369,16 @@
 <!-- Patient Table -->
 <div class="card data-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-format-list-bulleted mr-2"></i>Patient Records</h5>
+        <h5><i class="ph ph-clipboard-text mr-2"></i>Patient Records</h5>
     </div>
     <div class="card-body" style="padding: 15px;">
         <div class="table-responsive">
             <table id="datatable" class="table patient-table">
                 <thead>
                     <tr>
-                        <th><i class="mdi mdi-account mr-1"></i>Patient Name</th>
-                        <th><i class="mdi mdi-map-marker mr-1"></i>Address</th> 
-                        <th><i class="mdi mdi-cog mr-1"></i>Actions</th>
+                        <th><i class="ph ph-user mr-1"></i>Patient Name</th>
+                        <th><i class="ph ph-map-pin mr-1"></i>Address</th> 
+                        <th><i class="ph ph-gear-six mr-1"></i>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -391,17 +391,17 @@
                         </td>
                         <td>
                             <div class="patient-address">
-                                <i class="mdi mdi-map-marker-outline text-muted mr-1"></i>
+                                <i class="ph ph-map-pin text-muted mr-1"></i>
                                 <?= strtoupper($row->sitio.', '.$row->barangay.', '.$row->city_mun.', '.$row->province); ?>
                             </div>
                         </td>
                         <td>
                             <div class="action-buttons">
                                 <a href="<?= base_url(); ?>Pages/patient_profile/<?= $row->id; ?>" class="btn btn-view">
-                                    <i class="mdi mdi-eye mr-1"></i>View
+                                    <i class="ph ph-eye mr-1"></i>View
                                 </a>
                                 <a href="<?= base_url(); ?>Pages/ap/<?= $row->id; ?>" class="btn btn-appointment">
-                                    <i class="mdi mdi-calendar-check mr-1"></i>Appointment
+                                    <i class="ph ph-calendar-check mr-1"></i>Appointment
                                 </a>
                             </div>
                         </td>
@@ -410,10 +410,10 @@
                     <?php if(empty($data)): ?>
                     <tr>
                         <td colspan="3" class="text-center py-5">
-                            <i class="mdi mdi-account-off-outline mdi-48px text-muted mb-3 d-block"></i>
+                            <i class="ph ph-users-four text-muted mb-3 d-block" style="font-size: 48px;"></i>
                             <p class="text-muted">No patients found</p>
                             <a href="<?= base_url(); ?>Pages/patient_add" class="btn btn-primary mt-2">
-                                <i class="mdi mdi-account-plus mr-1"></i>Add First Patient
+                                <i class="ph ph-user-plus mr-1"></i>Add First Patient
                             </a>
                         </td>
                     </tr>

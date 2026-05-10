@@ -148,12 +148,12 @@
 <div class="new-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-hospital-building mr-2"></i>Create New Clinic</h2>
+            <h2><i class="ph ph-buildings mr-2"></i>Create New Clinic</h2>
             <p>Add a new clinic to the multi-tenant system</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-light">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to List
+                <i class="ph ph-arrow-left"></i>Back to List
             </a>
         </div>
     </div>
@@ -166,7 +166,7 @@
     <div class="col-lg-8">
         <div class="card form-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-hospital-building"></i>Clinic Information</h5>
+                <h5><i class="ph ph-buildings"></i>Clinic Information</h5>
             </div>
             <div class="card-body">
                 
@@ -179,7 +179,7 @@
                 <div class="form-group">
                     <label class="required">Clinic Code</label>
                     <input type="text" name="code" class="form-control" value="<?= set_value('code'); ?>" placeholder="e.g., CLINIC001" required>
-                    <small class="form-text text-muted"><i class="mdi mdi-information-outline mr-1"></i>Unique identifier for this clinic (e.g., CLINIC001)</small>
+                    <small class="form-text text-muted"><i class="ph ph-info mr-1"></i>Unique identifier for this clinic (e.g., CLINIC001)</small>
                     <?= form_error('code'); ?>
                 </div>
                 
@@ -208,9 +208,9 @@
                 <span class="text-muted"><small><span class="text-danger">*</span> Required fields</small></span>
             </div>
             <div>
-                <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-cancel-new mr-2">Cancel</a>
+                <a href="<?= base_url(); ?>Pages/clinic_list" class="btn btn-cancel-new mr-2"><i class="ph ph-x"></i>Cancel</a>
                 <button type="submit" class="btn btn-create">
-                    <i class="mdi mdi-content-save mr-1"></i>Create Clinic
+                    <i class="ph ph-floppy-disk"></i>Create Clinic
                 </button>
             </div>
         </div>
@@ -220,33 +220,33 @@
     <div class="col-lg-4">
         <div class="card info-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-lightbulb-outline mr-1"></i>Important Notes</h5>
+                <h5><i class="ph ph-info mr-1"></i>Important Notes</h5>
             </div>
             <div class="card-body">
                 
                 <div class="info-item">
-                    <i class="mdi mdi-identifier"></i>
+                    <i class="ph ph-identification-card"></i>
                     <div class="info-text">
                         <strong>Clinic Code</strong> must be unique across all clinics
                     </div>
                 </div>
                 
                 <div class="info-item">
-                    <i class="mdi mdi-shield-account"></i>
+                    <i class="ph ph-shield"></i>
                     <div class="info-text">
                         <strong>Data isolation</strong> - Each clinic's data is completely separate
                     </div>
                 </div>
                 
                 <div class="info-item">
-                    <i class="mdi mdi-account-multiple"></i>
+                    <i class="ph ph-users"></i>
                     <div class="info-text">
                         <strong>User assignment</strong> - Users must be assigned to a specific clinic
                     </div>
                 </div>
                 
                 <div class="info-item">
-                    <i class="mdi mdi-security"></i>
+                    <i class="ph ph-shield"></i>
                     <div class="info-text">
                         <strong>Superadmin access</strong> - Can manage all clinics and assign users
                     </div>
@@ -258,14 +258,14 @@
         <!-- Tips Card -->
         <div class="card info-card mt-4">
             <div class="card-header">
-                <h5><i class="mdi mdi-check-circle-outline mr-1"></i>Best Practices</h5>
+                <h5><i class="ph ph-check-circle mr-1"></i>Best Practices</h5>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Use meaningful clinic names</li>
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Keep codes short and memorable</li>
-                    <li class="mb-2"><i class="mdi mdi-check-circle text-success mr-2"></i>Include full address for accuracy</li>
-                    <li><i class="mdi mdi-check-circle text-success mr-2"></i>Update contact info regularly</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Use meaningful clinic names</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Keep codes short and memorable</li>
+                    <li class="mb-2"><i class="ph ph-check-circle text-success mr-2"></i>Include full address for accuracy</li>
+                    <li><i class="ph ph-check-circle text-success mr-2"></i>Update contact info regularly</li>
                 </ul>
             </div>
         </div>

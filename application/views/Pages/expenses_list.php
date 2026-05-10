@@ -112,12 +112,12 @@
         <div class="form-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-receipt mr-2"></i>Expenses Management</h2>
+                    <h2><i class="ph ph-receipt mr-2"></i>Expenses Management</h2>
                     <p>Track and manage clinic expenses</p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a data-toggle="modal" class="open-AddBookDialog btn btn-add" href="#new">
-                        <i class="mdi mdi-plus mr-1"></i>New Expense
+                        <i class="ph ph-plus"></i>New Expense
                     </a>
                 </div>
             </div>
@@ -149,7 +149,7 @@
     <div class="col-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-file-document"></i></span>Expense Records</h5>
+                <h5><span class="section-icon"><i class="ph ph-file-doc"></i></span>Expense Records</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -174,10 +174,10 @@
                                 <td><?= date('M d, Y', strtotime($row->date)); ?></td>
                                 <td>
                                     <a data-toggle="modal" class="open-AddBookDialog btn btn-success btn-action" href="#edit<?= $row->id; ?>">
-                                        <i class="mdi mdi-pencil mr-1"></i>Edit
+                                        <i class="ph ph-pencil-simple"></i>Edit
                                     </a>
                                     <a class="btn btn-danger btn-action" onclick="return confirm('Are you sure you want to delete this expense?')" href="<?= base_url()?>Pages/expenses_delete/<?= $row->id; ?>">
-                                        <i class="mdi mdi-delete mr-1"></i>Delete
+                                        <i class="ph ph-trash"></i>Delete
                                     </a>
 
                                     <div id="edit<?= $row->id; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -212,8 +212,8 @@
                                                     
                                                     
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <input type="submit" name="edit" class="btn btn-primary" value="Update" />
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ph ph-x"></i>Cancel</button>
+                                                        <button type="submit" name="edit" class="btn btn-primary"><i class="ph ph-floppy-disk"></i>Update</button>
                                                     </div>
                                                     </form>
                                                 </div>
@@ -262,8 +262,8 @@
                     </div>
                     
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <input type="submit" name="add" class="btn btn-primary" value="Create" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ph ph-x"></i>Cancel</button>
+                        <button type="submit" name="add" class="btn btn-primary"><i class="ph ph-plus"></i>Create</button>
                     </div>
                     </form>
             </div>

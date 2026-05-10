@@ -24,12 +24,12 @@
 <div class="profile-hero" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%); border-radius: 12px; padding: 25px 30px; color: white; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(30, 136, 229, 0.3);">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2 style="color: white; font-weight: 600; margin-bottom: 5px; font-size: 24px;"><i class="mdi mdi-calendar-plus mr-2"></i>New Appointment</h2>
+            <h2 style="color: white; font-weight: 600; margin-bottom: 5px; font-size: 24px;"><i class="ph ph-calendar-plus mr-2"></i>New Appointment</h2>
             <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">Create a new appointment for the patient</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-light">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to Patients
+                <i class="ph ph-arrow-left"></i>Back to Patients
             </a>
         </div>
     </div>
@@ -52,7 +52,7 @@ ob_start();
 <!-- Medical History -->
 <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 25px;">
     <div class="card-header" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 20px 25px; border-radius: 12px 12px 0 0; border-bottom: none;">
-        <h5 style="margin: 0; font-weight: 600; color: #1565c0;"><i class="mdi mdi-history mr-2"></i>Medical History</h5>
+        <h5 style="margin: 0; font-weight: 600; color: #1565c0;"><i class="ph ph-files mr-2"></i>Medical History</h5>
     </div>
     <div class="card-body" style="padding: 0;">
         <div class="table-responsive">
@@ -113,7 +113,7 @@ ob_start();
                         <td style="padding: 12px 8px; border-color: #f5f5f5; vertical-align: middle; font-size: 12px;"><span style="color: #1565c0; font-weight: 500;"><?= strtoupper($row->diagnosis); ?></span></td>
                         <td style="padding: 12px 8px; border-color: #f5f5f5; vertical-align: middle; font-size: 12px;"><span style="color: #43a047; font-weight: 500;"><?= strtoupper($row->treatment); ?></span></td>
                         <td style="padding: 12px 8px; border-color: #f5f5f5; vertical-align: middle; font-size: 12px;"><?= strtoupper($row->remarks); ?></td>
-                        <td style="padding: 12px 8px; border-color: #f5f5f5; vertical-align: middle; font-size: 12px;"><a href="<?= base_url(); ?>pages/appointment_edit/<?= $data->id; ?>/<?= $app->id; ?>" class="btn" style="background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%); border: none; color: white; padding: 6px 15px; border-radius: 6px; font-size: 12px; font-weight: 500;">Edit</a></td>
+                        <td style="padding: 12px 8px; border-color: #f5f5f5; vertical-align: middle; font-size: 12px;"><a href="<?= base_url(); ?>pages/appointment_edit/<?= $data->id; ?>/<?= $app->id; ?>" class="btn" style="background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%); border: none; color: white; padding: 6px 15px; border-radius: 6px; font-size: 12px; font-weight: 500;"><i class="ph ph-pencil-simple"></i>Edit</a></td>
                     </tr>
                 <?php } ?>    
                 </tbody>
@@ -127,7 +127,7 @@ ob_start();
 <!-- Appointment Form -->
 <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 25px;">
     <div class="card-header" style="background: white; border-bottom: 2px solid #e3f2fd; padding: 20px 25px; border-radius: 12px 12px 0 0;">
-        <h5 style="margin: 0; font-weight: 600; color: #1565c0;"><i class="mdi mdi-calendar-plus mr-2"></i><?= $title; ?></h5>
+        <h5 style="margin: 0; font-weight: 600; color: #1565c0;"><i class="ph ph-calendar-plus mr-2"></i><?= $title; ?></h5>
     </div>
     <div class="card-body" style="padding: 25px;">
         <?= validation_errors(); ?>
@@ -180,14 +180,14 @@ ob_start();
         <div class="form-row mb-3">
             <div class="form-group col-md-12">
                 <button type="button" class="btn btn-outline-primary" onclick="togglePregnancySection()" style="border-radius: 8px; padding: 10px 20px; font-weight: 500;">
-                    <i class="mdi mdi-baby mr-1"></i><span id="pregnancyToggleText">Show Pregnancy Details</span>
+                    <i class="ph ph-info mr-1"></i><span id="pregnancyToggleText">Show Pregnancy Details</span>
                 </button>
             </div>
         </div>
 
         <!-- Pregnancy Section (Hidden by default) -->
         <div id="pregnancySection" style="display: none; background: #fafafa; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-            <h6 style="color: #1565c0; font-weight: 600; margin-bottom: 15px;"><i class="mdi mdi-baby-carriage mr-1"></i>Obstetric Information</h6>
+            <h6 style="color: #1565c0; font-weight: 600; margin-bottom: 15px;"><i class="ph ph-notepad mr-1"></i>Obstetric Information</h6>
             
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -273,9 +273,9 @@ ob_start();
 
         <div class="form-group mt-4">
             <button type="submit" name="submit" class="btn" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%); border: none; color: white; padding: 14px 35px; border-radius: 8px; font-weight: 500; font-size: 15px; cursor: pointer; transition: all 0.3s ease;">
-                <i class="mdi mdi-content-save mr-1"></i>Create Appointment
+                <i class="ph ph-floppy-disk"></i>Create Appointment
             </button>
-            <a href="<?= base_url(); ?>Pages/patient_list" class="btn" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #616161; padding: 14px 30px; border-radius: 8px; font-weight: 500; font-size: 15px; margin-left: 10px;">Cancel</a>
+            <a href="<?= base_url(); ?>Pages/patient_list" class="btn" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #616161; padding: 14px 30px; border-radius: 8px; font-weight: 500; font-size: 15px; margin-left: 10px;"><i class="ph ph-x"></i>Cancel</a>
         </div>
         </form>
     </div>

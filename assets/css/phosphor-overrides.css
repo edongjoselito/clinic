@@ -1,0 +1,68 @@
+.ph {
+    line-height: 1;
+    vertical-align: middle;
+}
+
+#sidebar-menu > ul > li > a i.ph,
+.dropdown-item.notify-item .ph,
+.button-menu-mobile .ph,
+.nav-user .ph,
+.btn .ph,
+.page-title-box .btn .ph,
+.nav-second-level li a .ph,
+.nav-third-level li a .ph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sidebar-menu > ul > li > a i.ph {
+    margin: 0 10px 0 3px;
+    width: 20px;
+    font-size: 18px;
+}
+
+.nav-second-level li a .ph,
+.nav-third-level li a .ph {
+    margin-right: 10px;
+    width: 16px;
+    font-size: 15px;
+}
+
+.dropdown-item.notify-item .ph {
+    margin-right: 8px;
+    width: 16px;
+    font-size: 16px;
+}
+
+.button-menu-mobile .ph {
+    font-size: 24px;
+}
+
+.nav-user .ph {
+    font-size: 14px;
+}
+
+.btn .ph,
+.page-title-box .btn .ph {
+    margin-right: 0.35rem;
+    font-size: 1rem;
+}
+
+#sidebar-menu .menu-arrow {
+    font-family: inherit;
+    line-height: 1;
+}
+
+#sidebar-menu .menu-arrow:before {
+    content: none !important;
+}
+
+#sidebar-menu .menu-arrow .ph {
+    font-size: 14px;
+    transition: transform 0.15s ease;
+}
+
+#sidebar-menu li.mm-active > a > span.menu-arrow .ph {
+    transform: rotate(90deg);
+}

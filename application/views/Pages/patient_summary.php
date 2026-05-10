@@ -146,12 +146,12 @@
         <div class="form-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-account-group mr-2"></i>Patient Summary</h2>
+                    <h2><i class="ph ph-users-three mr-2"></i>Patient Summary</h2>
                     <p>Generate patient visit reports by date range</p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a href="<?= base_url(); ?>Pages/dashboard" class="btn btn-light">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Back to Dashboard
+                        <i class="ph ph-arrow-left"></i>Back to Dashboard
                     </a>
                 </div>
             </div>
@@ -164,7 +164,7 @@
     <div class="col-12">
         <div class="card filter-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-filter-variant"></i></span>Filter by Date Range</h5>
+                <h5><span class="section-icon"><i class="ph ph-funnel"></i></span>Filter by Date Range</h5>
             </div>
             <div class="card-body">
                 <?php 
@@ -182,7 +182,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <button type="submit" name="submit" class="btn-submit w-100">
-                            <i class="mdi mdi-magnify mr-1"></i>Generate Report
+                            <i class="ph ph-magnifying-glass"></i>Generate Report
                         </button>
                     </div>
                 </div>
@@ -197,20 +197,20 @@
     <div class="col-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-file-document-outline"></i></span>Patient Report</h5>
+                <h5><span class="section-icon"><i class="ph ph-file-doc"></i></span>Patient Report</h5>
             </div>
             <div class="card-body">
                 <?php if(!isset($_POST['submit'])): ?>
 
                     <div class="no-data">
-                        <i class="mdi mdi-calendar-search mdi-48px mb-3 d-block"></i>
+                        <i class="ph ph-calendar-dots mb-3 d-block" style="font-size: 48px;"></i>
                         <p>Select a date range and click Generate Report to view patient visits</p>
                     </div>
 
                 <?php else: ?>
 
                     <div class="alert alert-info mb-4" style="background: rgba(30, 136, 229, 0.1); border: none; color: #1565c0; border-radius: 8px;">
-                        <i class="mdi mdi-calendar-range mr-2"></i>
+                        <i class="ph ph-calendar-dots mr-2"></i>
                         Report period: <strong><?= isset($df) ? date('F d, Y', strtotime($df)) : ''; ?></strong> to <strong><?= isset($dt) ? date('F d, Y', strtotime($dt)) : ''; ?></strong>
                     </div>
 
@@ -250,7 +250,7 @@
                                 <?php else: ?>
                                     <tr>
                                         <td colspan="4" class="no-data" style="border: none;">
-                                            <i class="mdi mdi-account-off mdi-48px mb-3 d-block"></i>
+                                            <i class="ph ph-users mb-3 d-block" style="font-size: 48px;"></i>
                                             <p>No patient visits found for the selected date range</p>
                                         </td>
                                     </tr>

@@ -285,15 +285,15 @@
 
 <!-- Quick Actions -->
 <div class="quick-actions">
-    <h5><i class="mdi mdi-flash mr-2"></i>Quick Actions</h5>
+    <h5><i class="ph ph-lightning mr-2"></i>Quick Actions</h5>
     <a href="<?= base_url(); ?>Pages/patient_add" class="action-btn action-btn-primary">
-        <i class="mdi mdi-account-plus"></i> New Patient
+        <i class="ph ph-user-plus"></i> New Patient
     </a>
     <a href="<?= base_url(); ?>Pages/pay" class="action-btn action-btn-info">
-        <i class="mdi mdi-cash-register"></i> Process Payment
+        <i class="ph ph-credit-card"></i> Process Payment
     </a>
     <a href="<?= base_url(); ?>Pages/patient_queue" class="action-btn action-btn-warning">
-        <i class="mdi mdi-format-list-checks"></i> View Queue
+        <i class="ph ph-list-checks"></i> View Queue
     </a>
 </div>
 
@@ -303,7 +303,7 @@
         <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon appointments">
-                    <i class="mdi mdi-calendar-check"></i>
+                    <i class="ph ph-calendar-check"></i>
                 </div>
                 <div class="stat-number" data-plugin="counterup"><?= $app->num_rows(); ?></div>
                 <div class="stat-label"><a href="<?= base_url(); ?>Pages/patient_queue" class="stat-link">Today's Appointments</a></div>
@@ -315,7 +315,7 @@
         <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon items">
-                    <i class="mdi mdi-pill"></i>
+                    <i class="ph ph-pill"></i>
                 </div>
                 <div class="stat-number" data-plugin="counterup"><?= $item->num_rows(); ?></div>
                 <div class="stat-label"><a href="<?= base_url(); ?>Pages/item_list" class="stat-link">Medical Items</a></div>
@@ -327,7 +327,7 @@
         <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon referrals">
-                    <i class="mdi mdi-share-variant"></i>
+                    <i class="ph ph-share-network"></i>
                 </div>
                 <div class="stat-number" data-plugin="counterup"><?= $ref->num_rows(); ?></div>
                 <div class="stat-label"><a href="<?= base_url(); ?>Pages/referral_list" class="stat-link">Referrals</a></div>
@@ -339,7 +339,7 @@
         <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon users">
-                    <i class="mdi mdi-account-group"></i>
+                    <i class="ph ph-users-three"></i>
                 </div>
                 <div class="stat-number" data-plugin="counterup"><?= $user->num_rows(); ?></div>
                 <div class="stat-label"><a href="<?= base_url(); ?>Pages/users_list" class="stat-link">System Users</a></div>
@@ -365,11 +365,11 @@
     <div class="col-12 mb-4">
         <div class="card widget-card calendar-widget">
             <div class="card-header">
-                <h5><i class="mdi mdi-calendar-month mr-2"></i>Appointments Calendar</h5>
+                <h5><i class="ph ph-calendar-dots mr-2"></i>Appointments Calendar</h5>
                 <div class="cal-nav">
-                    <a href="?m=<?= $prev_m; ?>&y=<?= $prev_y; ?>" title="Previous Month"><i class="mdi mdi-chevron-left"></i></a>
+                    <a href="?m=<?= $prev_m; ?>&y=<?= $prev_y; ?>" title="Previous Month"><i class="ph ph-arrow-left"></i></a>
                     <span class="cal-title"><?= $month_name; ?></span>
-                    <a href="?m=<?= $next_m; ?>&y=<?= $next_y; ?>" title="Next Month"><i class="mdi mdi-chevron-right"></i></a>
+                    <a href="?m=<?= $next_m; ?>&y=<?= $next_y; ?>" title="Next Month"><i class="ph ph-arrow-right"></i></a>
                     <a href="<?= base_url(); ?>" title="Today" style="width:auto; padding:0 12px; font-size:12px; font-weight:600;">Today</a>
                 </div>
             </div>
@@ -415,7 +415,7 @@
     <div class="col-xl-8">
         <div class="card widget-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-clock-outline mr-2"></i>Recent Appointments</h5>
+                <h5><i class="ph ph-clock mr-2"></i>Recent Appointments</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -443,7 +443,7 @@
                             <?php else: ?>
                                 <tr>
                                     <td colspan="4" class="text-center text-muted py-4">
-                                        <i class="mdi mdi-calendar-blank mdi-24px mb-2 d-block"></i>
+                                        <i class="ph ph-calendar-blank mb-2 d-block" style="font-size: 24px;"></i>
                                         No recent appointments found
                                     </td>
                                 </tr>
@@ -458,7 +458,7 @@
     <div class="col-xl-4">
         <div class="card widget-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-chart-line mr-2"></i>Today's Overview</h5>
+                <h5><i class="ph ph-chart-line mr-2"></i>Today's Overview</h5>
             </div>
             <div class="card-body">
                 <div class="mb-4">
@@ -490,7 +490,7 @@
                 </div>
                 <hr>
                 <a href="<?= base_url(); ?>Pages/patient_queue" class="btn btn-outline-primary btn-block">
-                    <i class="mdi mdi-arrow-right mr-1"></i> Go to Patient Queue
+                    <i class="ph ph-arrow-right mr-1"></i> Go to Patient Queue
                 </a>
             </div>
         </div>

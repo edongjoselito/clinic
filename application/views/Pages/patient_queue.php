@@ -251,7 +251,7 @@
 <div class="queue-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-format-list-checks mr-2"></i>Patient Queue</h2>
+            <h2><i class="ph ph-list-checks mr-2"></i>Patient Queue</h2>
             <p>
                 <?php if(!empty($filter_date)): ?>
                     Showing appointments for <strong><?= date('F j, Y', strtotime($filter_date)); ?></strong>
@@ -263,11 +263,11 @@
         <div class="col-md-4 text-md-right">
             <?php if(!empty($filter_date)): ?>
                 <a href="<?= base_url(); ?>Pages/patient_queue" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 500; margin-right: 8px;">
-                    <i class="mdi mdi-close mr-1"></i>Clear Filter
+                    <i class="ph ph-x"></i>Clear Filter
                 </a>
             <?php endif; ?>
             <a href="<?= base_url(); ?>Pages/patient_add" class="btn" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; padding: 12px 25px; border-radius: 8px; font-weight: 500;">
-                <i class="mdi mdi-account-plus mr-1"></i>New Patient
+                <i class="ph ph-user-plus"></i>New Patient
             </a>
         </div>
     </div>
@@ -278,7 +278,7 @@
     <div class="col-md-6">
         <div class="stat-card-queue">
             <div class="stat-icon">
-                <i class="mdi mdi-clock-outline"></i>
+                <i class="ph ph-clock"></i>
             </div>
             <div class="stat-info">
                 <div class="stat-count"><?= count($data); ?></div>
@@ -289,7 +289,7 @@
     <div class="col-md-6">
         <div class="stat-card-queue">
             <div class="stat-icon" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); color: #2e7d32;">
-                <i class="mdi mdi-check-circle-outline"></i>
+                <i class="ph ph-check-circle"></i>
             </div>
             <div class="stat-info">
                 <div class="stat-count"><?= count($dp); ?></div>
@@ -302,7 +302,7 @@
 <!-- Waiting List -->
 <div class="card queue-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-clock-outline mr-2"></i>Waiting List</h5>
+        <h5><i class="ph ph-clock mr-2"></i>Waiting List</h5>
         <span class="count-badge"><?= count($data); ?> Patients</span>
     </div>
     <div class="card-body">
@@ -336,13 +336,13 @@
                         <td><?= strtoupper($row->transaction); ?></td>
                         <td>
                             <a href="diagnose/<?= $row->id; ?>" class="btn btn-diagnose mr-1">
-                                <i class="mdi mdi-stethoscope mr-1"></i>Diagnose
+                                <i class="ph ph-stethoscope"></i>Diagnose
                             </a>
                             <a href="appointment_edit/<?= $row->patient_id.'/'.$row->id; ?>" class="btn btn-edit-queue mr-1">
-                                <i class="mdi mdi-pencil"></i>
+                                <i class="ph ph-pencil-simple"></i>
                             </a>
                             <a href="app_delete/<?= $row->id; ?>" class="btn btn-delete-queue" onclick="return confirm('Are you sure?')">
-                                <i class="mdi mdi-delete"></i>
+                                <i class="ph ph-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -351,7 +351,7 @@
                     <tr>
                         <td colspan="7">
                             <div class="empty-queue">
-                                <i class="mdi mdi-check-circle-outline"></i>
+                                <i class="ph ph-check-circle"></i>
                                 <p>No patients in waiting list</p>
                             </div>
                         </td>
@@ -366,7 +366,7 @@
 <!-- Diagnosed Patients -->
 <div class="card queue-card diagnosed-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-check-circle-outline mr-2"></i>Diagnosed Patients</h5>
+        <h5><i class="ph ph-check-circle mr-2"></i>Diagnosed Patients</h5>
         <span class="count-badge"><?= count($dp); ?> Cases</span>
     </div>
     <div class="card-body">
@@ -420,10 +420,10 @@
                         <td><?= strtoupper($row->remarks); ?></td>
                         <td>
                             <a href="<?= base_url(); ?>Pages/diagnose_edit/<?= $row->id; ?>" class="btn btn-edit-queue mr-1">
-                                <i class="mdi mdi-pencil"></i>
+                                <i class="ph ph-pencil-simple"></i>
                             </a>
                             <a href="<?= base_url(); ?>Pages/diagnose_del/<?= $row->id; ?>/<?= $row->appointment_id; ?>" onclick="return confirm('Are you sure?')" class="btn btn-delete-queue">
-                                <i class="mdi mdi-delete"></i>
+                                <i class="ph ph-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -432,7 +432,7 @@
                     <tr>
                         <td colspan="12">
                             <div class="empty-queue">
-                                <i class="mdi mdi-clipboard-text-outline"></i>
+                                <i class="ph ph-clipboard-text"></i>
                                 <p>No diagnosed patients yet</p>
                             </div>
                         </td>

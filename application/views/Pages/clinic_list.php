@@ -123,12 +123,12 @@
         <div class="page-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-hospital-building mr-2"></i>Clinic Management</h2>
+                    <h2><i class="ph ph-buildings mr-2"></i>Clinic Management</h2>
                     <p>Manage and oversee all registered clinics</p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a href="<?= base_url(); ?>Pages/clinic_new" class="btn-create">
-                        <i class="mdi mdi-plus mr-1"></i>Create New Clinic
+                        <i class="ph ph-plus"></i>Create New Clinic
                     </a>
                 </div>
             </div>
@@ -156,7 +156,7 @@
     <div class="col-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5><i class="mdi mdi-format-list-bulleted mr-2"></i>All Clinics</h5>
+                <h5><i class="ph ph-clipboard-text mr-2"></i>All Clinics</h5>
             </div>
             <div class="card-body" style="padding: 0;">
                 <div class="table-responsive">
@@ -183,19 +183,19 @@
                                 <td><?= $clinic->email ?: '<span style="color: #bdbdbd;">-</span>'; ?></td>
                                 <td>
                                     <?php if($clinic->status == 1): ?>
-                                        <span class="status-badge status-active"><i class="mdi mdi-check-circle mr-1"></i>Active</span>
+                                        <span class="status-badge status-active"><i class="ph ph-check-circle mr-1"></i>Active</span>
                                     <?php else: ?>
-                                        <span class="status-badge status-inactive"><i class="mdi mdi-close-circle mr-1"></i>Inactive</span>
+                                        <span class="status-badge status-inactive"><i class="ph ph-x mr-1"></i>Inactive</span>
                                     <?php endif; ?>
                                 </td>
                                 <td style="color: #757575; font-size: 13px;"><?= date('M d, Y', strtotime($clinic->created_at)); ?></td>
                                 <td>
                                     <a href="<?= base_url(); ?>Pages/clinic_edit/<?= $clinic->id; ?>" class="btn-action btn-edit" title="Edit">
-                                        <i class="mdi mdi-pencil"></i> Edit
+                                        <i class="ph ph-pencil-simple"></i> Edit
                                     </a>
                                     <?php if($clinic->status == 1): ?>
                                     <a href="<?= base_url(); ?>Pages/clinic_delete/<?= $clinic->id; ?>" class="btn-action btn-deactivate" title="Deactivate" onclick="return confirm('Are you sure you want to deactivate this clinic?');">
-                                        <i class="mdi mdi-close-circle"></i>
+                                        <i class="ph ph-x"></i>
                                     </a>
                                     <?php endif; ?>
                                 </td>
@@ -205,7 +205,7 @@
                             <tr>
                                 <td colspan="8">
                                     <div class="empty-state">
-                                        <i class="mdi mdi-hospital-building"></i>
+                                        <i class="ph ph-buildings"></i>
                                         <h5>No clinics found</h5>
                                         <p class="mb-0">Create your first clinic to get started.</p>
                                     </div>

@@ -150,12 +150,12 @@
         <div class="form-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-cart mr-2"></i>Stock Management</h2>
+                    <h2><i class="ph ph-package mr-2"></i>Stock Management</h2>
                     <p>Search items and add to cart</p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a href="<?= base_url(); ?>Pages/dashboard" class="btn btn-light">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Back to Dashboard
+                        <i class="ph ph-arrow-left"></i>Back to Dashboard
                     </a>
                 </div>
             </div>
@@ -187,7 +187,7 @@
     <div class="col-12">
         <div class="card search-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-magnify"></i></span>Search Item</h5>
+                <h5><span class="section-icon"><i class="ph ph-magnifying-glass"></i></span>Search Item</h5>
             </div>
             <div class="card-body">
                 <form class="sales-form form-horizontal" method="post" action="stocks">
@@ -203,7 +203,7 @@
                         </div>
                         <div class="form-group col-md-2">
                             <button type="submit" name="item" class="btn-search w-100">
-                                <i class="mdi mdi-magnify mr-1"></i>Search
+                                <i class="ph ph-magnifying-glass"></i>Search
                             </button>
                         </div>
                     </div>
@@ -219,7 +219,7 @@
     <div class="col-12">
         <div class="card form-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-cart-plus"></i></span>Add to Cart</h5>
+                <h5><span class="section-icon"><i class="ph ph-shopping-cart-simple"></i></span>Add to Cart</h5>
             </div>
             <div class="card-body">
                 <form class="sales-form form-horizontal" name="abc" method="post" action="stocks">

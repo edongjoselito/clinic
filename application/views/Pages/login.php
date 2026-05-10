@@ -9,6 +9,8 @@
     <link rel="shortcut icon" href="<?= base_url(); ?>assets/images/dts.ico">
     <link href="<?= base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url(); ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url(); ?>assets/css/phosphor-overrides.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -75,7 +77,7 @@
         .input-wrap {
             position: relative;
         }
-        .input-wrap i {
+        .input-wrap > .ph {
             position: absolute;
             left: 14px;
             top: 50%;
@@ -100,6 +102,35 @@
             background: white;
             box-shadow: 0 0 0 4px rgba(30,136,229,0.1);
             outline: none;
+        }
+        .input-wrap.has-toggle .form-control {
+            padding-right: 48px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #78909c;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .password-toggle:hover {
+            background: rgba(30,136,229,0.08);
+            color: #1565c0;
+        }
+        .password-toggle:focus {
+            outline: none;
+            background: rgba(30,136,229,0.12);
+            color: #1565c0;
         }
         .btn-login {
             width: 100%;
@@ -160,7 +191,7 @@
     <div class="login-card">
         <div class="login-header">
             <div class="logo-icon">
-                <i class="mdi mdi-hospital-building"></i>
+                <i class="ph ph-hospital"></i>
             </div>
             <h2>Clinic Management</h2>
             <p>Sign in to your account</p>
@@ -187,21 +218,24 @@
                 <div class="form-group">
                     <label for="username">Username</label>
                     <div class="input-wrap">
-                        <i class="mdi mdi-account-outline"></i>
+                        <i class="ph ph-user"></i>
                         <input class="form-control" type="text" id="username" name="username" placeholder="Enter your username" autocomplete="off" autofocus>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <div class="input-wrap">
-                        <i class="mdi mdi-lock-outline"></i>
+                    <div class="input-wrap has-toggle">
+                        <i class="ph ph-lock"></i>
                         <input class="form-control" type="password" id="password" name="password" placeholder="Enter your password" autocomplete="off" required>
+                        <button type="button" class="password-toggle" id="toggle-password" aria-label="Show password" aria-controls="password">
+                            <i class="ph ph-eye"></i>
+                        </button>
                     </div>
                 </div>
 
                 <button class="btn-login" type="submit" name="submit">
-                    <i class="mdi mdi-login mr-1"></i>Sign In
+                    <i class="ph ph-sign-in"></i>Sign In
                 </button>
             </form>
         </div>
@@ -213,5 +247,28 @@
 
     <script src="<?= base_url(); ?>assets/js/vendor.min.js"></script>
     <script src="<?= base_url(); ?>assets/js/app.min.js"></script>
+    <script>
+        (function () {
+            var passwordInput = document.getElementById('password');
+            var toggleButton = document.getElementById('toggle-password');
+
+            if (!passwordInput || !toggleButton) {
+                return;
+            }
+
+            var toggleIcon = toggleButton.querySelector('i');
+
+            toggleButton.addEventListener('click', function () {
+                var isPassword = passwordInput.type === 'password';
+
+                passwordInput.type = isPassword ? 'text' : 'password';
+                toggleButton.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+
+                if (toggleIcon) {
+                    toggleIcon.className = isPassword ? 'ph ph-eye-slash' : 'ph ph-eye';
+                }
+            });
+        }());
+    </script>
 </body>
 </html>

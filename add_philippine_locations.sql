@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `provinces`;
 -- Create Philippine Provinces Table
 CREATE TABLE `provinces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `province_code` varchar(10) NOT NULL,
+  `province_code` varchar(50) NOT NULL,
   `province_name` varchar(100) NOT NULL,
   `region_code` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -18,7 +18,7 @@ CREATE TABLE `cities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `city_code` varchar(10) NOT NULL,
   `city_name` varchar(100) NOT NULL,
-  `province_code` varchar(10) NOT NULL,
+  `province_code` varchar(50) NOT NULL,
   `city_type` enum('City','Municipality') DEFAULT 'Municipality',
   PRIMARY KEY (`id`),
   UNIQUE KEY `city_code` (`city_code`),
@@ -40,7 +40,6 @@ CREATE TABLE `barangays` (
 INSERT INTO `provinces` (`province_code`, `province_name`, `region_code`) VALUES
 ('ABRA', 'Abra', 'CAR'),
 ('AGUSAN DEL NORTE', 'Agusan del Norte', 'CARAGA'),
-('AGUSAN DEL SUR', 'Agusan del Sur', 'CARAGA'),
 ('AKLAN', 'Aklan', 'VI'),
 ('ALBAY', 'Albay', 'V'),
 ('ANTIQUE', 'Antique', 'VI'),
@@ -56,7 +55,6 @@ INSERT INTO `provinces` (`province_code`, `province_name`, `region_code`) VALUES
 ('BUKIDNON', 'Bukidnon', 'X'),
 ('BULACAN', 'Bulacan', 'III'),
 ('CAGAYAN', 'Cagayan', 'II'),
-('CAMARINES NORTE', 'Camarines Norte', 'V'),
 ('CAMARINES SUR', 'Camarines Sur', 'V'),
 ('CAMIGUIN', 'Camiguin', 'X'),
 ('CAPIZ', 'Capiz', 'VI'),

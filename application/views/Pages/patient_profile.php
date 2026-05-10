@@ -249,12 +249,12 @@
 <div class="profile-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-account-card-details mr-2"></i>Patient Profile</h2>
+            <h2><i class="ph ph-user-circle mr-2"></i>Patient Profile</h2>
             <p>View patient information and medical history</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-back">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to List
+                <i class="ph ph-arrow-left"></i>Back to List
             </a>
         </div>
     </div>
@@ -265,11 +265,11 @@
     <div class="profile-header">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h5><i class="mdi mdi-account mr-2"></i>Patient Information</h5>
+                <h5><i class="ph ph-user mr-2"></i>Patient Information</h5>
             </div>
             <div class="col-md-6 text-md-right">
                 <a href="<?= base_url(); ?>Pages/patient_edit/<?= $p->id; ?>" class="btn btn-edit-profile">
-                    <i class="mdi mdi-account-settings-variant mr-1"></i>Edit Profile
+                    <i class="ph ph-user-gear mr-1"></i>Edit Profile
                 </a>
             </div>
         </div>
@@ -284,7 +284,7 @@
                     <?= mb_strtoupper($p->first_name, 'UTF-8').' '.mb_strtoupper($p->middle_name, 'UTF-8').' '.mb_strtoupper($p->last_name, 'UTF-8'); ?>
                 </div>
                 <div class="profile-address">
-                    <i class="mdi mdi-map-marker-outline mr-1"></i>
+                    <i class="ph ph-map-pin mr-1"></i>
                     <?= strtoupper($p->sitio.' '.$p->barangay.' '.$p->city_mun.' '.$p->province); ?>
                 </div>
             </div>
@@ -322,7 +322,7 @@
 <!-- Medical History -->
 <div class="card history-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-medical-bag mr-2"></i>Medical History</h5>
+        <h5><i class="ph ph-bag mr-2"></i>Medical History</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -384,7 +384,7 @@
                         <td><?= strtoupper($row->remarks); ?></td>
                         <td>
                             <a href="<?= base_url(); ?>Pages/diagnose_edit/<?= $row->id; ?>" class="btn btn-edit-diagnosis">
-                                <i class="mdi mdi-pencil mr-1"></i>Edit
+                                <i class="ph ph-pencil-simple mr-1"></i>Edit
                             </a>
                         </td>
                     </tr>
@@ -393,7 +393,7 @@
                     <tr>
                         <td colspan="17">
                             <div class="empty-history">
-                                <i class="mdi mdi-clipboard-text-outline"></i>
+                                <i class="ph ph-clipboard-text"></i>
                                 <p>No medical history records found</p>
                             </div>
                         </td>

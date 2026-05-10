@@ -20,7 +20,9 @@ redirect(base_url().'Pages/log_in');
         <!-- App css -->
         <link href="<?= base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="bootstrap-stylesheet" />
         <link href="<?= base_url(); ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" rel="stylesheet" type="text/css" />
         <link href="<?= base_url(); ?>assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-stylesheet" />
+        <link href="<?= base_url(); ?>assets/css/phosphor-overrides.css" rel="stylesheet" type="text/css" />
 
 
     </head>
@@ -45,7 +47,7 @@ redirect(base_url().'Pages/log_in');
                         <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <img src="<?= base_url(); ?>assets/images/users/avatar-1.jpg" alt="user-image" class="rounded-circle">
                             <span class="pro-user-name ml-1">
-                            <?= $this->session->username; ?>   <i class="mdi mdi-chevron-down"></i> 
+                            <?= $this->session->username; ?>   <i class="ph ph-caret-down"></i> 
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
@@ -56,19 +58,19 @@ redirect(base_url().'Pages/log_in');
 
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-account-outline"></i>
+                                <i class="ph ph-user"></i>
                                 <span>Profile</span>
                             </a>
 
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-settings-outline"></i>
+                                <i class="ph ph-gear-six"></i>
                                 <span>Settings</span>
                             </a>
 
                             <!-- item-->
                             <a href="<?= base_url(); ?>lock_user_screen" class="dropdown-item notify-item">
-                                <i class="mdi mdi-lock-outline"></i>
+                                <i class="ph ph-lock"></i>
                                 <span>Lock Screen</span>
                             </a>
 
@@ -76,7 +78,7 @@ redirect(base_url().'Pages/log_in');
 
                             <!-- item-->
                             <a href="<?= base_url(); ?>lock" class="dropdown-item notify-item">
-                                <i class="mdi mdi-logout-variant"></i>
+                                <i class="ph ph-sign-out"></i>
                                 <span>Logout</span>
                             </a>
 
@@ -118,7 +120,7 @@ redirect(base_url().'Pages/log_in');
                 <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
                     <li>
                         <button class="button-menu-mobile waves-effect">
-                            <i class="mdi mdi-menu"></i>
+                            <i class="ph ph-list"></i>
                         </button>
                     </li>
 

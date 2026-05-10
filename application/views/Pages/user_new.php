@@ -120,12 +120,12 @@
 <div class="form-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-account-plus mr-2"></i><?= $title; ?></h2>
+            <h2><i class="ph ph-user-circle-plus mr-2"></i><?= $title; ?></h2>
             <p>Enter user information to create a new account</p>
         </div>
         <div class="col-md-4 text-md-right">
             <a href="<?= base_url(); ?>Pages/users_list" class="btn btn-light">
-                <i class="mdi mdi-arrow-left mr-1"></i>Back to List
+                <i class="ph ph-arrow-left"></i>Back to List
             </a>
         </div>
     </div>
@@ -138,7 +138,7 @@
 <!-- Account Information -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="mdi mdi-account-circle"></i></span>Account Information</h5>
+        <h5><span class="section-icon"><i class="ph ph-user-circle"></i></span>Account Information</h5>
     </div>
     <div class="card-body">
         <div class="form-row">
@@ -172,7 +172,7 @@
 <!-- Role & Specialty -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="mdi mdi-briefcase"></i></span>Role & Specialty</h5>
+        <h5><span class="section-icon"><i class="ph ph-user-gear"></i></span>Role & Specialty</h5>
     </div>
     <div class="card-body">
         <div class="form-row">
@@ -239,9 +239,9 @@
                 <span class="text-muted"><small><span class="text-danger">*</span> Required fields</small></span>
             </div>
             <div>
-                <a href="<?= base_url(); ?>Pages/users_list" class="btn btn-cancel mr-2">Cancel</a>
+                <a href="<?= base_url(); ?>Pages/users_list" class="btn btn-cancel mr-2"><i class="ph ph-x"></i>Cancel</a>
                 <button type="submit" name="submit" class="btn-submit">
-                    <i class="mdi mdi-content-save mr-1"></i>Create User
+                    <i class="ph ph-floppy-disk"></i>Create User
                 </button>
             </div>
         </div>

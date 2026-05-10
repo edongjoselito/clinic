@@ -157,12 +157,12 @@
         <div class="form-hero">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2><i class="mdi mdi-stethoscope mr-2"></i><?= $title; ?></h2>
+                    <h2><i class="ph ph-stethoscope mr-2"></i><?= $title; ?></h2>
                     <p><?= strtoupper($p->first_name.' '.$p->middle_name.' '.$p->last_name); ?> - <?= $p->occupation; ?></p>
                 </div>
                 <div class="col-md-4 text-md-right">
                     <a href="<?= base_url(); ?>Pages/patient_queue" class="btn btn-light">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Back to Queue
+                        <i class="ph ph-arrow-left"></i>Back to Queue
                     </a>
                 </div>
             </div>
@@ -175,7 +175,7 @@
     <div class="col-md-4">
         <div class="card vitals-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-heart-pulse"></i></span>Patient Vitals</h5>
+                <h5><span class="section-icon"><i class="ph ph-pulse"></i></span>Patient Vitals</h5>
             </div>
             <div class="card-body">
                 <div class="vital-item">
@@ -216,7 +216,7 @@
     <div class="col-md-8">
         <div class="card form-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-file-document-edit"></i></span>New Diagnosis Entry</h5>
+                <h5><span class="section-icon"><i class="ph ph-note-pencil"></i></span>New Diagnosis Entry</h5>
             </div>
             <div class="card-body">
                 <?php 
@@ -286,9 +286,9 @@
 
                 <div class="form-group mt-3">
                     <button type="submit" name="submit" class="btn-submit">
-                        <i class="mdi mdi-content-save mr-1"></i>Save Diagnosis
+                        <i class="ph ph-floppy-disk"></i>Save Diagnosis
                     </button>
-                    <a href="<?= base_url(); ?>Pages/patient_queue" class="btn" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #616161; padding: 14px 30px; border-radius: 8px; font-weight: 500; font-size: 15px; margin-left: 10px;">Cancel</a>
+                    <a href="<?= base_url(); ?>Pages/patient_queue" class="btn" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #616161; padding: 14px 30px; border-radius: 8px; font-weight: 500; font-size: 15px; margin-left: 10px;"><i class="ph ph-x"></i>Cancel</a>
                 </div>
                 </form>
             </div>
@@ -301,7 +301,7 @@
     <div class="col-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5><span class="section-icon"><i class="mdi mdi-history"></i></span>Diagnosis History</h5>
+                <h5><span class="section-icon"><i class="ph ph-files"></i></span>Diagnosis History</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -358,7 +358,7 @@
                                     <td><?= strtoupper($row->remarks); ?></td>
                                     <td>
                                         <a href="<?=base_url(); ?>Pages/diagnose_edit/<?= $row->id; ?>" class="btn btn-success btn-action">
-                                            <i class="mdi mdi-pencil mr-1"></i>Edit
+                                            <i class="ph ph-pencil-simple mr-1"></i>Edit
                                         </a>
                                     </td>
                                 </tr>
@@ -367,7 +367,7 @@
                             ?>
                                 <tr>
                                     <td colspan="19" class="text-center text-muted py-4">
-                                        <i class="mdi mdi-clipboard-text-outline" style="font-size: 24px; color: #bdbdbd;"></i>
+                                        <i class="ph ph-clipboard-text" style="font-size: 24px; color: #bdbdbd;"></i>
                                         <p class="mt-2 mb-0">No previous diagnosis records found.</p>
                                     </td>
                                 </tr>

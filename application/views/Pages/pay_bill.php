@@ -137,7 +137,7 @@
 <div class="pay-hero">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2><i class="mdi mdi-cash-register mr-2"></i>Patient Billing</h2>
+            <h2><i class="ph ph-cash-register mr-2"></i>Patient Billing</h2>
             <p>Process payments for patient treatments and services</p>
         </div>
         <div class="col-md-4 text-md-right">
@@ -168,19 +168,19 @@
 <!-- Billing Table -->
 <div class="card pay-card">
     <div class="card-header">
-        <h5><i class="mdi mdi-format-list-bulleted mr-2"></i>Pending Payments</h5>
+        <h5><i class="ph ph-list-bullets mr-2"></i>Pending Payments</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table id="datatable" class="table pay-table">
                 <thead>
                     <tr>
-                        <th><i class="mdi mdi-account mr-1"></i>Patient</th>
-                        <th><i class="mdi mdi-map-marker mr-1"></i>Address</th>
-                        <th><i class="mdi mdi-stethoscope mr-1"></i>Diagnosis</th>
-                        <th><i class="mdi mdi-medical-bag mr-1"></i>Treatment</th>
-                        <th><i class="mdi mdi-comment-text mr-1"></i>Remarks</th>
-                        <th><i class="mdi mdi-cash mr-1"></i>Action</th>
+                        <th><i class="ph ph-user mr-1"></i>Patient</th>
+                        <th><i class="ph ph-map-pin mr-1"></i>Address</th>
+                        <th><i class="ph ph-stethoscope mr-1"></i>Diagnosis</th>
+                        <th><i class="ph ph-bag mr-1"></i>Treatment</th>
+                        <th><i class="ph ph-chat-text mr-1"></i>Remarks</th>
+                        <th><i class="ph ph-currency-circle-dollar mr-1"></i>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -196,7 +196,7 @@
                         </td>
                         <td>
                             <div class="pay-patient-address">
-                                <i class="mdi mdi-map-marker-outline text-muted mr-1"></i>
+                                <i class="ph ph-map-pin text-muted mr-1"></i>
                                 <?= strtoupper($p->sitio.', '.$p->barangay.', '.$p->city_mun.', '.$p->province); ?>
                             </div>
                         </td>
@@ -217,7 +217,7 @@
                         </td>
                         <td>
                             <a href="sale_code/<?=$row->id; ?>" class="btn btn-pay">
-                                <i class="mdi mdi-currency-php"></i>PAY NOW
+                                <i class="ph ph-currency-circle-dollar"></i>PAY NOW
                             </a>
                         </td>
                     </tr>
@@ -226,7 +226,7 @@
                     <tr>
                         <td colspan="6">
                             <div class="empty-state">
-                                <i class="mdi mdi-check-circle-outline"></i>
+                                <i class="ph ph-check-circle"></i>
                                 <p>No pending payments at this time</p>
                             </div>
                         </td>

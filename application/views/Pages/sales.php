@@ -1,7 +1,7 @@
             <?php 
                 if($data === null){
                     echo '<div class="alert alert-danger">
-                            <h4><i class="fas fa-exclamation-triangle"></i> Error</h4>
+                            <h4><i class="ph ph-warning"></i> Error</h4>
                             <p>Diagnosis record not found. Please ensure you have a valid diagnosis ID.</p>
                             <a href="'.base_url().'Pages/patient_queue" class="btn btn-primary">Return to Patient Queue</a>
                           </div>';
@@ -13,7 +13,7 @@
                 
                 if($p === null || $a === null){
                     echo '<div class="alert alert-danger">
-                            <h4><i class="fas fa-exclamation-triangle"></i> Error</h4>
+                            <h4><i class="ph ph-warning"></i> Error</h4>
                             <p>Patient or appointment record not found. Please ensure the diagnosis has valid associated records.</p>
                             <a href="'.base_url().'Pages/patient_queue" class="btn btn-primary">Return to Patient Queue</a>
                           </div>';
@@ -38,7 +38,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header bg-primary text-white">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-user-injured mr-2"></i>Patient Information
+                                            <i class="ph ph-user-circle mr-2"></i>Patient Information
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -92,7 +92,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header bg-info text-white">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-search mr-2"></i>Select Item
+                                            <i class="ph ph-magnifying-glass mr-2"></i>Select Item
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -115,7 +115,7 @@
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <button type="submit" name="item" class="btn btn-info btn-block">
-                                                        <i class="fas fa-search mr-1"></i> Search
+                                                        <i class="ph ph-magnifying-glass"></i> Search
                                                     </button>
                                                 </div>
                                             </div>  
@@ -127,7 +127,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header bg-success text-white">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                                            <i class="ph ph-shopping-cart-simple mr-2"></i>Add to Cart
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -183,7 +183,7 @@
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <button id="xx" type="submit" name="submit" class="btn btn-success btn-lg btn-block" disabled>
-                                                        <i class="fas fa-cart-plus mr-2"></i>ADD TO CART
+                                                        <i class="ph ph-shopping-cart-simple mr-2"></i>ADD TO CART
                                                     </button>
                                                 </div>
                                             </div>
@@ -195,7 +195,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header bg-warning text-dark">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-shopping-cart mr-2"></i>Cart Items
+                                            <i class="ph ph-shopping-cart-simple mr-2"></i>Cart Items
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -248,7 +248,7 @@
                                 <div class="card">
                                     <div class="card-header bg-dark text-white">
                                         <h5 class="card-title mb-0">
-                                            <i class="fas fa-calculator mr-2"></i>Payment Summary
+                                            <i class="ph ph-receipt mr-2"></i>Payment Summary
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -307,7 +307,7 @@
                                             <div class="row justify-content-end">
                                                 <div class="col-md-4">
                                                     <button type="submit" id="save_summary" class="btn btn-success btn-lg btn-block" name="pay"<?php if($total <= 0){echo ' disabled';} ?>>
-                                                        <i class="fas fa-save mr-2"></i>SAVE TRANSACTION
+                                                        <i class="ph ph-floppy-disk mr-2"></i>SAVE TRANSACTION
                                                     </button>
                                                 </div>
                                             </div>

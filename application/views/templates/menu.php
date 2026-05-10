@@ -17,15 +17,15 @@ $reports_open = in_array($current_page, $report_pages, true);
 
                 <li class="menu-title">Navigation</li>
 
-                <li><a href="<?= base_url(); ?>" class="waves-effect<?= $current_page === 'index' ? ' active' : ''; ?>"><i class="ph ph-gauge"></i><span>  Dashboard  </span></a></li>
-                <li><a href="<?= base_url(); ?>Pages/patient_list" class="waves-effect<?= $current_page === 'patient_list' ? ' active' : ''; ?>"><i class="ph ph-users-three"></i><span>  Patients </span></a></li>
-                <li><a href="<?= base_url(); ?>Pages/patient_queue" class="waves-effect<?= $current_page === 'patient_queue' ? ' active' : ''; ?>"><i class="ph ph-queue"></i><span>Patient's Queue</span></a></li>
-                <li><a href="<?= base_url(); ?>Pages/pay" class="waves-effect<?= $current_page === 'pay' ? ' active' : ''; ?>"><i class="ph ph-receipt"></i><span>  Patient's Bill </span></a></li>
+                <li><a href="<?= base_url(); ?>" class="waves-effect<?= $current_page === 'index' ? ' active' : ''; ?>"><span class="menu-icon"><i class="ph ph-gauge"></i></span><span class="menu-text">Dashboard</span></a></li>
+                <li><a href="<?= base_url(); ?>Pages/patient_list" class="waves-effect<?= $current_page === 'patient_list' ? ' active' : ''; ?>"><span class="menu-icon"><i class="ph ph-users-three"></i></span><span class="menu-text">Patients</span></a></li>
+                <li><a href="<?= base_url(); ?>Pages/patient_queue" class="waves-effect<?= $current_page === 'patient_queue' ? ' active' : ''; ?>"><span class="menu-icon"><i class="ph ph-queue"></i></span><span class="menu-text">Patient's Queue</span></a></li>
+                <li><a href="<?= base_url(); ?>Pages/pay" class="waves-effect<?= $current_page === 'pay' ? ' active' : ''; ?>"><span class="menu-icon"><i class="ph ph-receipt"></i></span><span class="menu-text">Patient's Bill</span></a></li>
                 
                 <li class="<?= $settings_open ? 'mm-active' : ''; ?>">
                     <a href="javascript: void(0);" class="waves-effect<?= $settings_open ? ' active' : ''; ?>" aria-expanded="<?= $settings_open ? 'true' : 'false'; ?>">
-                        <i class="ph ph-gear-six"></i>
-                        <span> Settings </span>
+                        <span class="menu-icon"><i class="ph ph-gear-six"></i></span>
+                        <span class="menu-text">Settings</span>
                         <span class="menu-arrow"><i class="ph ph-caret-right"></i></span>
                     </a>
                     <ul class="nav-second-level<?= $settings_open ? ' mm-show' : ''; ?>" aria-expanded="<?= $settings_open ? 'true' : 'false'; ?>">
@@ -41,8 +41,8 @@ $reports_open = in_array($current_page, $report_pages, true);
                 </li>
                 <li class="<?= $reports_open ? 'mm-active' : ''; ?>">
                     <a href="javascript: void(0);" class="waves-effect<?= $reports_open ? ' active' : ''; ?>" aria-expanded="<?= $reports_open ? 'true' : 'false'; ?>">
-                        <i class="ph ph-chart-bar"></i>
-                        <span>Reports</span>
+                        <span class="menu-icon"><i class="ph ph-chart-bar"></i></span>
+                        <span class="menu-text">Reports</span>
                         <span class="menu-arrow"><i class="ph ph-caret-right"></i></span>
                     </a>
                     <ul class="nav-second-level<?= $reports_open ? ' mm-show' : ''; ?>" aria-expanded="<?= $reports_open ? 'true' : 'false'; ?>">

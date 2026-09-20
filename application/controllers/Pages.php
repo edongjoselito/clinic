@@ -163,6 +163,7 @@ class Pages extends CI_Controller{
 
         $page = "patient_list";
         $data['data'] = $this->Page_model->get_all_patients_optimized();
+        $data['total_patients'] = $this->Page_model->count_patients();
 
     $this->load->view('templates/header');
     $this->load->view('templates/menu');
@@ -514,7 +515,9 @@ class Pages extends CI_Controller{
 
         $data['title'] = "Search Patient";
         $search = $this->input->post('search');
+        $data['search_term'] = $search;
         $data['data'] =  $this->Page_model->search_patients($search);
+        $data['total_patients'] = $this->Page_model->count_patients();
 
 
         $this->load->view('templates/header');

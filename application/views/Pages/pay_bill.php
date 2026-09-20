@@ -122,6 +122,12 @@
     background: #eef4fb; color: #1565c0; text-decoration: none; transition: all .2s; font-size: 16px;
 }
 .btn-view:hover { background: #1e88e5; color: #fff; text-decoration: none; }
+.btn-print-bill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 9px; margin-left: 6px;
+    background: #fff5e6; color: #d68910; text-decoration: none; transition: all .2s; font-size: 16px;
+}
+.btn-print-bill:hover { background: #f39c12; color: #fff; text-decoration: none; }
 .actions-cell { white-space: nowrap; text-align: right; }
 
 .empty-state { text-align: center; padding: 60px 20px; color: #8a9bb0; }
@@ -222,6 +228,7 @@
                             ); ?></td>
                         <td class="actions-cell">
                             <a href="<?= base_url(); ?>Pages/sale_code/<?= (int) $row->id; ?>" class="btn-pay"><i class="ph ph-currency-circle-dollar"></i>Pay Now</a>
+                            <a href="<?= base_url(); ?>Pages/receipt/<?= (int) $row->id; ?>" target="_blank" class="btn-print-bill" data-toggle="tooltip" data-placement="top" title="Print statement of charges"><i class="ph ph-printer"></i></a>
                             <a href="<?= base_url(); ?>Pages/patient_profile/<?= (int) $row->patient_id; ?>" class="btn-view" data-toggle="tooltip" data-placement="top" title="View patient profile"><i class="ph ph-user"></i></a>
                         </td>
                     </tr>

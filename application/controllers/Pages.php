@@ -1084,6 +1084,50 @@ class Pages extends CI_Controller{
         redirect(base_url().'Pages/sale/'.$diag_id);
     }
 
+    /**
+     * Standalone printable receipt/statement for a diagnosis's charges.
+     * Opened in a new tab; the view auto-invokes window.print().
+     */
+    public function receipt($id){
+
+        $this->db->select('d.*, u.first_name AS doc_first, u.middle_name AS doc_mid, u.last_name AS doc_last,
+            c.name AS clinic_name, c.address AS clinic_address, c.contact_number AS clinic_contact, c.email AS clinic_email');
+        $this->db->from('diagnose d');
+        $this->db->join('users u', 'u.id = d.user_id', 'left');
+        $this->db->join('clinics c', 'c.id = d.clinic_id', 'left');
+        $this->db->where('d.id', $id);
+        if (table_has_clinic_id('diagnose') && !is_superadmin()) {
+            $this->db->where('d.clinic_id', current_clinic_id());
+        }
+        $data['d'] = $this->db->get()->row();
+
+        if(empty($data['d'])){
+            show_404();
+        }
+
+        $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$data['d']->patient_id);
+        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$data['d']->appointment_id);
+
+        // Charge lines for this diagnosis
+        $this->db->select('s.*, i.description');
+        $this->db->from('sales s');
+        $this->db->join('items i', 'i.id = s.item_id', 'left');
+        $this->db->where('s.diagnose_id', $data['d']->id);
+        $this->db->order_by('s.id', 'ASC');
+        $data['sales'] = $this->db->get()->result();
+
+        // Settlement record, if the bill has been paid
+        $data['summary'] = null;
+        if (!empty($data['sales'])) {
+            $data['summary'] = $this->Page_model->one_cond_get_single_row('sales_summary','reciept_code',$data['sales'][0]->reciept_code);
+        }
+
+        // Cashier currently logged in
+        $data['cashier'] = $this->Page_model->one_cond_get_single_row('users','id',$this->session->id);
+
+        $this->load->view('Pages/receipt_print', $data);
+    }
+
     public function stock_code(){
         $code = $this->Page_model->one_cond_get_single_row('code','id',1);
         $a = $code->stock_code;

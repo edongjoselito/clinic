@@ -99,6 +99,8 @@
     background: #e3f2fd; color: #1565c0; font-size: 12px; font-weight: 700;
 }
 .header-note { font-size: 12.5px; color: #8a9bb0; font-weight: 500; }
+.header-link { font-size: 13px; font-weight: 600; color: #1565c0; display: inline-flex; align-items: center; gap: 5px; }
+.header-link:hover { color: #0d47a1; text-decoration: none; }
 .bill-card .card-body { padding: 24px; }
 .bill-card .card-body.flush { padding: 0; }
 
@@ -355,6 +357,7 @@ select.form-control { padding-right: 32px; }
 <div class="card bill-card">
     <div class="card-header">
         <h5><span class="section-icon teal"><i class="ph ph-money"></i></span>Payment</h5>
+        <a href="<?= base_url(); ?>Pages/receipt/<?= (int) $data->id; ?>" target="_blank" class="header-link"><i class="ph ph-printer"></i>Print receipt</a>
     </div>
     <div class="card-body">
         <form name="ad" method="post" action="<?= base_url(); ?>Pages/sale/<?= (int) $data->id; ?>" autocomplete="off">

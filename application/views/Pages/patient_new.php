@@ -1,126 +1,171 @@
 <style>
-.patient-form-wrapper {
-    padding-top: 20px;
-}
+.patient-form-wrapper { padding-top: 20px; }
+
+/* ===== Hero ===== */
 .form-hero {
-    background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border-radius: 12px;
-    padding: 25px 30px;
-    color: white;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(30, 136, 229, 0.3);
+    position: relative;
+    background: linear-gradient(120deg, #0d47a1 0%, #1565c0 45%, #1e88e5 100%);
+    border-radius: 16px;
+    padding: 30px 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 32px rgba(13, 71, 161, 0.28);
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
+.form-hero::before {
+    content: '';
+    position: absolute;
+    top: -90px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+}
+.form-hero > * { position: relative; z-index: 1; }
 .form-hero h2 {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 5px;
+    color: #fff;
+    font-weight: 700;
     font-size: 24px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.form-hero p {
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 0;
+.form-hero p { color: rgba(255,255,255,0.85); margin: 0; font-size: 14px; }
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 18px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all .2s ease;
 }
+.hero-cta:hover { background: rgba(255,255,255,0.25); color: #fff; text-decoration: none; }
+
+/* ===== Cards ===== */
 .form-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
+    border: 1px solid #edf2f7;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(30, 58, 95, 0.03);
+    margin-bottom: 24px;
+    background: #fff;
 }
 .form-card .card-header {
-    background: white;
-    border-bottom: 2px solid #e3f2fd;
-    padding: 20px 25px;
-    border-radius: 12px 12px 0 0;
+    background: #fff;
+    border-bottom: 1px solid #f0f4f8;
+    padding: 16px 24px;
+    border-radius: 14px 14px 0 0;
 }
 .form-card .card-header h5 {
     margin: 0;
-    font-weight: 600;
-    color: #1565c0;
-    font-size: 16px;
+    font-weight: 700;
+    color: #1c2b3a;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-.form-card .card-header h5 i {
-    margin-right: 8px;
-    color: #1e88e5;
+.section-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: #e8f4fd;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
-.form-card .card-body {
-    padding: 25px;
-}
+.section-icon i { color: #1e88e5; font-size: 18px; }
+.form-card .card-body { padding: 24px; }
+
+/* ===== Form controls ===== */
+.form-group { margin-bottom: 20px; }
+.form-row:last-child .form-group { margin-bottom: 0; }
 .form-group label {
-    font-weight: 500;
-    color: #424242;
-    font-size: 13px;
+    font-weight: 600;
+    color: #5a6b7d;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
 }
 .form-control {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 12px 15px;
+    height: 44px;
+    border: 1px solid #dce4ec;
+    border-radius: 10px;
+    padding: 0 14px;
     font-size: 14px;
-    transition: all 0.3s ease;
+    color: #1c2b3a;
+    transition: all 0.2s ease;
 }
-.form-control:focus {
-    border-color: #1e88e5;
-    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+.form-control:focus { border-color: #1e88e5; box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1); }
+.form-control[readonly] { background: #f7fafd; color: #6c7d8f; }
+.form-control:disabled { background: #f7fafd; color: #a5b3c2; }
+select.form-control { padding-right: 32px; }
+.radio-row {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
 }
 .custom-radio .custom-control-label {
     text-transform: none;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
+    color: #1c2b3a;
+    letter-spacing: 0;
+    margin: 0;
     cursor: pointer;
 }
-.custom-control-input:checked ~ .custom-control-label::before {
-    border-color: #1e88e5;
-    background-color: #1e88e5;
+.custom-control-input:checked ~ .custom-control-label::before { border-color: #1e88e5; background-color: #1e88e5; }
+.form-hint { display: block; font-size: 12.5px; color: #8a9bb0; margin-top: 8px; }
+.required::after { content: ' *'; color: #e53935; }
+
+/* ===== Footer actions ===== */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
-.btn-submit {
-    background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border: none;
-    color: white;
-    padding: 14px 35px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(30, 136, 229, 0.4);
-    color: white;
-}
-.btn-cancel {
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    color: #616161;
-    padding: 14px 30px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    transition: all 0.3s ease;
-}
-.btn-cancel:hover {
-    background: #eeeeee;
-    color: #424242;
-}
-.section-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-radius: 10px;
+.form-actions .hint { font-size: 13px; color: #8a9bb0; }
+.form-actions .hint span { color: #e53935; }
+.form-actions .btns { display: flex; gap: 10px; }
+.btn-cancel, .btn-submit {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    margin-right: 12px;
+    gap: 6px;
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
-.section-icon i {
-    color: #1565c0;
-    font-size: 20px;
-}
-.required::after {
-    content: ' *';
-    color: #e53935;
+.btn-cancel { background: #f1f5f9; color: #3d4f63; }
+.btn-cancel:hover { background: #e3eaf1; color: #1c2b3a; text-decoration: none; }
+.btn-submit { background: #1e88e5; color: #fff; }
+.btn-submit:hover { background: #1565c0; color: #fff; }
+
+@media (max-width: 767px) {
+    .form-hero { padding: 24px 22px; }
+    .form-card .card-body { padding: 20px; }
+    .form-row .form-group { margin-bottom: 20px; }
 }
 </style>
 
@@ -128,25 +173,18 @@
 
 <!-- Form Header -->
 <div class="form-hero">
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h2><i class="ph ph-user-plus mr-2"></i><?= $title; ?></h2>
-            <p>Enter patient information to register a new patient</p>
-        </div>
-        <div class="col-md-4 text-md-right">
-            <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-light">
-                <i class="ph ph-arrow-left"></i>Back to List
-            </a>
-        </div>
+    <div>
+        <h2><i class="ph ph-user-plus"></i><?= $title; ?></h2>
+        <p>Enter patient information to register a new patient</p>
     </div>
+    <a href="<?= base_url(); ?>Pages/patient_list" class="hero-cta">
+        <i class="ph ph-arrow-left"></i>Back to List
+    </a>
 </div>
 
 <?= validation_errors(); ?>
 
-<?php 
-    $attributes = array('class' => 'patient-form');
-    echo form_open('Pages/patient_add/', $attributes);
-?>
+<?= form_open('Pages/patient_add/', array('class' => 'patient-form')); ?>
 
 <!-- Personal Information -->
 <div class="card form-card">
@@ -180,12 +218,12 @@
             </div>
             <div class="form-group col-md-3">
                 <label class="required">Gender</label>
-                <div class="mt-2">
-                    <div class="custom-control custom-radio custom-control-inline">
+                <div class="radio-row">
+                    <div class="custom-control custom-radio">
                         <input type="radio" value="male" id="genderMale" name="gender" class="custom-control-input" required>
                         <label class="custom-control-label" for="genderMale">Male</label>
                     </div>
-                    <div class="custom-control custom-radio custom-control-inline">
+                    <div class="custom-control custom-radio">
                         <input type="radio" value="female" id="genderFemale" name="gender" class="custom-control-input">
                         <label class="custom-control-label" for="genderFemale">Female</label>
                     </div>
@@ -223,17 +261,19 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label class="required">Patient Portal Access</label>
-                <div class="mt-2">
-                    <div class="custom-control custom-radio custom-control-inline">
+                <div class="radio-row">
+                    <div class="custom-control custom-radio">
                         <input type="radio" value="1" id="portalEnabled" name="portal_access" class="custom-control-input" required>
                         <label class="custom-control-label" for="portalEnabled">Enable Portal Access</label>
                     </div>
-                    <div class="custom-control custom-radio custom-control-inline">
+                    <div class="custom-control custom-radio">
                         <input type="radio" value="0" id="portalDisabled" name="portal_access" class="custom-control-input" checked>
                         <label class="custom-control-label" for="portalDisabled">Disable Portal Access</label>
                     </div>
                 </div>
-                <small class="text-muted">When enabled, a random password will be generated and sent to the patient's email.</small>
+                <small class="form-hint">When enabled, a random password will be generated and sent to the patient's email.</small>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -296,21 +336,17 @@
 <!-- Submit Buttons -->
 <div class="card form-card">
     <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <span class="text-muted"><small><span class="text-danger">*</span> Required fields</small></span>
-            </div>
-            <div>
-                <a href="<?= base_url(); ?>Pages/patient_list" class="btn btn-cancel mr-2"><i class="ph ph-x"></i>Cancel</a>
-                <button type="submit" name="submit" class="btn-submit">
-                    <i class="ph ph-floppy-disk"></i>Save Patient
-                </button>
+        <div class="form-actions">
+            <div class="hint"><span>*</span> Required fields</div>
+            <div class="btns">
+                <a href="<?= base_url(); ?>Pages/patient_list" class="btn-cancel"><i class="ph ph-x"></i>Cancel</a>
+                <button type="submit" name="submit" class="btn-submit"><i class="ph ph-floppy-disk"></i>Save Patient</button>
             </div>
         </div>
     </div>
 </div>
 
-</form>
+<?= form_close(); ?>
 
 <script>
 function calculateAge() {

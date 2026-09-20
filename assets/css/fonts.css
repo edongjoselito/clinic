@@ -1,0 +1,28 @@
+/* DM Sans - self-hosted variable font (weights 100-1000, optical size) */
+
+@font-face {
+    font-family: 'DM Sans';
+    font-style: normal;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url('../fonts/DM_Sans/DMSans-VariableFont_opsz,wght.ttf') format('truetype-variations'),
+         url('../fonts/DM_Sans/DMSans-VariableFont_opsz,wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    font-style: italic;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url('../fonts/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype-variations'),
+         url('../fonts/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+}
+
+/* jQuery UI widgets */
+.ui-widget,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    font-family: 'DM Sans', sans-serif;
+}

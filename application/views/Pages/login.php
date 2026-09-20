@@ -11,9 +11,9 @@
     <link href="<?= base_url(); ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url(); ?>assets/css/phosphor-overrides.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="<?= base_url(); ?>assets/css/fonts.css" rel="stylesheet" type="text/css" />
     <style>
-        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        * { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
         body {
             min-height: 100vh;
             background: linear-gradient(135deg, #1565c0 0%, #0d47a1 50%, #1a237e 100%);

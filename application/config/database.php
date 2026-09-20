@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 
 $active_group = 'default';
@@ -7,9 +7,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1:3307',
+	'hostname' => '127.0.0.1',
 	'username' => 'root',
-	'password' => 'moth34board',
+	'password' => '',
 	'database' => 'clinicaa_db',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

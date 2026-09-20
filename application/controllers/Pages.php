@@ -40,12 +40,62 @@ class Pages extends CI_Controller{
 
     public function view(){
 
+             date_default_timezone_set('Asia/Manila');
              $page = "dashboard";
+             $today = date('Y-m-d');
 
              $data['app'] = $this->Page_model->count_with_cond('appointment','visible',0);
              $data['user'] = $this->Page_model->count_all('users');
              $data['item'] = $this->Page_model->count_all('items');
              $data['ref'] = $this->Page_model->count_all('referrals');
+
+             // Logged-in user record (for greeting)
+             $data['current_user'] = $this->db->get_where('users', array('id' => $this->session->userdata('id')))->row();
+
+             // KPIs
+             if (table_has_clinic_id('diagnose')) {
+                 $this->db->where('clinic_id', current_clinic_id());
+             }
+             $this->db->where('date', $today);
+             $data['seen_today'] = $this->db->count_all_results('diagnose');
+
+             $data['pending_bills']  = $this->Page_model->count_with_cond('diagnose','payment_status',0)->num_rows();
+             $data['total_patients'] = $this->Page_model->count_all('patients')->num_rows();
+
+             $this->db->select_sum('amount_due');
+             $this->db->where('date', $today);
+             if (table_has_clinic_id('sales_summary')) {
+                 $this->db->where('clinic_id', current_clinic_id());
+             }
+             $rev = $this->db->get('sales_summary')->row();
+             $data['revenue_today'] = $rev && $rev->amount_due ? (float) $rev->amount_due : 0;
+
+             // Waiting queue (same semantics as the queue page) with patient details
+             $this->db->select('appointment.id, appointment.patient_id, appointment.visit_date, appointment.transaction, appointment.age, appointment.bp, appointment.weight');
+             $this->db->select('patients.first_name, patients.middle_name, patients.last_name, patients.gender');
+             $this->db->from('appointment');
+             $this->db->join('patients', 'patients.id = appointment.patient_id', 'left');
+             $this->db->where('appointment.visible', 0);
+             if (table_has_clinic_id('appointment')) {
+                 $this->db->where('appointment.clinic_id', current_clinic_id());
+             }
+             $this->db->order_by('appointment.id', 'ASC');
+             $this->db->limit(7);
+             $data['queue_list'] = $this->db->get()->result();
+
+             // Recently diagnosed patients
+             $this->db->select('diagnose.id, diagnose.date, diagnose.diagnosis, diagnose.payment_status, diagnose.patient_id');
+             $this->db->select('patients.first_name, patients.middle_name, patients.last_name');
+             $this->db->select('users.first_name AS doc_first, users.last_name AS doc_last');
+             $this->db->from('diagnose');
+             $this->db->join('patients', 'patients.id = diagnose.patient_id', 'left');
+             $this->db->join('users', 'users.id = diagnose.user_id', 'left');
+             if (table_has_clinic_id('diagnose')) {
+                 $this->db->where('diagnose.clinic_id', current_clinic_id());
+             }
+             $this->db->order_by('diagnose.id', 'DESC');
+             $this->db->limit(6);
+             $data['recent_diagnoses'] = $this->db->get()->result();
 
              // Calendar month/year (from URL or current)
              $cal_month = (int) ($this->input->get('m') ?: date('n'));

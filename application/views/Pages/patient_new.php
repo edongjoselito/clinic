@@ -113,27 +113,41 @@
 .form-control[readonly] { background: #f7fafd; color: #6c7d8f; }
 .form-control:disabled { background: #f7fafd; color: #a5b3c2; }
 select.form-control { padding-right: 32px; }
-.radio-row {
+/* Segmented radio (Gender) — same height as inputs */
+.segmented {
+    display: flex;
     height: 44px;
+    border: 1px solid #dce4ec;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+.segmented input { position: absolute; opacity: 0; width: 0; height: 0; }
+.segmented label {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 22px;
-}
-.custom-radio .custom-control-label {
-    text-transform: none;
-    font-weight: 500;
-    font-size: 14px;
-    color: #1c2b3a;
-    letter-spacing: 0;
+    justify-content: center;
+    gap: 6px;
     margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5a6b7d;
+    text-transform: none;
+    letter-spacing: 0;
     cursor: pointer;
+    transition: all .15s;
 }
-.custom-control-input:checked ~ .custom-control-label::before { border-color: #1e88e5; background-color: #1e88e5; }
+.segmented label i { font-size: 16px; }
+.segmented label + input + label { border-left: 1px solid #dce4ec; }
+.segmented label:hover { background: #f7fafd; }
+.segmented input:checked + label { background: #1e88e5; color: #fff; }
+.segmented input:focus-visible + label { box-shadow: inset 0 0 0 2px rgba(30,136,229,.35); }
 .form-hint { display: block; font-size: 12.5px; color: #8a9bb0; margin-top: 8px; }
 .required::after { content: ' *'; color: #e53935; }
 
 /* ===== Portal toggle ===== */
-.portal-toggle {
+.form-group label.portal-toggle {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -245,24 +259,23 @@ select.form-control { padding-right: 32px; }
                 <label class="required">Birthday</label>
                 <input required type="date" id="datepicker" class="form-control" name="birthday" max="<?= date('Y-m-d'); ?>" onchange="calculateAge()" />
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-4">
                 <label class="required">Age</label>
-                <input required type="number" id="age" name="age" class="form-control" placeholder="Auto" readonly tabindex="-1" />
+                <input required type="number" id="age" name="age" class="form-control" placeholder="Calculated from birthday" readonly tabindex="-1" />
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label class="required">Gender</label>
-                <div class="radio-row">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" value="male" id="genderMale" name="gender" class="custom-control-input" required>
-                        <label class="custom-control-label" for="genderMale">Male</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" value="female" id="genderFemale" name="gender" class="custom-control-input">
-                        <label class="custom-control-label" for="genderFemale">Female</label>
-                    </div>
+                <div class="segmented">
+                    <input type="radio" value="male" id="genderMale" name="gender" required>
+                    <label for="genderMale"><i class="ph ph-gender-male"></i>Male</label>
+                    <input type="radio" value="female" id="genderFemale" name="gender">
+                    <label for="genderFemale"><i class="ph ph-gender-female"></i>Female</label>
                 </div>
             </div>
-            <div class="form-group col-md-3">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
                 <label class="required">Civil Status</label>
                 <select name="civil_status" class="form-control" required>
                     <option value="">Select Status</option>
@@ -274,13 +287,6 @@ select.form-control { padding-right: 32px; }
                     <option value="Divorced">Divorced</option>
                 </select>
             </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label class="required">Occupation</label>
-                <input required type="text" class="form-control" name="occupation" placeholder="e.g. Teacher" />
-            </div>
             <div class="form-group col-md-4">
                 <label>Contact Number</label>
                 <input type="tel" class="form-control" name="contact" placeholder="09XX XXX XXXX" inputmode="tel" autocomplete="tel" />
@@ -288,6 +294,17 @@ select.form-control { padding-right: 32px; }
             <div class="form-group col-md-4">
                 <label class="required">Email Address</label>
                 <input required type="email" class="form-control" name="email" placeholder="name@example.com" autocomplete="email" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label class="required">Occupation</label>
+                <input required type="text" class="form-control" name="occupation" placeholder="e.g. Teacher" />
+            </div>
+            <div class="form-group col-md-8">
+                <label>Company / Employer</label>
+                <input type="text" class="form-control" name="company" placeholder="Optional" />
             </div>
         </div>
 
@@ -346,21 +363,6 @@ select.form-control { padding-right: 32px; }
             <div class="form-group col-md-12">
                 <label class="required">Sitio</label>
                 <input required type="text" class="form-control" name="sitio" placeholder="Street, purok, or sitio" />
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Work Information -->
-<div class="card form-card">
-    <div class="card-header">
-        <h5><span class="section-icon"><i class="ph ph-briefcase"></i></span>Work Information</h5>
-    </div>
-    <div class="card-body">
-        <div class="form-row">
-            <div class="form-group col-md-12">
-                <label>Company/Employer</label>
-                <input type="text" class="form-control" name="company" placeholder="Optional" />
             </div>
         </div>
     </div>

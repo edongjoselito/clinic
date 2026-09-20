@@ -3,27 +3,46 @@
 
 /* ===== Hero ===== */
 .dashboard-hero {
-    background: #fff;
-    border: 1px solid #edf2f7;
+    position: relative;
+    background: linear-gradient(120deg, #0d47a1 0%, #1565c0 45%, #1e88e5 100%);
+    border: none;
     border-radius: 16px;
-    padding: 28px 30px;
+    padding: 34px 36px;
     margin-bottom: 24px;
-    box-shadow: 0 1px 6px rgba(30, 58, 95, 0.04);
+    box-shadow: 0 12px 32px rgba(13, 71, 161, 0.28);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
+    overflow: hidden;
 }
+.dashboard-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+}
+.dashboard-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -70px; right: 160px;
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+}
+.dashboard-hero > div { position: relative; z-index: 1; }
 .dashboard-hero .hero-title {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
-    color: #1c2b3a;
+    color: #fff;
     margin-bottom: 4px;
     line-height: 1.2;
 }
 .dashboard-hero .hero-clinic {
-    color: #1e88e5;
+    color: rgba(255,255,255,0.85);
     font-weight: 600;
     font-size: 13px;
     text-transform: uppercase;
@@ -31,15 +50,20 @@
     margin-bottom: 6px;
 }
 .dashboard-hero .hero-sub {
-    color: #6c7d8f;
+    color: rgba(255,255,255,0.85);
     font-size: 14px;
     margin: 0;
 }
 .hero-right { text-align: right; }
-.hero-date { font-weight: 600; color: #1c2b3a; font-size: 15px; margin-bottom: 4px; }
-.hero-day { color: #8a9bb0; font-size: 13px; }
+.hero-date {
+    font-weight: 600;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+.hero-day { color: rgba(255,255,255,0.75); font-size: 13px; }
 @media (max-width: 767px) {
-    .dashboard-hero { padding: 22px 20px; }
+    .dashboard-hero { padding: 26px 22px; }
     .hero-right { text-align: left; width: 100%; }
 }
 
@@ -181,7 +205,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 32px;
+    width: 110px;
+    height: 34px;
     border-radius: 7px;
     font-size: 12.5px;
     font-weight: 600;
@@ -191,13 +216,7 @@
 }
 .btn-queue.diagnose { background: #1e88e5; color: #fff; }
 .btn-queue.diagnose:hover { background: #1565c0; color: #fff; text-decoration: none; }
-.btn-queue.view {
-    width: 32px;
-    background: #eef4fb;
-    color: #1e88e5;
-    padding: 0;
-    margin-left: 6px;
-}
+.btn-queue.view { background: #eef4fb; color: #1e88e5; }
 .btn-queue.view:hover { background: #dceafa; color: #0d47a1; text-decoration: none; }
 .empty-state {
     text-align: center;
@@ -490,10 +509,7 @@ $waiting = $app->num_rows();
                         ?>
                         <tr>
                             <td><span style="font-weight:700; color:#8a9bb0;"><?= $pos++; ?></span></td>
-                            <td>
-                                <span class="queue-avatar <?= $avatar_class; ?>"><?= htmlentities($initials); ?></span>
-                                <span class="cell-patient"><?= htmlentities(ucwords(strtolower($full_name))); ?></span>
-                            </td>
+                            <td class="cell-patient"><?= htmlentities(ucwords(strtolower($full_name))); ?></td>
                             <td><?= $q->age ? $q->age . ' yrs' : '—'; ?> <?= $gender ? '<span class="cell-sub">· ' . ucwords($gender) . '</span>' : ''; ?></td>
                             <td><?= $visit ? date('M d, Y', strtotime($visit)) : '—'; ?></td>
                             <td><?= $type ? '<span class="visit-type">' . htmlentities($type) . '</span>' : '—'; ?></td>

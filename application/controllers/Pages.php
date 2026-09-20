@@ -302,6 +302,11 @@ class Pages extends CI_Controller{
         $this->db->order_by('diagnose.id', 'DESC');
         $data['diag'] = $this->db->get()->result();
 
+        // Appointments with no diagnosis yet: still waiting, or cancelled.
+        // Without these the profile claims "no medical history" for a patient
+        // who has actually been checked in.
+        $data['pending'] = $this->Page_model->get_open_appointments($param);
+
         // Last visit + unpaid count for the hero summary
         $data['visit_count'] = count($data['diag']);
         $data['unpaid_count'] = 0;
@@ -332,8 +337,18 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Add New Patient"; 
+        $data['title'] = "Edit Patient";
         $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$param);
+
+        if(empty($data['p'])){
+            show_404();
+        }
+
+        // Provinces for the cascading address dropdowns
+        $this->db->select('province');
+        $this->db->distinct();
+        $this->db->order_by('province', 'ASC');
+        $data['provinces'] = $this->db->get('settings_address')->result();
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -357,26 +372,40 @@ class Pages extends CI_Controller{
 
         // Optional date filter: ?date=YYYY-MM-DD
         $filter_date = $this->input->get('date');
-        if($filter_date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $filter_date)){
-            if (table_has_clinic_id('appointment')) {
-                $this->db->where('clinic_id', current_clinic_id());
-            }
-            $this->db->where('DATE(visit_date)', $filter_date);
-            $data['data'] = $this->db->get('appointment')->result();
+        $is_filtered = $filter_date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $filter_date);
+        if ($is_filtered) { $data['filter_date'] = $filter_date; }
 
-            if (table_has_clinic_id('diagnose')) {
-                $this->db->where('clinic_id', current_clinic_id());
-            }
-            $this->db->where('date', $filter_date);
-            $data['dp'] = $this->db->get('diagnose')->result();
-
-            $data['filter_date'] = $filter_date;
-        } else {
-            $data['data'] = $this->Page_model->one_cond_loop('appointment','visible',0);
-            $data['dp'] = $this->Page_model->one_cond_loop('diagnose','date',date('Y-m-d'));
+        // Waiting list: appointments + patient in one query
+        $this->db->select('appointment.id, appointment.patient_id, appointment.visit_date, appointment.age, appointment.bp, appointment.weight, appointment.transaction, appointment.referral_status');
+        $this->db->select('patients.first_name, patients.middle_name, patients.last_name, patients.gender');
+        $this->db->from('appointment');
+        $this->db->join('patients', 'patients.id = appointment.patient_id', 'left');
+        if (table_has_clinic_id('appointment')) {
+            $this->db->where('appointment.clinic_id', current_clinic_id());
         }
+        if ($is_filtered) {
+            $this->db->where('DATE(appointment.visit_date)', $filter_date);
+        } else {
+            $this->db->where('appointment.visible', 0);
+        }
+        $this->db->order_by('appointment.id', 'ASC');
+        $data['data'] = $this->db->get()->result();
 
-        $data['patient'] = $this->Page_model->get_limited_col('id, first_name, middle_name, last_name','patients');
+        // Diagnosed: diagnose + appointment vitals + patient + attending user in one query
+        $this->db->select('diagnose.id, diagnose.appointment_id, diagnose.patient_id, diagnose.lab, diagnose.diagnosis, diagnose.treatment, diagnose.remarks, diagnose.payment_status, diagnose.date');
+        $this->db->select('appointment.visit_date, appointment.age AS visit_age, appointment.bp, appointment.weight, appointment.transaction');
+        $this->db->select('patients.first_name, patients.middle_name, patients.last_name, patients.gender');
+        $this->db->select('users.first_name AS doc_first, users.middle_name AS doc_middle, users.last_name AS doc_last');
+        $this->db->from('diagnose');
+        $this->db->join('appointment', 'appointment.id = diagnose.appointment_id', 'left');
+        $this->db->join('patients', 'patients.id = diagnose.patient_id', 'left');
+        $this->db->join('users', 'users.id = diagnose.user_id', 'left');
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('diagnose.clinic_id', current_clinic_id());
+        }
+        $this->db->where('diagnose.date', $is_filtered ? $filter_date : date('Y-m-d'));
+        $this->db->order_by('diagnose.id', 'DESC');
+        $data['dp'] = $this->db->get()->result();
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -428,7 +457,27 @@ class Pages extends CI_Controller{
 
         $data['data'] = $this->Page_model->one_cond_get_single_row('patients','id',$user_id);
         $data['edit_app'] = $this->Page_model->one_cond_get_single_row('appointment','id',$app_id);
+
+        if(empty($data['data']) || empty($data['edit_app'])){
+            show_404();
+        }
+
         $data['patient'] = $this->Page_model->no_cond_loop('referrals');
+
+        // Diagnosis history with visit details and clinician in one query
+        $this->db->select('d.*, a.visit_date, a.age AS visit_age, a.bp, a.weight, a.lmp, a.date_of_delivery,
+            a.gravida, a.parity, a.term, a.preterm, a.abortion, a.living, a.transaction,
+            u.first_name AS doc_first, u.last_name AS doc_last');
+        $this->db->from('diagnose d');
+        $this->db->join('appointment a', 'a.id = d.appointment_id', 'left');
+        $this->db->join('users u', 'u.id = d.user_id', 'left');
+        $this->db->where('d.patient_id', $data['data']->id);
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('d.clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('d.date DESC, d.id DESC');
+        $this->db->limit(10);
+        $data['history'] = $this->db->get()->result();
         
 
         if($this->input->post('submit')){
@@ -452,6 +501,29 @@ class Pages extends CI_Controller{
         $this->Page_model->delete('appointment','id',$param);
         $this->Page_model->update_ap_vstat();
         $this->session->set_flashdata('danger', 'deleted Successfully');
+        redirect(base_url().'Pages/patient_queue');
+    }
+
+    /**
+     * Take a no-show or mistaken check-in out of the waiting list without
+     * destroying the record, so the visit still shows on the patient's profile.
+     */
+    public function app_cancel(){
+        $id = (int) $this->input->post('appointment_id');
+        if (!$id) {
+            show_404();
+        }
+
+        $reason = trim((string) $this->input->post('reason'));
+        if ($reason === 'Other') {
+            $reason = trim((string) $this->input->post('reason_other'));
+        }
+        if ($reason === '') {
+            $reason = 'Cancelled';
+        }
+
+        $this->Page_model->cancel_appointment($id, $reason);
+        $this->session->set_flashdata('success', ' Appointment cancelled and removed from the queue.');
         redirect(base_url().'Pages/patient_queue');
     }
 
@@ -555,8 +627,31 @@ class Pages extends CI_Controller{
         $data['title'] = "New Appointment"; 
 
         $data['data'] = $this->Page_model->one_cond_get_single_row('patients','id',$id);
+        if (!$data['data']) {
+            show_404();
+        }
         $data['patient'] = $this->Page_model->no_cond_loop('referrals');
 
+        // Visit history in one joined query (was 3 queries per row in the view)
+        $this->db->select('diagnose.id, diagnose.date, diagnose.lab, diagnose.diagnosis, diagnose.treatment, diagnose.remarks, diagnose.payment_status');
+        $this->db->select('appointment.id AS appointment_id, appointment.visit_date, appointment.age AS visit_age, appointment.bp, appointment.weight, appointment.lmp, appointment.date_of_delivery, appointment.gravida, appointment.parity, appointment.term, appointment.preterm, appointment.abortion, appointment.living, appointment.transaction');
+        $this->db->select('users.first_name AS doc_first, users.middle_name AS doc_middle, users.last_name AS doc_last');
+        $this->db->from('diagnose');
+        $this->db->join('appointment', 'appointment.id = diagnose.appointment_id', 'left');
+        $this->db->join('users', 'users.id = diagnose.user_id', 'left');
+        $this->db->where('diagnose.patient_id', $id);
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('diagnose.clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('diagnose.id', 'DESC');
+        $this->db->limit(10);
+        $data['history'] = $this->db->get()->result();
+
+        // Appointments still awaiting a diagnosis, or cancelled
+        $data['pending'] = $this->Page_model->get_open_appointments($id, 10);
+
+        // Pre-fill the latest vitals so staff can compare quickly
+        $data['last_visit'] = $data['history'] ? $data['history'][0] : null;
 
         $this->load->view('templates/header');
         $this->load->view('templates/menu');
@@ -598,14 +693,35 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "New Diagnose"; 
+        $data['title'] = "New Diagnose";
 
-        
+
         $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$param);
+
+        if(empty($data['a'])){
+            show_404();
+        }
+
+        $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$data['a']->patient_id);
 
         // Get all specialties for selection
         $this->db->order_by('category, name');
         $data['specialties'] = $this->db->get('specialties')->result();
+
+        // Diagnosis history with visit details and clinician in one query
+        $this->db->select('d.*, a.visit_date, a.age AS visit_age, a.bp, a.weight, a.lmp, a.date_of_delivery,
+            a.gravida, a.parity, a.term, a.preterm, a.abortion, a.living, a.transaction,
+            u.first_name AS doc_first, u.last_name AS doc_last, s.name AS specialty_name');
+        $this->db->from('diagnose d');
+        $this->db->join('appointment a', 'a.id = d.appointment_id', 'left');
+        $this->db->join('users u', 'u.id = d.user_id', 'left');
+        $this->db->join('specialties s', 's.id = d.specialty_id', 'left');
+        $this->db->where('d.patient_id', $data['a']->patient_id);
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('d.clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('d.date DESC, d.id DESC');
+        $data['history'] = $this->db->get()->result();
 
 
         $this->load->view('templates/header');
@@ -631,7 +747,14 @@ class Pages extends CI_Controller{
 
         $data['title'] = "Edit Diagnose";
 
-        $data['d'] = $this->Page_model->one_cond_get_single_row('diagnose','id',$this->uri->segment(3));
+        $this->db->select('d.*, u.first_name AS doc_first, u.middle_name AS doc_mid, u.last_name AS doc_last');
+        $this->db->from('diagnose d');
+        $this->db->join('users u', 'u.id = d.user_id', 'left');
+        $this->db->where('d.id', $this->uri->segment(3));
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('d.clinic_id', current_clinic_id());
+        }
+        $data['d'] = $this->db->get()->row();
 
         // Check if diagnose record exists
         if(empty($data['d'])){
@@ -664,6 +787,35 @@ class Pages extends CI_Controller{
         $this->load->view('templates/menu');
         $this->load->view('Pages/'.$page, $data);
         $this->load->view('templates/footer');
+    }
+
+    /**
+     * Standalone printable prescription for a diagnosis record.
+     * Opened in a new tab; the view auto-invokes window.print().
+     */
+    public function prescription($id){
+
+        $this->db->select('d.*, u.first_name AS doc_first, u.middle_name AS doc_mid, u.last_name AS doc_last,
+            u.position AS doc_position, s.name AS doc_specialty, c.name AS clinic_name, c.address AS clinic_address,
+            c.contact_number AS clinic_contact, c.email AS clinic_email');
+        $this->db->from('diagnose d');
+        $this->db->join('users u', 'u.id = d.user_id', 'left');
+        $this->db->join('specialties s', 's.id = u.specialty_id', 'left');
+        $this->db->join('clinics c', 'c.id = d.clinic_id', 'left');
+        $this->db->where('d.id', $id);
+        if (table_has_clinic_id('diagnose') && !is_superadmin()) {
+            $this->db->where('d.clinic_id', current_clinic_id());
+        }
+        $data['d'] = $this->db->get()->row();
+
+        if(empty($data['d'])){
+            show_404();
+        }
+
+        $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$data['d']->patient_id);
+        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$data['d']->appointment_id);
+
+        $this->load->view('Pages/prescription_print', $data);
     }
     public function diagnose_delete($param){
         $this->Page_model->delete('diagnose','id',$param);
@@ -823,7 +975,22 @@ class Pages extends CI_Controller{
     public function pay(){
 
     $page = "pay_bill";
-    $data['data'] = $this->Page_model->one_cond_loop('diagnose','payment_status',0);
+
+    // Unpaid diagnoses with patient, visit and attending doctor in one query
+    $this->db->select('diagnose.id, diagnose.date, diagnose.diagnosis, diagnose.treatment, diagnose.remarks, diagnose.lab, diagnose.patient_id');
+    $this->db->select('patients.first_name, patients.middle_name, patients.last_name, patients.gender, patients.contact');
+    $this->db->select('appointment.visit_date, appointment.transaction, appointment.age AS visit_age');
+    $this->db->select('users.first_name AS doc_first, users.last_name AS doc_last');
+    $this->db->from('diagnose');
+    $this->db->join('patients', 'patients.id = diagnose.patient_id', 'left');
+    $this->db->join('appointment', 'appointment.id = diagnose.appointment_id', 'left');
+    $this->db->join('users', 'users.id = diagnose.user_id', 'left');
+    $this->db->where('diagnose.payment_status', 0);
+    if (table_has_clinic_id('diagnose')) {
+        $this->db->where('diagnose.clinic_id', current_clinic_id());
+    }
+    $this->db->order_by('diagnose.id', 'DESC');
+    $data['data'] = $this->db->get()->result();
 
     $this->load->view('templates/header');
     $this->load->view('templates/menu');
@@ -843,9 +1010,24 @@ class Pages extends CI_Controller{
             redirect(base_url().'Pages/patient_queue');
             return;
         }
-        
-        $data['item'] = $this->Page_model->no_cond_loop('items');
-        $data['sales'] = $this->Page_model->one_cond_loop('sales','reciept_code',$_SESSION['sc']);
+
+        // Items offered by this clinic, plus the charges already on this receipt
+        if (table_has_clinic_id('items')) {
+            $this->db->where('clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('description', 'ASC');
+        $data['item'] = $this->db->get('items')->result();
+
+        $this->db->select('s.*, i.description');
+        $this->db->from('sales s');
+        $this->db->join('items i', 'i.id = s.item_id', 'left');
+        $this->db->where('s.reciept_code', $_SESSION['sc']);
+        $this->db->order_by('s.id', 'ASC');
+        $data['sales'] = $this->db->get()->result();
+
+        $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$data['data']->patient_id);
+        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$data['data']->appointment_id);
+        $data['i'] = $this->Page_model->one_cond_get_single_row('items','id',$this->uri->segment(4));
 
         if($this->input->post('item')){
             $item = $this->input->post('item_id');
@@ -887,6 +1069,19 @@ class Pages extends CI_Controller{
 			session_write_close();
             redirect(base_url().'Pages/sale/'.$d);
     
+    }
+
+    /**
+     * Remove a single charge line from the pending receipt, then back to billing.
+     */
+    public function sale_item_delete(){
+        $sales_id = (int) $this->uri->segment(3);
+        $diag_id  = (int) $this->uri->segment(4);
+        if ($sales_id) {
+            $this->Page_model->delete('sales', 'id', $sales_id);
+            $this->session->set_flashdata('danger', 'Charge removed.');
+        }
+        redirect(base_url().'Pages/sale/'.$diag_id);
     }
 
     public function stock_code(){

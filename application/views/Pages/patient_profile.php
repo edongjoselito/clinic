@@ -114,7 +114,7 @@
 /* ===== Summary strip ===== */
 .summary-strip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
 }
@@ -137,6 +137,7 @@
 .summary-icon.green { background: #e7f7f5; color: #11998e; }
 .summary-icon.amber { background: #fff5e6; color: #f39c12; }
 .summary-icon.purple{ background: #f3effb; color: #7e57c2; }
+.summary-icon.orange{ background: #fff5e6; color: #f39c12; }
 .summary-label { font-size: 12px; font-weight: 600; color: #8a9bb0; text-transform: uppercase; letter-spacing: .5px; }
 .summary-value { font-size: 18px; font-weight: 700; color: #1c2b3a; line-height: 1.2; }
 
@@ -215,43 +216,29 @@
 .detail-value a { color: #1e88e5; text-decoration: none; }
 .detail-value a:hover { text-decoration: underline; }
 
-/* ===== Visit timeline ===== */
-.visit-list { padding: 8px 24px 24px; }
-.visit {
-    position: relative;
-    padding: 20px 0 20px 32px;
-    border-left: 2px solid #e8eef5;
+/* ===== Visit history table ===== */
+.table-modern { margin-bottom: 0; }
+.table-modern th {
+    border-top: none; border-bottom: 1px solid #f0f4f8;
+    font-weight: 700; color: #8496a9; font-size: 11.5px;
+    text-transform: uppercase; letter-spacing: .6px;
+    padding: 14px 18px; background: #fcfdff; white-space: nowrap;
 }
-.visit:last-child { padding-bottom: 0; }
-.visit::before {
-    content: '';
-    position: absolute;
-    left: -7px; top: 26px;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: #1e88e5;
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 2px #1e88e5;
-}
-.visit-card {
-    background: #fff;
-    border: 1px solid #edf2f7;
-    border-radius: 12px;
-    overflow: hidden;
-}
-.visit-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 14px 18px;
-    background: #f9fbfd;
-    border-bottom: 1px solid #f0f4f8;
-}
-.visit-date { font-weight: 700; color: #1c2b3a; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-.visit-date i { color: #1e88e5; }
-.visit-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.table-modern td { vertical-align: top; border-color: #f2f5f8; padding: 16px 18px; font-size: 13.5px; color: #3d4f63; }
+.table-modern th:first-child, .table-modern td:first-child { padding-left: 24px; }
+.table-modern th:last-child, .table-modern td:last-child { padding-right: 24px; }
+.table-modern tbody tr:hover { background: #fafcfe; }
+.table-modern tbody tr:last-child td { border-bottom: none; }
+.cell-date { font-weight: 700; color: #1c2b3a; font-size: 14px; white-space: nowrap; }
+.cell-sub { font-size: 12px; color: #8a9bb0; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+.muted-dash { color: #c4cedb; }
+
+/* Rows that have no diagnosis attached */
+.row-open { background: #fffdf7; }
+.row-open:hover { background: #fffaf0; }
+.row-cancelled { background: #fdfbfb; }
+.row-cancelled .cell-date { color: #8a9bb0; text-decoration: line-through; }
+
 .tag {
     display: inline-flex; align-items: center; gap: 5px;
     height: 26px; padding: 0 10px; border-radius: 13px;
@@ -261,26 +248,38 @@
 .tag.specialty { background: #f3effb; color: #7e57c2; }
 .tag.paid { background: #e7f7f5; color: #0f8a7f; }
 .tag.unpaid { background: #fff5e6; color: #d68910; }
-.tag.doctor { background: #f1f5f9; color: #3d4f63; }
-.visit-body { padding: 18px; }
-.vitals { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tag.pending { background: #fff5e6; color: #d68910; }
+.tag.cancelled { background: #fdecec; color: #c62828; }
+.header-note { font-size: 12.5px; color: #8a9bb0; font-weight: 500; }
+
+.vitals { display: flex; gap: 6px; flex-wrap: wrap; }
 .vital {
-    display: inline-flex; align-items: baseline; gap: 6px;
+    display: inline-flex; align-items: baseline; gap: 5px;
     background: #f7fafd; border: 1px solid #edf2f7;
-    border-radius: 8px; padding: 6px 10px;
+    border-radius: 7px; padding: 4px 9px; white-space: nowrap;
 }
-.vital .k { font-size: 10.5px; font-weight: 700; color: #8a9bb0; text-transform: uppercase; letter-spacing: .4px; }
-.vital .v { font-size: 13.5px; font-weight: 700; color: #1c2b3a; }
-.notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.note-block { background: #f9fbfd; border-radius: 10px; padding: 12px 14px; border-left: 3px solid #dce4ec; }
-.note-block.diagnosis { border-left-color: #1e88e5; }
-.note-block.treatment { border-left-color: #11998e; }
-.note-block.lab { border-left-color: #7e57c2; }
-.note-block.remarks { border-left-color: #f39c12; }
-.note-label { font-size: 11px; font-weight: 700; color: #8a9bb0; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-.note-text { font-size: 13.5px; color: #1c2b3a; white-space: pre-line; line-height: 1.55; }
-.note-text.muted { color: #b8c4d0; font-style: italic; }
-.visit-actions { display: flex; justify-content: flex-end; margin-top: 14px; }
+.vital .k { font-size: 10px; font-weight: 700; color: #8a9bb0; text-transform: uppercase; letter-spacing: .4px; }
+.vital .v { font-size: 12.5px; font-weight: 700; color: #1c2b3a; }
+.note.muted { color: #a8b6c6; font-style: italic; font-size: 13px; }
+
+/* DataTables chrome, matched to the queue and billing tables */
+.info-card .dataTables_wrapper { padding: 0; }
+.info-card .dataTables_length, .info-card .dataTables_filter { padding: 14px 24px 0; }
+.info-card .dataTables_filter { text-align: right; }
+.info-card .dataTables_length label, .info-card .dataTables_filter label {
+    margin: 0; color: #6c7d8f; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;
+}
+.info-card .dataTables_length select, .info-card .dataTables_filter input {
+    border: 1px solid #dce4ec; border-radius: 8px; height: 34px; padding: 0 10px;
+    font-size: 13px; color: #1c2b3a; outline: none;
+}
+.info-card .dataTables_filter input { width: 220px; }
+.info-card .dataTables_filter input:focus, .info-card .dataTables_length select:focus { border-color: #1e88e5; }
+.info-card .dataTables_info { padding: 12px 24px 16px; font-size: 12.5px; color: #8a9bb0; }
+.info-card .dataTables_paginate { padding: 12px 24px 16px; }
+.info-card .page-link { border-radius: 8px !important; margin-left: 4px; border: 1px solid #e3eaf1; color: #3d4f63; font-weight: 600; font-size: 13px; padding: 6px 12px; }
+.info-card .page-item.active .page-link { background: #1e88e5; border-color: #1e88e5; }
+
 .btn-sm-action {
     display: inline-flex; align-items: center; gap: 6px;
     height: 32px; padding: 0 12px; border-radius: 8px;
@@ -311,9 +310,8 @@
     .hero-actions .hero-cta { flex: 1; justify-content: center; }
     .summary-strip { grid-template-columns: 1fr; }
     .details-grid { grid-template-columns: 1fr; }
-    .notes { grid-template-columns: 1fr; }
-    .visit-list { padding: 8px 16px 16px; }
-    .visit { padding-left: 22px; }
+    .table-modern th:first-child, .table-modern td:first-child { padding-left: 16px; }
+    .table-modern th:last-child, .table-modern td:last-child { padding-right: 16px; }
 }
 </style>
 
@@ -330,6 +328,35 @@ $gender = strtolower(trim($p->gender));
 $unpaid_count = isset($unpaid_count) ? (int) $unpaid_count : 0;
 $visit_count  = isset($visit_count) ? (int) $visit_count : count($diag);
 $last_visit_ts = !empty($last_visit) ? strtotime($last_visit) : false;
+
+// Appointments that never got a diagnosis: still waiting, or cancelled.
+$pending = isset($pending) ? $pending : array();
+$awaiting = array();
+$cancelled = array();
+foreach ($pending as $a) {
+    if (!empty($a->cancelled_at)) { $cancelled[] = $a; } else { $awaiting[] = $a; }
+}
+$open_count = count($awaiting);
+
+// Diagnosed visits and still-open appointments belong in one chronological list.
+// Two separate timeline widgets made the same patient's history read as two
+// unrelated things.
+$timeline = array();
+foreach ($diag as $v) {
+    $d = $v->date ?: $v->visit_date;
+    $timeline[] = array('kind' => 'diagnosed', 'ts' => $d ? strtotime($d) : 0, 'row' => $v);
+}
+foreach ($pending as $a) {
+    $timeline[] = array(
+        'kind' => !empty($a->cancelled_at) ? 'cancelled' : 'open',
+        'ts'   => $a->visit_date ? strtotime($a->visit_date) : 0,
+        'row'  => $a,
+    );
+}
+usort($timeline, function ($x, $y) {
+    if ($x['ts'] === $y['ts']) { return 0; }
+    return ($x['ts'] < $y['ts']) ? 1 : -1;
+});
 
 function pv($v) { $v = trim((string) $v); return $v === '' ? '<span class="muted">—</span>' : htmlentities($v); }
 ?>
@@ -390,6 +417,15 @@ function pv($v) { $v = trim((string) $v); return $v === '' ? '<span class="muted
             <div class="summary-value"><?= $unpaid_count; ?></div>
         </div>
     </div>
+    <?php if($open_count): ?>
+    <div class="summary-tile">
+        <div class="summary-icon orange"><i class="ph ph-hourglass-medium"></i></div>
+        <div>
+            <div class="summary-label">Awaiting Diagnosis</div>
+            <div class="summary-value"><?= $open_count; ?></div>
+        </div>
+    </div>
+    <?php endif; ?>
     <div class="summary-tile">
         <div class="summary-icon purple"><i class="ph ph-phone"></i></div>
         <div>
@@ -415,93 +451,122 @@ function pv($v) { $v = trim((string) $v); return $v === '' ? '<span class="muted
             <div class="detail"><div class="detail-label">Age</div><div class="detail-value"><?= $p->age ? (int) $p->age . ' years old' : '<span class="muted">—</span>'; ?></div></div>
             <div class="detail"><div class="detail-label">Gender</div><div class="detail-value"><?= pv(ucfirst($gender)); ?></div></div>
             <div class="detail"><div class="detail-label">Civil Status</div><div class="detail-value"><?= pv($p->civil_status); ?></div></div>
-            <div class="detail"><div class="detail-label">Occupation</div><div class="detail-value"><?= pv(ucwords(strtolower($p->occupation))); ?></div></div>
+            <div class="detail"><div class="detail-label">Occupation</div><div class="detail-value"><?= pv(ucwords(strtolower((string) $p->occupation))); ?></div></div>
             <div class="detail"><div class="detail-label">Contact Number</div><div class="detail-value"><?= pv($p->contact); ?></div></div>
-            <div class="detail"><div class="detail-label">Email</div><div class="detail-value"><?= trim($p->email) !== '' ? '<a href="mailto:' . htmlentities($p->email) . '">' . htmlentities($p->email) . '</a>' : '<span class="muted">—</span>'; ?></div></div>
+            <div class="detail"><div class="detail-label">Email</div><div class="detail-value"><?= trim((string) $p->email) !== '' ? '<a href="mailto:' . htmlentities($p->email) . '">' . htmlentities($p->email) . '</a>' : '<span class="muted">—</span>'; ?></div></div>
             <div class="detail"><div class="detail-label">Portal Access</div><div class="detail-value"><?= (int) $p->portal_access === 1 ? 'Enabled' : 'Disabled'; ?></div></div>
-            <div class="detail"><div class="detail-label">Company / Employer</div><div class="detail-value"><?= pv(ucwords(strtolower($p->company))); ?></div></div>
+            <div class="detail"><div class="detail-label">Company / Employer</div><div class="detail-value"><?= pv(ucwords(strtolower((string) $p->company))); ?></div></div>
             <div class="detail" style="grid-column: span 2;"><div class="detail-label">Address</div><div class="detail-value"><?= pv($address); ?></div></div>
         </div>
     </div>
 </div>
 
-<!-- Visit history -->
+<!-- Visit history: diagnosed visits and open appointments in one list -->
 <div class="card info-card">
     <div class="card-header">
-        <h5><span class="section-icon"><i class="ph ph-clipboard-text"></i></span>Medical History <span class="count-badge"><?= $visit_count; ?></span></h5>
+        <h5>
+            <span class="section-icon"><i class="ph ph-clipboard-text"></i></span>
+            Visit History <span class="count-badge"><?= count($timeline); ?></span>
+            <?php if($open_count): ?><span class="tag pending"><i class="ph ph-clock"></i><?= $open_count; ?> awaiting diagnosis</span><?php endif; ?>
+        </h5>
         <a href="<?= base_url(); ?>Pages/ap/<?= $p->id; ?>" class="header-link"><i class="ph ph-plus"></i>New appointment</a>
     </div>
-    <?php if(!empty($diag)): ?>
-    <div class="visit-list">
-        <?php foreach($diag as $v):
-            $vdate = $v->date ?: $v->visit_date;
-            $vdate_ts = $vdate ? strtotime($vdate) : false;
-            $doc = trim((string) $v->doc_last);
-            if ($doc !== '') {
-                $doc = ucwords(strtolower($doc . ', ' . $v->doc_first)) . (trim((string) $v->doc_middle) !== '' ? ' ' . strtoupper(substr(trim($v->doc_middle), 0, 1)) . '.' : '');
-            }
-            $has_ob = trim((string) $v->lmp) !== '' || trim((string) $v->date_of_delivery) !== '' || (int) $v->gravida || (int) $v->parity || (int) $v->abortion || (int) $v->living;
-        ?>
-        <div class="visit">
-            <div class="visit-card">
-                <div class="visit-head">
-                    <div class="visit-date"><i class="ph ph-calendar-blank"></i><?= $vdate_ts ? date('F j, Y', $vdate_ts) : 'Undated visit'; ?></div>
-                    <div class="visit-meta">
-                        <?php if(trim((string) $v->transaction) !== ''): ?><span class="tag type"><?= htmlentities($v->transaction); ?></span><?php endif; ?>
-                        <?php if(!empty($v->specialty_name)): ?><span class="tag specialty"><i class="ph ph-first-aid-kit"></i><?= htmlentities($v->specialty_name); ?></span><?php endif; ?>
-                        <?php if($doc !== ''): ?><span class="tag doctor"><i class="ph ph-user-circle"></i><?= htmlentities($doc); ?></span><?php endif; ?>
-                        <span class="tag <?= (int) $v->payment_status === 1 ? 'paid' : 'unpaid'; ?>"><i class="ph <?= (int) $v->payment_status === 1 ? 'ph-check-circle' : 'ph-clock'; ?>"></i><?= (int) $v->payment_status === 1 ? 'Paid' : 'Unpaid'; ?></span>
-                    </div>
-                </div>
-                <div class="visit-body">
-                    <div class="vitals">
-                        <?php if($v->visit_age): ?><span class="vital"><span class="k">Age</span><span class="v"><?= (int) $v->visit_age; ?></span></span><?php endif; ?>
-                        <?php if(trim((string) $v->bp) !== ''): ?><span class="vital"><span class="k">BP</span><span class="v"><?= htmlentities($v->bp); ?></span></span><?php endif; ?>
-                        <?php if(trim((string) $v->weight) !== ''): ?><span class="vital"><span class="k">Weight</span><span class="v"><?= htmlentities($v->weight); ?> kg</span></span><?php endif; ?>
-                        <?php if($has_ob): ?>
-                            <?php if(trim((string) $v->lmp) !== ''): ?><span class="vital"><span class="k">LMP</span><span class="v"><?= htmlentities($v->lmp); ?></span></span><?php endif; ?>
-                            <?php if(trim((string) $v->date_of_delivery) !== ''): ?><span class="vital"><span class="k">EDD</span><span class="v"><?= htmlentities($v->date_of_delivery); ?></span></span><?php endif; ?>
-                            <span class="vital"><span class="k">G/P/A/L</span><span class="v"><?= (int) $v->gravida; ?>/<?= (int) $v->parity; ?>/<?= (int) $v->abortion; ?>/<?= (int) $v->living; ?></span></span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="notes">
-                        <div class="note-block diagnosis">
-                            <div class="note-label">Diagnosis</div>
-                            <div class="note-text <?= trim((string) $v->diagnosis) === '' ? 'muted' : ''; ?>"><?= trim((string) $v->diagnosis) !== '' ? htmlentities(trim($v->diagnosis)) : 'No diagnosis recorded'; ?></div>
-                        </div>
-                        <div class="note-block treatment">
-                            <div class="note-label">Treatment</div>
-                            <div class="note-text <?= trim((string) $v->treatment) === '' ? 'muted' : ''; ?>"><?= trim((string) $v->treatment) !== '' ? htmlentities(trim($v->treatment)) : 'No treatment recorded'; ?></div>
-                        </div>
-                        <?php if(trim((string) $v->lab) !== ''): ?>
-                        <div class="note-block lab">
-                            <div class="note-label">Laboratory</div>
-                            <div class="note-text"><?= htmlentities(trim($v->lab)); ?></div>
-                        </div>
-                        <?php endif; ?>
-                        <?php if(trim((string) $v->remarks) !== ''): ?>
-                        <div class="note-block remarks">
-                            <div class="note-label">Remarks</div>
-                            <div class="note-text"><?= htmlentities(trim($v->remarks)); ?></div>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="visit-actions">
-                        <a href="<?= base_url(); ?>Pages/diagnose_edit/<?= $v->id; ?>" class="btn-sm-action"><i class="ph ph-pencil-simple"></i>Edit record</a>
-                    </div>
-                </div>
-            </div>
+    <div class="card-body" style="padding: 0;">
+        <?php if(!empty($timeline)): ?>
+        <div class="table-responsive">
+            <table id="historyTable" class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>Visit</th>
+                        <th>Vitals</th>
+                        <th>Findings</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($timeline as $item):
+                        $r    = $item['row'];
+                        $kind = $item['kind'];
+                        $ts   = $item['ts'];
+
+                        $doc = trim((string) (isset($r->doc_last) ? $r->doc_last : ''));
+                        if ($doc !== '') {
+                            $doc = ucwords(strtolower($doc . ', ' . $r->doc_first))
+                                 . (trim((string) $r->doc_middle) !== '' ? ' ' . strtoupper(substr(trim($r->doc_middle), 0, 1)) . '.' : '');
+                        }
+
+                        $bp = trim((string) $r->bp);
+                        $wt = trim((string) $r->weight);
+                        $type = trim((string) $r->transaction);
+                        $has_ob = trim((string) $r->lmp) !== '' || trim((string) $r->date_of_delivery) !== ''
+                                  || (int) $r->gravida || (int) $r->parity || (int) $r->abortion || (int) $r->living;
+                    ?>
+                    <tr class="row-<?= $kind; ?>">
+                        <td data-order="<?= $ts; ?>">
+                            <div class="cell-date"><?= $ts ? date('M j, Y', $ts) : 'Undated'; ?></div>
+                            <?php if($type !== ''): ?><div class="cell-sub"><span class="tag type"><?= htmlentities($type); ?></span></div><?php endif; ?>
+                            <?php if($doc !== ''): ?><div class="cell-sub"><i class="ph ph-user-circle"></i><?= htmlentities($doc); ?></div><?php endif; ?>
+                            <?php if(!empty($r->specialty_name)): ?><div class="cell-sub"><span class="tag specialty"><?= htmlentities($r->specialty_name); ?></span></div><?php endif; ?>
+                        </td>
+                        <td>
+                            <div class="vitals">
+                                <?php if($r->visit_age): ?><span class="vital"><span class="k">Age</span><span class="v"><?= (int) $r->visit_age; ?></span></span><?php endif; ?>
+                                <?php if($bp !== ''): ?><span class="vital"><span class="k">BP</span><span class="v"><?= htmlentities($bp); ?></span></span><?php endif; ?>
+                                <?php if($wt !== ''): ?><span class="vital"><span class="k">Wt</span><span class="v"><?= htmlentities($wt); ?> kg</span></span><?php endif; ?>
+                                <?php if($has_ob): ?>
+                                    <?php if(trim((string) $r->lmp) !== ''): ?><span class="vital"><span class="k">LMP</span><span class="v"><?= htmlentities($r->lmp); ?></span></span><?php endif; ?>
+                                    <?php if(trim((string) $r->date_of_delivery) !== ''): ?><span class="vital"><span class="k">EDD</span><span class="v"><?= htmlentities($r->date_of_delivery); ?></span></span><?php endif; ?>
+                                    <span class="vital"><span class="k">G/P/A/L</span><span class="v"><?= (int) $r->gravida; ?>/<?= (int) $r->parity; ?>/<?= (int) $r->abortion; ?>/<?= (int) $r->living; ?></span></span>
+                                <?php endif; ?>
+                                <?php if(!$r->visit_age && $bp === '' && $wt === '' && !$has_ob): ?><span class="muted-dash">—</span><?php endif; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <?php if($kind === 'diagnosed'): ?>
+                                <?= findings_cell(
+                                    array('Diagnosis' => $r->diagnosis, 'Treatment' => $r->treatment, 'Laboratory' => $r->lab, 'Remarks' => $r->remarks),
+                                    $display_name,
+                                    ($ts ? date('F j, Y', $ts) : '') . ($doc !== '' ? ' · ' . $doc : '')
+                                ); ?>
+                            <?php elseif($kind === 'cancelled'): ?>
+                                <div class="note muted">Cancelled<?= trim((string) $r->cancel_reason) !== '' ? ' — ' . htmlentities($r->cancel_reason) : ''; ?></div>
+                            <?php else: ?>
+                                <div class="note muted">Checked in, not yet diagnosed</div>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if($kind === 'diagnosed'): ?>
+                                <span class="tag <?= (int) $r->payment_status === 1 ? 'paid' : 'unpaid'; ?>"><i class="ph <?= (int) $r->payment_status === 1 ? 'ph-check-circle' : 'ph-clock'; ?>"></i><?= (int) $r->payment_status === 1 ? 'Paid' : 'Unpaid'; ?></span>
+                            <?php elseif($kind === 'cancelled'): ?>
+                                <span class="tag cancelled"><i class="ph ph-x-circle"></i>Cancelled</span>
+                            <?php else: ?>
+                                <span class="tag pending"><i class="ph ph-clock"></i>Awaiting diagnosis</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-right">
+                            <?php if($kind === 'diagnosed'): ?>
+                                <a href="<?= base_url(); ?>Pages/diagnose_edit/<?= (int) $r->id; ?>" class="btn-sm-action"><i class="ph ph-pencil-simple"></i>Edit record</a>
+                            <?php elseif($kind === 'open'): ?>
+                                <a href="<?= base_url(); ?>Pages/diagnose/<?= (int) $r->id; ?>" class="btn-sm-action"><i class="ph ph-stethoscope"></i>Diagnose</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-        <?php endforeach; ?>
+        <?php else: ?>
+        <div class="empty-state">
+            <i class="ph ph-clipboard-text"></i>
+            <p>No visits recorded yet for this patient</p>
+            <a href="<?= base_url(); ?>Pages/ap/<?= $p->id; ?>" class="empty-link"><i class="ph ph-calendar-plus"></i>Create first appointment</a>
+        </div>
+        <?php endif; ?>
     </div>
-    <?php else: ?>
-    <div class="empty-state">
-        <i class="ph ph-clipboard-text"></i>
-        <p>No medical history yet for this patient</p>
-        <a href="<?= base_url(); ?>Pages/ap/<?= $p->id; ?>" class="empty-link"><i class="ph ph-calendar-plus"></i>Create first appointment</a>
-    </div>
-    <?php endif; ?>
 </div>
+
+<?= findings_modal(); ?>
 
 </div>
 
@@ -510,5 +575,27 @@ $(function () {
     $('#patientInfo')
         .on('show.bs.collapse', function () { $('[data-target="#patientInfo"] .toggle-text').text('Hide'); })
         .on('hide.bs.collapse', function () { $('[data-target="#patientInfo"] .toggle-text').text('Show'); });
+
+    // Search and paging only earn their place once the history is long enough.
+    var $history = $('#historyTable');
+    if ($history.length && $history.find('tbody tr').length > 8) {
+        $history.DataTable({
+            responsive: false,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
+            dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row"<"col-sm-6"i><"col-sm-6"p>>',
+            order: [[0, 'desc']],
+            columnDefs: [{ targets: [1, 2, 4], orderable: false }],
+            language: {
+                search: '', searchPlaceholder: 'Search visits…',
+                lengthMenu: 'Show _MENU_',
+                info: 'Showing _START_ to _END_ of _TOTAL_ visits',
+                infoEmpty: 'Nothing to show',
+                infoFiltered: '(filtered from _MAX_)',
+                zeroRecords: 'No matching visits',
+                paginate: { first: 'First', last: 'Last', next: 'Next', previous: 'Prev' }
+            }
+        });
+    }
 });
 </script>

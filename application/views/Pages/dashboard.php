@@ -431,9 +431,9 @@ $waiting = $app->num_rows();
     <div class="card-header">
         <h5><i class="ph ph-calendar-dots"></i>Appointments Calendar</h5>
         <div class="cal-nav">
-            <a href="?m=<?= $prev_m; ?>&y=<?= $prev_y; ?>" title="Previous Month"><i class="ph ph-caret-left"></i></a>
+            <a href="?m=<?= $prev_m; ?>&y=<?= $prev_y; ?>" data-toggle="tooltip" data-placement="top" title="Previous Month"><i class="ph ph-caret-left"></i></a>
             <span class="cal-title"><?= $month_name; ?></span>
-            <a href="?m=<?= $next_m; ?>&y=<?= $next_y; ?>" title="Next Month"><i class="ph ph-caret-right"></i></a>
+            <a href="?m=<?= $next_m; ?>&y=<?= $next_y; ?>" data-toggle="tooltip" data-placement="top" title="Next Month"><i class="ph ph-caret-right"></i></a>
         </div>
     </div>
     <div class="card-body">
@@ -455,7 +455,7 @@ $waiting = $app->num_rows();
                 if($count > 0){ $classes .= ' has-apts'; }
                 if($date_str === $today_str){ $classes .= ' today'; }
             ?>
-                <a href="<?= base_url(); ?>Pages/patient_queue?date=<?= $date_str; ?>" class="<?= $classes; ?>" title="<?= $count; ?> appointment<?= $count==1?'':'s'; ?>">
+                <a href="<?= base_url(); ?>Pages/patient_queue?date=<?= $date_str; ?>" class="<?= $classes; ?>" data-toggle="tooltip" data-placement="top" title="<?= $count; ?> appointment<?= $count==1?'':'s'; ?>">
                     <span><?= $day; ?></span>
                     <?php if($count > 0): ?>
                         <span class="cal-count"><?= $count; ?></span>
@@ -520,7 +520,7 @@ $waiting = $app->num_rows();
                             </td>
                             <td>
                                 <a href="<?= base_url(); ?>Pages/diagnose/<?= $q->id; ?>" class="btn-queue diagnose"><i class="ph ph-stethoscope mr-1"></i>Diagnose</a>
-                                <a href="<?= base_url(); ?>Pages/patient_profile/<?= $q->patient_id; ?>" class="btn-queue view" title="View patient"><i class="ph ph-user"></i></a>
+                                <a href="<?= base_url(); ?>Pages/patient_profile/<?= $q->patient_id; ?>" class="btn-queue view" data-toggle="tooltip" data-placement="top" title="View patient"><i class="ph ph-user"></i></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -568,8 +568,8 @@ $waiting = $app->num_rows();
                             <td>
                                 <div class="cell-patient"><?= htmlentities(ucwords(strtolower(trim($d_lname . ', ' . $d_fname)))); ?></div>
                             </td>
-                            <td><div class="diag-preview" title="<?= htmlentities($diag_text); ?>"><?= $diag_text !== '' ? htmlentities($diag_text) : '—'; ?></div></td>
-                            <td><div class="treatment-preview" title="<?= htmlentities($treat_text); ?>"><?= $treat_text !== '' ? htmlentities($treat_text) : '—'; ?></div></td>
+                            <td><div class="diag-preview" data-toggle="tooltip" data-placement="top" title="<?= htmlentities($diag_text); ?>"><?= $diag_text !== '' ? htmlentities($diag_text) : '—'; ?></div></td>
+                            <td><div class="treatment-preview" data-toggle="tooltip" data-placement="top" title="<?= htmlentities($treat_text); ?>"><?= $treat_text !== '' ? htmlentities($treat_text) : '—'; ?></div></td>
                             <td><?= $doc_name !== '' ? htmlentities(ucwords(strtolower($doc_name))) : '—'; ?></td>
                             <td><?= $diag_date ? date('M d, Y', strtotime($diag_date)) : '—'; ?></td>
                             <td>
@@ -623,3 +623,9 @@ $waiting = $app->num_rows();
 </div>
 
 </div>
+
+<script>
+$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+});
+</script>

@@ -41,10 +41,8 @@ function refer() {
 </script>
       
 
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-            <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-            <script language=javascript src="../js/numeric.js"></script>
-            <script language=javascript src="../js/common.js"></script>
+        <!-- Vendor js: jQuery + Bootstrap + metisMenu (metisMenu collapses the sidebar submenus) -->
+        <script src="<?= base_url(); ?>assets/js/vendor.min.js"></script>
 
             <script type='text/javascript'>
             var moname=new Array('01','02','03','04','05','06','07','08','09','10','11','12');

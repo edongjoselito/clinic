@@ -188,3 +188,30 @@ if (!function_exists('table_has_clinic_id')) {
         return $checked[$table];
     }
 }
+
+if (!function_exists('table_has_column')) {
+    /**
+     * Check whether a table has a given column, so features that depend on a
+     * newer schema degrade quietly on databases that have not been migrated yet.
+     *
+     * @param string $table
+     * @param string $column
+     * @return bool
+     */
+    function table_has_column($table, $column) {
+        static $checked = [];
+
+        $key = $table . '.' . $column;
+        if (isset($checked[$key])) {
+            return $checked[$key];
+        }
+
+        $CI =& get_instance();
+        $CI->load->database();
+
+        $query = $CI->db->query("SHOW COLUMNS FROM `$table` LIKE " . $CI->db->escape($column));
+        $checked[$key] = ($query->num_rows() > 0);
+
+        return $checked[$key];
+    }
+}

@@ -150,11 +150,12 @@ public function update_diagnose(){
     $id = $this->input->post('d_id');
 
     $data = array(
-    'lab' => $this->input->post('lab'), 
-    'diagnosis' => $this->input->post('diagnosis'), 
-    'treatment' => $this->input->post('treatment'), 
-    'remarks' => $this->input->post('remarks')
-    ); 
+    'lab' => $this->input->post('lab'),
+    'diagnosis' => $this->input->post('diagnosis'),
+    'treatment' => $this->input->post('treatment'),
+    'remarks' => $this->input->post('remarks'),
+    'specialty_id' => $this->input->post('specialty_id') ? $this->input->post('specialty_id') : NULL
+    );
 
     $this->db->where('id', $id);
     return $this->db->update('diagnose', $data);
@@ -183,6 +184,55 @@ public function update_ap_vstat(){
 
     $this->db->where('id', $id);
     return $this->db->update('appointment', $data);
+}
+
+public function cancel_appointment($id, $reason = ''){
+    date_default_timezone_set('Asia/Manila');
+
+    // visible = 1 takes it out of the waiting list; the row itself is kept so the
+    // visit still shows on the patient's profile, marked as cancelled.
+    $data = array('visible' => 1);
+    if (table_has_column('appointment', 'cancelled_at')) {
+        $data['cancelled_at'] = date('Y-m-d H:i:s');
+    }
+    if (table_has_column('appointment', 'cancel_reason')) {
+        $data['cancel_reason'] = $reason !== '' ? mb_substr($reason, 0, 255) : 'Cancelled';
+    }
+
+    $this->db->where('id', (int) $id);
+    if (table_has_clinic_id('appointment')) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
+    return $this->db->update('appointment', $data);
+}
+
+/**
+ * Appointments with no diagnosis attached: either still waiting in the queue
+ * or cancelled. They are real visits, so the profile should not report the
+ * patient as having no history at all.
+ */
+public function get_open_appointments($patient_id, $limit = 0){
+    $has_cancel = table_has_column('appointment', 'cancelled_at');
+
+    $this->db->select('appointment.id, appointment.visit_date, appointment.age AS visit_age, appointment.bp, appointment.weight');
+    $this->db->select('appointment.lmp, appointment.date_of_delivery, appointment.gravida, appointment.parity, appointment.term, appointment.preterm, appointment.abortion, appointment.living');
+    $this->db->select('appointment.transaction, appointment.visible');
+    if ($has_cancel) {
+        $this->db->select('appointment.cancelled_at, appointment.cancel_reason');
+    }
+    $this->db->from('appointment');
+    $this->db->join('diagnose', 'diagnose.appointment_id = appointment.id', 'left');
+    $this->db->where('appointment.patient_id', (int) $patient_id);
+    $this->db->where('diagnose.id IS NULL', null, false);
+    if (table_has_clinic_id('appointment')) {
+        $this->db->where('appointment.clinic_id', current_clinic_id());
+    }
+    $this->db->order_by('appointment.visit_date', 'DESC');
+    $this->db->order_by('appointment.id', 'DESC');
+    if ($limit > 0) {
+        $this->db->limit($limit);
+    }
+    return $this->db->get()->result();
 }
 public function insert_user_sa(){
 
@@ -351,11 +401,11 @@ public function update_appointment(){
     'living' => $this->input->post('living'), 
     'no_of_weeks' => $this->input->post('no_of_weeks'), 
     'no_of_days' => $this->input->post('no_of_days'), 
-    'transaction' => $this->input->post('transaction'), 
-    'visit_date' => date('Y-m-d'),
-    'age' => $this->input->post('age'),  
-    'referral_status' => $this->input->post('ref'), 
-    'referral_id' => $this->input->post('ref'),
+    'transaction' => $this->input->post('transaction'),
+    'visit_date' => $this->input->post('visit_date') ?: date('Y-m-d'),
+    'age' => $this->input->post('age'),
+    'referral_status' => $this->input->post('ref'),
+    'referral_id' => $this->input->post('ref_id') ? $this->input->post('ref_id') : '',
     'term' => $this->input->post('term'),
     'preterm' => $this->input->post('preterm')
     ); 
@@ -367,7 +417,7 @@ public function update_appointment(){
 public function insert_sales(){
     $data = array(
     'clinic_id' => current_clinic_id(),
-    'item_id' => $this->input->post('item_id'), 
+    'item_id' => $this->input->post('item_id'),
     'price' => $this->input->post('price'), 
     'reciept_code' => $this->input->post('sales_code'), 
     'quantity' => $this->input->post('quantity'), 

@@ -1,532 +1,352 @@
 <?php
-    // Variables $d, $p, $a are passed from controller
-    // $d = diagnosis record, $p = patient, $a = appointment
     if(empty($d)){
         echo '<div class="alert alert-danger">Diagnosis record not found.</div>';
         return;
     }
+    $p_name   = $p ? ucwords(strtolower(trim($p->first_name . ' ' . $p->last_name))) : 'Unknown Patient';
+    $full_name = $p ? trim($p->first_name . ' ' . $p->middle_name . ' ' . $p->last_name) : '';
+    $initials = $p ? strtoupper(substr(trim($p->first_name), 0, 1) . substr(trim($p->last_name), 0, 1)) : '';
+    $gender   = strtolower(trim((string) ($p->gender ?? '')));
+    $address  = $p ? trim(implode(' ', array_filter(array_map('trim', array($p->sitio, $p->barangay, $p->city_mun, $p->province))))) : '';
+    $has_ob   = $a && (trim((string) $a->lmp) !== '' || trim((string) $a->date_of_delivery) !== '' || (int) $a->gravida || (int) $a->parity);
+    $visit_ts = ($a && $a->visit_date) ? strtotime($a->visit_date) : false;
+    $diag_ts  = $d->date ? strtotime($d->date) : false;
+    $doc_name = trim((string) $d->doc_last) !== '' ? ucwords(strtolower(trim($d->doc_first . ' ' . $d->doc_mid . ' ' . $d->doc_last))) : '';
 ?>
-
 <style>
-.diagnose-wrapper {
-    padding-top: 20px;
-}
-.diagnose-hero {
+.diagnose-wrapper { padding-top: 20px; }
+
+/* ===== Hero ===== */
+.hero-card {
+    position: relative; overflow: hidden;
     background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border-radius: 12px;
-    padding: 25px 30px;
-    color: white;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(30, 136, 229, 0.3);
+    border-radius: 16px; padding: 28px 32px; color: #fff;
+    margin-bottom: 24px; box-shadow: 0 12px 32px rgba(30, 136, 229, 0.28);
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
 }
-.diagnose-hero h2 {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 24px;
+.hero-card::before, .hero-card::after {
+    content: ''; position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.07); pointer-events: none;
 }
-.diagnose-hero p {
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 0;
+.hero-card::before { width: 260px; height: 260px; right: -60px; top: -110px; }
+.hero-card::after { width: 170px; height: 170px; right: 130px; bottom: -90px; }
+.hero-left { display: flex; align-items: center; gap: 18px; position: relative; z-index: 1; min-width: 0; }
+.hero-avatar {
+    width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #fff;
 }
-.btn-back {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+.hero-title h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; color: #fff; }
+.hero-sub { font-size: 13.5px; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 5px 12px; font-size: 12.5px; font-weight: 500; color: #fff;
 }
-.btn-back:hover {
-    background: rgba(255,255,255,0.3);
-    color: white;
+.hero-chip i { font-size: 14px; }
+.hero-actions { display: flex; gap: 10px; position: relative; z-index: 1; flex-wrap: wrap; }
+.hero-cta {
+    display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px;
+    border-radius: 10px; font-size: 13.5px; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.15); color: #fff;
 }
-.patient-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
+.hero-cta:hover { background: rgba(255,255,255,0.25); color: #fff; text-decoration: none; }
+
+/* ===== Cards ===== */
+.form-card, .table-card {
+    border: none; border-radius: 14px; background: #fff;
+    box-shadow: 0 2px 14px rgba(15, 40, 80, 0.07); margin-bottom: 24px; overflow: hidden;
 }
-.patient-card .card-header {
+.form-card .card-header, .table-card .card-header {
+    background: #fff; border-bottom: 1px solid #eef2f7;
+    padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+}
+.form-card .card-header h5, .table-card .card-header h5 {
+    margin: 0; font-size: 15.5px; font-weight: 700; color: #1c2b3a;
+    display: flex; align-items: center; gap: 12px;
+}
+.section-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
     background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    padding: 20px 25px;
-    border-radius: 12px 12px 0 0;
-    border-bottom: none;
+    border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;
 }
-.patient-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #1565c0;
+.section-icon i { color: #1565c0; font-size: 19px; }
+.count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 24px; height: 24px; padding: 0 8px; border-radius: 12px;
+    background: #e3f2fd; color: #1565c0; font-size: 12px; font-weight: 700;
 }
-.patient-card .card-body {
-    padding: 25px;
+.header-link { font-size: 13px; font-weight: 600; color: #1565c0; display: inline-flex; align-items: center; gap: 5px; }
+.header-link:hover { color: #0d47a1; text-decoration: none; }
+
+/* ===== Vitals strip ===== */
+.vitals { display: flex; flex-wrap: wrap; gap: 10px; padding: 20px 24px; }
+.vital {
+    display: inline-flex; flex-direction: column; gap: 2px;
+    background: #f8fbff; border: 1px solid #e3eefb; border-radius: 10px;
+    padding: 10px 16px; min-width: 110px;
 }
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-.info-item {
-    background: #f8fbff;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 3px solid #1e88e5;
-}
-.info-label {
-    font-size: 12px;
-    color: #757575;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 5px;
-}
-.info-value {
-    font-weight: 600;
-    color: #212121;
-    font-size: 15px;
-}
-.history-table {
-    margin-bottom: 0;
-}
-.history-table thead {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-}
-.history-table thead th {
-    border: none;
-    font-weight: 600;
-    color: #1565c0;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 10px 8px;
-    white-space: nowrap;
-}
-.history-table tbody td {
-    padding: 12px 8px;
-    border-color: #f5f5f5;
-    vertical-align: middle;
-    font-size: 12px;
-}
-.history-table tbody tr:hover {
-    background-color: #f8fbff;
-}
-.form-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
-}
-.form-card .card-header {
-    background: white;
-    border-bottom: 2px solid #e3f2fd;
-    padding: 20px 25px;
-    border-radius: 12px 12px 0 0;
-}
-.form-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #1565c0;
-}
-.form-card .card-body {
-    padding: 25px;
-}
+.vital .k { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #8a9bb0; }
+.vital .v { font-size: 14.5px; font-weight: 700; color: #1565c0; }
+
+/* ===== Form ===== */
+.form-card .card-body { padding: 24px; }
 .form-group label {
-    font-weight: 500;
-    color: #424242;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    display: block; font-size: 12px; font-weight: 700; color: #54677c;
+    text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px;
 }
 .form-control {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    width: 100%; height: 44px; border: 1.5px solid #dde5ee; border-radius: 10px;
+    padding: 0 14px; font-size: 14px; color: #1c2b3a; background: #fff;
+    transition: border-color .2s, box-shadow .2s;
 }
-.form-control:focus {
-    border-color: #1e88e5;
-    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
-}
-.form-control[readonly] {
-    background-color: #f5f5f5;
-    color: #757575;
-}
-textarea.form-control {
-    resize: vertical;
-    min-height: 120px;
-}
-.btn-update-diagnosis {
-    background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border: none;
-    color: white;
-    padding: 14px 35px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.btn-update-diagnosis:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(30, 136, 229, 0.4);
-    color: white;
-}
-.btn-cancel-edit {
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    color: #616161;
-    padding: 14px 30px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    transition: all 0.3s ease;
-}
-.btn-cancel-edit:hover {
-    background: #eeeeee;
-    color: #424242;
-}
-.btn-print-prescription {
-    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
-    border: none;
-    color: white;
-    padding: 14px 30px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-left: 10px;
-}
-.btn-print-prescription:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(67, 160, 71, 0.4);
-    color: white;
-}
+textarea.form-control { height: auto; padding: 12px 14px; line-height: 1.6; resize: vertical; }
+.form-control:focus { border-color: #1e88e5; box-shadow: 0 0 0 3px rgba(30,136,229,.12); outline: none; }
+.form-control[readonly] { background: #f5f8fb; color: #54677c; }
+.form-hint { font-size: 12px; color: #8a9bb0; margin-top: 6px; }
 
-/* Printable Prescription Styles */
-.prescription-printable {
-    display: none;
-    font-family: 'Times New Roman', serif;
+/* ===== Buttons ===== */
+.btn-submit {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+    border: none; color: #fff; height: 42px; padding: 0 26px;
+    border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer;
+    transition: all .2s; box-shadow: 0 4px 14px rgba(30,136,229,.3);
 }
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    .prescription-printable,
-    .prescription-printable * {
-        visibility: visible;
-    }
-    .prescription-printable {
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 20mm;
-        background: white;
-    }
-    .no-print {
-        display: none !important;
-    }
+.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(30,136,229,.4); }
+.btn-cancel {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f1f5f9; border: 1px solid #e2e8f0; color: #54677c;
+    height: 42px; padding: 0 22px; border-radius: 10px; font-weight: 600; font-size: 14px;
 }
-.prescription-header {
-    text-align: center;
-    border-bottom: 2px solid #1565c0;
-    padding-bottom: 15px;
-    margin-bottom: 30px;
+.btn-cancel:hover { background: #e8eef4; color: #1c2b3a; text-decoration: none; }
+.btn-print {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+    border: none; color: #fff; height: 42px; padding: 0 22px;
+    border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all .2s;
 }
-.prescription-header h2 {
-    color: #1565c0;
-    font-size: 24px;
-    margin: 0;
-    font-weight: bold;
+.btn-print:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(67,160,71,.35); }
+.form-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid #f0f4f8; flex-wrap: wrap; }
+.form-actions .spacer { flex: 1; }
+
+/* ===== History table ===== */
+.table-modern { margin-bottom: 0; }
+.table-modern thead th {
+    background: #f8fafc; border: none; border-bottom: 1px solid #eef2f7;
+    font-weight: 700; color: #54677c; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .7px; padding: 12px 14px; white-space: nowrap;
 }
-.prescription-header p {
-    color: #424242;
-    margin: 5px 0;
-    font-size: 14px;
+.table-modern tbody td { border-color: #f1f5f9; padding: 14px; vertical-align: top; font-size: 13px; color: #33475b; }
+.table-modern tbody tr:hover { background: #f8fbff; }
+.cell-date { font-weight: 700; color: #1c2b3a; }
+.cell-sub { font-size: 12px; color: #8a9bb0; margin-top: 3px; }
+.vital-chip {
+    display: inline-flex; gap: 4px; background: #f8fbff; border: 1px solid #e3eefb;
+    border-radius: 7px; padding: 3px 9px; font-size: 12px; margin: 0 5px 5px 0;
 }
-.prescription-body {
-    margin: 30px 0;
+.vital-chip .k { color: #8a9bb0; font-weight: 600; }
+.vital-chip .v { color: #1565c0; font-weight: 700; }
+.tag {
+    display: inline-flex; align-items: center; border-radius: 14px;
+    padding: 3px 10px; font-size: 11.5px; font-weight: 700;
 }
-.prescription-row {
-    margin-bottom: 20px;
-}
-.prescription-label {
-    font-weight: bold;
-    color: #1565c0;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-.prescription-value {
-    font-size: 16px;
-    color: #212121;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 8px 0;
-    min-height: 30px;
-}
-.prescription-value.treatment {
-    min-height: 100px;
-    white-space: pre-wrap;
-}
-.prescription-footer {
-    margin-top: 50px;
-    text-align: right;
-}
-.prescription-signature {
-    border-top: 1px solid #424242;
-    width: 250px;
-    display: inline-block;
-    padding-top: 10px;
-    text-align: center;
+.tag.type { background: #e8f0fe; color: #1565c0; }
+.empty-state { text-align: center; padding: 44px 20px; color: #8a9bb0; }
+.empty-state > i { font-size: 40px; color: #d4dde8; display: block; margin-bottom: 10px; }
+.empty-state p { margin: 0; font-size: 14px; }
+
+@media (max-width: 767px) {
+    .hero-card { padding: 22px 20px; }
+    .hero-avatar { width: 52px; height: 52px; font-size: 20px; border-radius: 13px; }
+    .vital { min-width: 46%; flex: 1; }
 }
 </style>
 
 <div class="diagnose-wrapper">
 
-<!-- Hero Header -->
-<div class="diagnose-hero">
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h2><i class="ph ph-note-pencil mr-2"></i>Edit Diagnosis</h2>
-            <p><?= mb_strtoupper($p->first_name.' '.$p->middle_name.' '.$p->last_name, 'UTF-8'); ?></p>
+<!-- ===== Hero ===== -->
+<div class="hero-card">
+    <div class="hero-left">
+        <div class="hero-avatar"><?= $initials !== '' ? htmlentities($initials) : '<i class="ph ph-user"></i>'; ?></div>
+        <div class="hero-title">
+            <h2><i class="ph ph-note-pencil"></i> Edit Diagnosis</h2>
+            <div class="hero-sub">Updating findings for <strong><?= htmlentities($p_name); ?></strong></div>
+            <div class="hero-chips">
+                <?php if($a && trim((string) $a->age) !== ''): ?><span class="hero-chip"><i class="ph ph-calendar-blank"></i><?= htmlentities($a->age); ?> yrs at visit</span><?php endif; ?>
+                <?php if($gender !== ''): ?><span class="hero-chip"><i class="ph <?= $gender === 'female' ? 'ph-gender-female' : 'ph-gender-male'; ?>"></i><?= ucfirst($gender); ?></span><?php endif; ?>
+                <?php if($visit_ts): ?><span class="hero-chip"><i class="ph ph-clock"></i>Visit <?= date('M j, Y', $visit_ts); ?></span><?php endif; ?>
+                <?php if($diag_ts): ?><span class="hero-chip"><i class="ph ph-stethoscope"></i>Diagnosed <?= date('M j, Y', $diag_ts); ?></span><?php endif; ?>
+                <?php if($a && trim((string) $a->transaction) !== ''): ?><span class="hero-chip"><i class="ph ph-tag"></i><?= htmlentities($a->transaction); ?></span><?php endif; ?>
+                <?php if($doc_name !== ''): ?><span class="hero-chip"><i class="ph ph-user-circle"></i><?= htmlentities($doc_name); ?></span><?php endif; ?>
+            </div>
         </div>
-        <div class="col-md-4 text-md-right">
-            <a href="<?= base_url(); ?>Pages/patient_profile/<?= $p->id; ?>" class="btn btn-back">
-                <i class="ph ph-arrow-left"></i>Back to Profile
-            </a>
-        </div>
+    </div>
+    <div class="hero-actions">
+        <?php if($p): ?>
+        <a href="<?= base_url(); ?>Pages/patient_profile/<?= (int) $p->id; ?>" class="hero-cta"><i class="ph ph-user"></i>Profile</a>
+        <?php endif; ?>
+        <a href="<?= base_url(); ?>Pages/patient_queue" class="hero-cta"><i class="ph ph-arrow-left"></i>Back to Queue</a>
     </div>
 </div>
 
-<!-- Patient Info Card -->
-<div class="card patient-card">
-    <div class="card-header">
-        <h5><i class="ph ph-user mr-2"></i>Patient Information</h5>
-    </div>
-    <div class="card-body">
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">Patient Name</div>
-                <div class="info-value"><?= mb_strtoupper($p->last_name.', '.$p->first_name.' '.$p->middle_name, 'UTF-8'); ?></div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Address</div>
-                <div class="info-value"><?= strtoupper($p->sitio.' '.$p->barangay.' '.$p->city_mun.' '.$p->province); ?></div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Occupation</div>
-                <div class="info-value"><?= strtoupper($p->occupation); ?></div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Transaction Type</div>
-                <div class="info-value"><?= strtoupper($a->transaction); ?></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Appointment History -->
-<div class="card patient-card">
-    <div class="card-header">
-        <h5><i class="ph ph-files mr-2"></i>Appointment History</h5>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table history-table">
-                <thead>
-                    <tr>
-                        <th>DOA</th>
-                        <th>AGE</th>
-                        <th>EDD</th>
-                        <th>LMP</th>
-                        <th>BP</th>
-                        <th>WT</th>
-                        <th>G</th>
-                        <th>A</th>
-                        <th>P</th>
-                        <th>L</th>
-                        <th>TRANSACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($data as $row){?>
-                    <tr>
-                        <td><?= strtoupper($row->visit_date); ?></td>
-                        <td><?= strtoupper($row->age); ?></td>
-                        <td><?= strtoupper($row->date_of_delivery); ?></td>
-                        <td><?= strtoupper($row->lmp); ?></td>
-                        <td><?= strtoupper($row->bp); ?></td>
-                        <td><?= strtoupper($row->weight); ?></td>
-                        <td><?= strtoupper($row->gravida); ?></td>
-                        <td><?= strtoupper($row->abortion); ?></td>
-                        <td><?= strtoupper($row->parity); ?></td>
-                        <td><?= strtoupper($row->living); ?></td>
-                        <td><?= strtoupper($row->transaction); ?></td>
-                    </tr>
-                    <?php } ?>
-                    <?php if(empty($data)): ?>
-                    <tr>
-                        <td colspan="11" class="text-center py-5">
-                            <i class="ph ph-calendar-dots text-muted mb-3 d-block" style="font-size: 48px;"></i>
-                            <p class="text-muted">No appointment history found</p>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Diagnosis Form -->
+<!-- ===== Visit vitals ===== -->
 <div class="card form-card">
     <div class="card-header">
-        <h5><i class="ph ph-stethoscope mr-2"></i><?= $title; ?></h5>
+        <h5><span class="section-icon"><i class="ph ph-pulse"></i></span>Vitals for this Visit</h5>
+        <?php if($a): ?>
+        <a href="<?= base_url(); ?>Pages/appointment_edit/<?= (int) $a->patient_id; ?>/<?= (int) $a->id; ?>" class="header-link"><i class="ph ph-pencil-simple"></i>Edit vitals</a>
+        <?php endif; ?>
+    </div>
+    <?php if($a): ?>
+    <div class="vitals">
+        <div class="vital"><span class="k">Age</span><span class="v"><?= trim((string) $a->age) !== '' ? htmlentities($a->age) : '—'; ?></span></div>
+        <div class="vital"><span class="k">Blood Pressure</span><span class="v"><?= trim((string) $a->bp) !== '' ? htmlentities($a->bp) : '—'; ?></span></div>
+        <div class="vital"><span class="k">Weight</span><span class="v"><?= trim((string) $a->weight) !== '' ? htmlentities($a->weight) . ' kg' : '—'; ?></span></div>
+        <div class="vital"><span class="k">LMP</span><span class="v"><?= trim((string) $a->lmp) !== '' ? htmlentities($a->lmp) : '—'; ?></span></div>
+        <div class="vital"><span class="k">EDD</span><span class="v"><?= trim((string) $a->date_of_delivery) !== '' ? htmlentities($a->date_of_delivery) : '—'; ?></span></div>
+        <?php if($has_ob): ?>
+        <div class="vital"><span class="k">G / P</span><span class="v"><?= (int) $a->gravida; ?> / <?= (int) $a->parity; ?></span></div>
+        <div class="vital"><span class="k">T / P / A / L</span><span class="v"><?= (int) $a->term; ?> / <?= (int) $a->preterm; ?> / <?= (int) $a->abortion; ?> / <?= (int) $a->living; ?></span></div>
+        <?php endif; ?>
+    </div>
+    <?php else: ?>
+    <div class="empty-state"><i class="ph ph-warning-circle"></i><p>The linked appointment record was removed — vitals unavailable.</p></div>
+    <?php endif; ?>
+</div>
+
+<!-- ===== Edit form ===== -->
+<div class="card form-card">
+    <div class="card-header">
+        <h5><span class="section-icon"><i class="ph ph-stethoscope"></i></span>Diagnosis Entry</h5>
     </div>
     <div class="card-body">
-        <?php 
-            $attributes = array('class' => 'parsley-examples');
-            echo form_open(base_url().'Pages/diagnose_edit/', $attributes);
-        ?>
-        <input type="hidden" name="patient_id" value="<?= $p->id; ?>"/>
-        <input type="hidden" name="appointment_id" value="<?= $a->id; ?>"/>
-        <input type="hidden" name="user_id" value="<?= $this->session->id; ?>"/>
-        <input type="hidden" name="d_id" value="<?= $this->uri->segment(3); ?>"/>
+        <?= form_open('Pages/diagnose_edit/', array('class' => 'parsley-examples')); ?>
+        <input type="hidden" name="patient_id" value="<?= (int) $d->patient_id; ?>"/>
+        <input type="hidden" name="appointment_id" value="<?= (int) $d->appointment_id; ?>"/>
+        <input type="hidden" name="user_id" value="<?= (int) $this->session->id; ?>"/>
+        <input type="hidden" name="d_id" value="<?= (int) $d->id; ?>"/>
 
-        <div class="form-row">
+        <div class="row">
             <div class="form-group col-md-6">
-                <label>Medical Specialty (Optional)</label>
-                <select id="inputSpecialty" name="specialty_id" class="form-control">
-                    <option value="">-- No Specialty --</option>
-                    <?php if(isset($specialties)): ?>
-                        <?php 
+                <label>Patient</label>
+                <input type="text" readonly value="<?= htmlentities($p_name); ?>" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+                <label>Medical Specialty</label>
+                <select name="specialty_id" class="form-control">
+                    <option value="">General / No Specialty</option>
+                    <?php if(!empty($specialties)):
                         $current_category = '';
                         foreach($specialties as $specialty):
-                            if($specialty->category != $current_category):
-                                if($current_category != '') echo "</optgroup>";
+                            if($specialty->category !== $current_category):
+                                if($current_category !== '') echo '</optgroup>';
                                 $current_category = $specialty->category;
-                                $category_label = ucwords(str_replace('_', ' ', $current_category));
-                                echo "<optgroup label='$category_label'>";
+                                echo '<optgroup label="' . htmlentities(ucwords(str_replace('_', ' ', $current_category))) . '">';
                             endif;
-                        ?>
-                            <option value="<?= $specialty->id; ?>" <?= isset($d->specialty_id) && $d->specialty_id == $specialty->id ? 'selected' : ''; ?>><?= $specialty->name; ?></option>
-                        <?php endforeach; ?>
-                        <?php if($current_category != '') echo "</optgroup>"; ?>
-                    <?php endif; ?>
+                    ?>
+                        <option value="<?= (int) $specialty->id; ?>" <?= (int) $d->specialty_id === (int) $specialty->id ? 'selected' : ''; ?>><?= htmlentities($specialty->name); ?></option>
+                    <?php endforeach;
+                        if($current_category !== '') echo '</optgroup>';
+                    endif; ?>
                 </select>
-                <small class="form-text text-muted">Select medical specialty if applicable</small>
             </div>
         </div>
 
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label>Fullname</label>
-                <input type="text" readonly value="<?= strtoupper($p->first_name.' '.$p->middle_name.' '.$p->last_name); ?>" required class="form-control" name="first_name" />
-            </div>
+        <div class="form-group">
+            <label>Diagnosis</label>
+            <textarea class="form-control" rows="3" name="diagnosis" placeholder="Primary diagnosis / assessment…"><?= htmlentities((string) $d->diagnosis); ?></textarea>
+        </div>
 
-            <div class="form-group col-md-6">
-                <label>Transaction</label>
-                <input required type="text" value="<?= $a->transaction; ?>" class="form-control" name="trasaction" readonly />
-            </div>
-        </div> 
+        <div class="form-group">
+            <label>Treatment Plan</label>
+            <textarea class="form-control" rows="3" name="treatment" placeholder="Prescription, procedures, instructions…"><?= htmlentities((string) $d->treatment); ?></textarea>
+        </div>
 
-        <div class="form-row">
-            <div class="form-group col-md-6"> 
-                <label>Laboratory</label>
-                <textarea class="form-control" rows="5" placeholder="Enter laboratory results..." name="lab"><?= $d->lab; ?></textarea>  
-            </div>
-            <div class="form-group col-md-6"> 
-                <label>Diagnosis</label>
-                <textarea class="form-control" rows="5" placeholder="Enter diagnosis..." name="diagnosis"><?= $d->diagnosis; ?></textarea>
-            </div>
-        </div> 
+        <div class="form-group">
+            <label>Laboratory Results</label>
+            <textarea class="form-control" rows="2" name="lab" placeholder="Requested labs or results…"><?= htmlentities((string) $d->lab); ?></textarea>
+        </div>
 
-        <div class="form-row">
-            <div class="form-group col-md-6"> 
-                <label>Treatment</label>
-                <textarea class="form-control" rows="5" placeholder="Enter treatment plan..." name="treatment"><?= $d->treatment; ?></textarea>
-            </div>
-            <div class="form-group col-md-6"> 
-                <label>Remarks</label>
-                <textarea class="form-control" rows="5" placeholder="Enter additional remarks..." name="remarks"><?= $d->remarks; ?></textarea>
-            </div>
-        </div> 
+        <div class="form-group">
+            <label>Remarks</label>
+            <textarea class="form-control" rows="2" name="remarks" placeholder="Follow-up notes, referrals…"><?= htmlentities((string) $d->remarks); ?></textarea>
+        </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div>
-                <a href="<?= base_url(); ?>Pages/patient_profile/<?= $p->id; ?>" class="btn btn-cancel-edit mr-2"><i class="ph ph-x"></i>Cancel</a>
-                <button type="submit" name="submit" class="btn btn-update-diagnosis">
-                    <i class="ph ph-floppy-disk"></i>Update Diagnosis
-                </button>
-                <button type="button" class="btn btn-print-prescription" onclick="printPrescription()">
-                    <i class="ph ph-printer"></i>Print Prescription
-                </button>
-            </div>
+        <div class="form-actions">
+            <?php if($p): ?>
+            <a href="<?= base_url(); ?>Pages/patient_profile/<?= (int) $p->id; ?>" class="btn-cancel"><i class="ph ph-x"></i>Cancel</a>
+            <?php else: ?>
+            <a href="<?= base_url(); ?>Pages/patient_queue" class="btn-cancel"><i class="ph ph-x"></i>Cancel</a>
+            <?php endif; ?>
+            <button type="submit" name="submit" class="btn-submit"><i class="ph ph-floppy-disk"></i>Update Diagnosis</button>
+            <span class="spacer"></span>
+            <a href="<?= base_url(); ?>Pages/prescription/<?= (int) $d->id; ?>" target="_blank" class="btn-print"><i class="ph ph-printer"></i>Print Prescription</a>
         </div>
         </form>
     </div>
 </div>
 
-<!-- Printable Prescription Template -->
-<div class="prescription-printable" id="prescription-print">
-    <div class="prescription-header">
-        <h2>CLINIC MANAGEMENT SYSTEM</h2>
-        <p>Medical Prescription</p>
-        <p style="font-size: 12px; color: #757575;">Date: <?= date('F d, Y'); ?></p>
+<!-- ===== Visit history ===== -->
+<div class="card table-card">
+    <div class="card-header">
+        <h5><span class="section-icon"><i class="ph ph-files"></i></span>Visit History <span class="count-badge"><?= count($data); ?></span></h5>
+        <?php if($p): ?>
+        <a href="<?= base_url(); ?>Pages/patient_profile/<?= (int) $p->id; ?>" class="header-link">Full history <i class="ph ph-arrow-right"></i></a>
+        <?php endif; ?>
     </div>
-    
-    <div class="prescription-body">
-        <div class="prescription-row">
-            <div class="prescription-label">Patient Name:</div>
-            <div class="prescription-value"><?= mb_strtoupper($p->last_name.', '.$p->first_name.' '.$p->middle_name, 'UTF-8'); ?></div>
+    <div class="card-body" style="padding: 0;">
+        <?php if(!empty($data)): ?>
+        <div class="table-responsive">
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>Visit</th>
+                        <th>Vitals</th>
+                        <th>Obstetric</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data as $row):
+                        $rts = $row->visit_date ? strtotime($row->visit_date) : false;
+                        $ob = trim((string) $row->lmp) !== '' || trim((string) $row->date_of_delivery) !== '' || (int) $row->gravida || (int) $row->parity;
+                    ?>
+                    <tr<?= (int) $row->id === (int) $d->appointment_id ? ' style="background:#f0f7ff;"' : ''; ?>>
+                        <td>
+                            <div class="cell-date"><?= $rts ? date('M j, Y', $rts) : '—'; ?></div>
+                            <?php if($row->age): ?><div class="cell-sub">Age <?= (int) $row->age; ?></div><?php endif; ?>
+                            <?php if((int) $row->id === (int) $d->appointment_id): ?><div class="cell-sub"><span class="tag type">This visit</span></div><?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if(trim((string) $row->bp) !== ''): ?><span class="vital-chip"><span class="k">BP</span><span class="v"><?= htmlentities($row->bp); ?></span></span><?php endif; ?>
+                            <?php if(trim((string) $row->weight) !== ''): ?><span class="vital-chip"><span class="k">Wt</span><span class="v"><?= htmlentities($row->weight); ?> kg</span></span><?php endif; ?>
+                            <?php if(trim((string) $row->bp) === '' && trim((string) $row->weight) === ''): ?><span style="color:#b8c4d0;">No vitals</span><?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if($ob): ?>
+                                <?php if(trim((string) $row->lmp) !== ''): ?><span class="vital-chip"><span class="k">LMP</span><span class="v"><?= htmlentities($row->lmp); ?></span></span><?php endif; ?>
+                                <?php if(trim((string) $row->date_of_delivery) !== ''): ?><span class="vital-chip"><span class="k">EDD</span><span class="v"><?= htmlentities($row->date_of_delivery); ?></span></span><?php endif; ?>
+                                <span class="vital-chip"><span class="k">G/P/T/P/A/L</span><span class="v"><?= (int)$row->gravida; ?>/<?= (int)$row->parity; ?>/<?= (int)$row->term; ?>/<?= (int)$row->preterm; ?>/<?= (int)$row->abortion; ?>/<?= (int)$row->living; ?></span></span>
+                            <?php else: ?>
+                                <span style="color:#b8c4d0;">—</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><?= trim((string) $row->transaction) !== '' ? '<span class="tag type">' . htmlentities($row->transaction) . '</span>' : '<span style="color:#b8c4d0;">—</span>'; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-        
-        <div class="prescription-row">
-            <div class="prescription-label">Address:</div>
-            <div class="prescription-value"><?= strtoupper($p->sitio.' '.$p->barangay.' '.$p->city_mun.' '.$p->province); ?></div>
+        <?php else: ?>
+        <div class="empty-state">
+            <i class="ph ph-calendar-dots"></i>
+            <p>No appointment history found for this patient.</p>
         </div>
-        
-        <div class="prescription-row">
-            <div class="prescription-label">Age:</div>
-            <div class="prescription-value"><?= $a->age; ?> years old</div>
-        </div>
-        
-        <div class="prescription-row">
-            <div class="prescription-label">Diagnosis:</div>
-            <div class="prescription-value"><?= nl2br(htmlspecialchars($d->diagnosis)); ?></div>
-        </div>
-        
-        <div class="prescription-row">
-            <div class="prescription-label">Treatment / Medications:</div>
-            <div class="prescription-value treatment"><?= nl2br(htmlspecialchars($d->treatment)); ?></div>
-        </div>
-        
-        <div class="prescription-row">
-            <div class="prescription-label">Remarks:</div>
-            <div class="prescription-value"><?= nl2br(htmlspecialchars($d->remarks)); ?></div>
-        </div>
-    </div>
-    
-    <div class="prescription-footer">
-        <div class="prescription-signature">
-            <?php 
-            $doctor = $this->Page_model->one_cond_get_single_row('users','id',$d->user_id);
-            if(isset($doctor->id)):
-            ?>
-            <div style="font-weight: bold; font-size: 16px;"><?= $doctor->first_name.' '.$doctor->middle_name.' '.$doctor->last_name; ?></div>
-            <div style="font-size: 12px; color: #757575;">Attending Physician</div>
-            <?php endif; ?>
-        </div>
+        <?php endif; ?>
     </div>
 </div>
-
-<script>
-function printPrescription() {
-    window.print();
-}
-</script>
 
 </div>

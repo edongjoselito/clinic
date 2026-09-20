@@ -282,15 +282,31 @@ class Pages extends CI_Controller{
         }
 
         $data['p'] = $this->Page_model->one_cond_get_single_row('patients','id',$param);
-        $data['a'] = $this->Page_model->one_cond_get_single_row('appointment','id',$param);
-
-        $data['diag'] = $this->Page_model->one_cond_loop('diagnose','patient_id',$param);
-
-        if($data['diag'] ?? null){
-            $data['d'] = $data['diag'][0];
-        } else {
-            $data['d'] = null;
+        if (!$data['p']) {
+            show_404();
         }
+
+        // Visit history: diagnose + appointment vitals + attending user + specialty in one query
+        $this->db->select('diagnose.*');
+        $this->db->select('appointment.visit_date, appointment.age AS visit_age, appointment.bp, appointment.weight, appointment.lmp, appointment.date_of_delivery, appointment.gravida, appointment.abortion, appointment.parity, appointment.living, appointment.transaction');
+        $this->db->select('users.first_name AS doc_first, users.middle_name AS doc_middle, users.last_name AS doc_last');
+        $this->db->select('specialties.name AS specialty_name');
+        $this->db->from('diagnose');
+        $this->db->join('appointment', 'appointment.id = diagnose.appointment_id', 'left');
+        $this->db->join('users', 'users.id = diagnose.user_id', 'left');
+        $this->db->join('specialties', 'specialties.id = diagnose.specialty_id', 'left');
+        $this->db->where('diagnose.patient_id', $param);
+        if (table_has_clinic_id('diagnose')) {
+            $this->db->where('diagnose.clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('diagnose.id', 'DESC');
+        $data['diag'] = $this->db->get()->result();
+
+        // Last visit + unpaid count for the hero summary
+        $data['visit_count'] = count($data['diag']);
+        $data['unpaid_count'] = 0;
+        foreach ($data['diag'] as $v) { if ((int) $v->payment_status === 0) { $data['unpaid_count']++; } }
+        $data['last_visit'] = $data['diag'] ? ($data['diag'][0]->date ?: $data['diag'][0]->visit_date) : null;
 
        $this->load->view('templates/header');
        $this->load->view('templates/menu');

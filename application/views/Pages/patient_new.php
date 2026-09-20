@@ -132,6 +132,39 @@ select.form-control { padding-right: 32px; }
 .form-hint { display: block; font-size: 12.5px; color: #8a9bb0; margin-top: 8px; }
 .required::after { content: ' *'; color: #e53935; }
 
+/* ===== Portal toggle ===== */
+.portal-toggle {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: #f9fbfd;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0;
+    transition: border-color .2s;
+}
+.portal-toggle:hover { border-color: #c9dcf2; }
+.portal-icon {
+    width: 40px; height: 40px; min-width: 40px;
+    border-radius: 10px;
+    background: #e7f7f5;
+    color: #11998e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+}
+.portal-text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.portal-title { font-size: 14px; font-weight: 700; color: #1c2b3a; }
+.portal-desc { font-size: 12.5px; color: #8a9bb0; font-weight: 500; line-height: 1.45; }
+.portal-toggle .custom-switch { padding-left: 2.75rem; min-height: 1.5rem; }
+.portal-toggle .custom-switch .custom-control-label::before { width: 2.5rem; height: 1.4rem; border-radius: 0.7rem; left: -2.75rem; top: 0.05rem; background: #dce4ec; border-color: #dce4ec; }
+.portal-toggle .custom-switch .custom-control-label::after { width: calc(1.4rem - 4px); height: calc(1.4rem - 4px); border-radius: 50%; left: calc(-2.75rem + 2px); top: calc(0.05rem + 2px); background: #fff; }
+.portal-toggle .custom-switch .custom-control-input:checked ~ .custom-control-label::before { background: #11998e; border-color: #11998e; }
+.portal-toggle .custom-switch .custom-control-input:checked ~ .custom-control-label::after { transform: translateX(1.1rem); }
+
 /* ===== Footer actions ===== */
 .form-actions {
     display: flex;
@@ -195,26 +228,26 @@ select.form-control { padding-right: 32px; }
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">First Name</label>
-                <input required type="text" class="form-control" name="first_name" />
+                <input required type="text" class="form-control" name="first_name" placeholder="e.g. Maria" autocomplete="given-name" autofocus />
             </div>
             <div class="form-group col-md-4">
                 <label>Middle Name</label>
-                <input type="text" class="form-control" name="middle_name" />
+                <input type="text" class="form-control" name="middle_name" placeholder="e.g. Santos" autocomplete="additional-name" />
             </div>
             <div class="form-group col-md-4">
                 <label class="required">Last Name</label>
-                <input required type="text" class="form-control" name="last_name" />
+                <input required type="text" class="form-control" name="last_name" placeholder="e.g. Dela Cruz" autocomplete="family-name" />
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">Birthday</label>
-                <input required type="date" id="datepicker" class="form-control" name="birthday" onchange="calculateAge()" />
+                <input required type="date" id="datepicker" class="form-control" name="birthday" max="<?= date('Y-m-d'); ?>" onchange="calculateAge()" />
             </div>
             <div class="form-group col-md-2">
                 <label class="required">Age</label>
-                <input required type="number" id="age" name="age" class="form-control" readonly />
+                <input required type="number" id="age" name="age" class="form-control" placeholder="Auto" readonly tabindex="-1" />
             </div>
             <div class="form-group col-md-3">
                 <label class="required">Gender</label>
@@ -246,32 +279,32 @@ select.form-control { padding-right: 32px; }
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label class="required">Occupation</label>
-                <input required type="text" class="form-control" name="occupation" />
+                <input required type="text" class="form-control" name="occupation" placeholder="e.g. Teacher" />
             </div>
             <div class="form-group col-md-4">
                 <label>Contact Number</label>
-                <input type="text" class="form-control" name="contact" />
+                <input type="tel" class="form-control" name="contact" placeholder="09XX XXX XXXX" inputmode="tel" autocomplete="tel" />
             </div>
             <div class="form-group col-md-4">
                 <label class="required">Email Address</label>
-                <input required type="email" class="form-control" name="email" />
+                <input required type="email" class="form-control" name="email" placeholder="name@example.com" autocomplete="email" />
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-12">
-                <label class="required">Patient Portal Access</label>
-                <div class="radio-row">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" value="1" id="portalEnabled" name="portal_access" class="custom-control-input" required>
-                        <label class="custom-control-label" for="portalEnabled">Enable Portal Access</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" value="0" id="portalDisabled" name="portal_access" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="portalDisabled">Disable Portal Access</label>
-                    </div>
-                </div>
-                <small class="form-hint">When enabled, a random password will be generated and sent to the patient's email.</small>
+                <label class="portal-toggle" for="portalAccess">
+                    <span class="portal-icon"><i class="ph ph-shield-check"></i></span>
+                    <span class="portal-text">
+                        <span class="portal-title">Patient Portal Access</span>
+                        <span class="portal-desc">When enabled, a random password is generated and emailed to the patient so they can view their records online.</span>
+                    </span>
+                    <input type="hidden" name="portal_access" id="portalAccessValue" value="0">
+                    <span class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="portalAccess" onchange="document.getElementById('portalAccessValue').value = this.checked ? 1 : 0">
+                        <span class="custom-control-label"></span>
+                    </span>
+                </label>
             </div>
         </div>
     </div>
@@ -312,7 +345,7 @@ select.form-control { padding-right: 32px; }
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label class="required">Sitio</label>
-                <input required type="text" class="form-control" name="sitio" />
+                <input required type="text" class="form-control" name="sitio" placeholder="Street, purok, or sitio" />
             </div>
         </div>
     </div>
@@ -327,7 +360,7 @@ select.form-control { padding-right: 32px; }
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label>Company/Employer</label>
-                <input type="text" class="form-control" name="company" />
+                <input type="text" class="form-control" name="company" placeholder="Optional" />
             </div>
         </div>
     </div>

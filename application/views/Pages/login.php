@@ -16,96 +16,159 @@
         * { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 50%, #1a237e 100%);
+            margin: 0;
+            background: #eef3f9;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
-        .login-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+        .login-shell {
+            display: flex;
             width: 100%;
-            max-width: 420px;
+            max-width: 920px;
+            min-height: 560px;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(15, 45, 90, 0.14);
+        }
+
+        /* ===== Brand panel ===== */
+        .brand-panel {
+            flex: 0 0 380px;
+            background: linear-gradient(160deg, #1e88e5 0%, #1565c0 55%, #0d47a1 100%);
+            color: #fff;
+            padding: 48px 42px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
             overflow: hidden;
         }
-        .login-header {
-            background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-            padding: 40px 30px 30px;
-            text-align: center;
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: -90px; right: -90px;
+            width: 280px; height: 280px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
         }
-        .login-header .logo-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 16px;
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -120px; left: -80px;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+        }
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-logo .mark {
+            width: 46px; height: 46px;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
-            font-size: 32px;
-            color: white;
-            backdrop-filter: blur(10px);
+            font-size: 24px;
         }
-        .login-header h2 {
-            color: white;
+        .brand-logo .mark i { color: #fff; }
+        .brand-logo span { font-weight: 700; font-size: 17px; letter-spacing: 0.2px; }
+        .brand-copy { margin-top: auto; position: relative; z-index: 1; }
+        .brand-copy h1 {
+            color: #fff;
+            font-size: 28px;
             font-weight: 700;
-            font-size: 22px;
-            margin: 0;
+            line-height: 1.25;
+            margin: 0 0 14px;
         }
-        .login-header p {
-            color: rgba(255,255,255,0.8);
-            margin: 6px 0 0;
+        .brand-copy p {
+            color: rgba(255,255,255,0.82);
             font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 26px;
         }
-        .login-body {
-            padding: 32px 32px 28px;
+        .brand-feats { list-style: none; margin: 0; padding: 0; }
+        .brand-feats li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.9);
+            font-size: 13.5px;
+            font-weight: 500;
+            padding: 7px 0;
         }
-        .form-group {
-            margin-bottom: 22px;
+        .brand-feats li i {
+            width: 26px; height: 26px;
+            background: rgba(255,255,255,0.14);
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
         }
+
+        /* ===== Form panel ===== */
+        .form-panel {
+            flex: 1;
+            padding: 56px 56px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-panel .heading { margin-bottom: 30px; }
+        .form-panel .heading h2 {
+            color: #1c2b3a;
+            font-weight: 700;
+            font-size: 24px;
+            margin: 0 0 6px;
+        }
+        .form-panel .heading p { color: #8a9bb0; font-size: 14px; margin: 0; }
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #37474f;
-            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #5a6b7d;
+            margin-bottom: 7px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
-        .input-wrap {
-            position: relative;
-        }
+        .input-wrap { position: relative; }
         .input-wrap > .ph {
             position: absolute;
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #90a4ae;
-            font-size: 18px;
+            color: #9fb0c0;
+            font-size: 17px;
         }
         .form-control {
             height: 48px;
-            border: 2px solid #e3f2fd;
+            border: 1.5px solid #dfe7ee;
             border-radius: 10px;
             padding-left: 44px;
             padding-right: 16px;
             font-size: 14px;
             font-weight: 500;
-            color: #263238;
-            background: #fafafa;
-            transition: all 0.25s ease;
+            color: #1c2b3a;
+            background: #f8fafc;
+            transition: all 0.2s ease;
         }
         .form-control:focus {
             border-color: #1e88e5;
-            background: white;
+            background: #fff;
             box-shadow: 0 0 0 4px rgba(30,136,229,0.1);
             outline: none;
         }
-        .input-wrap.has-toggle .form-control {
-            padding-right: 48px;
-        }
+        .input-wrap.has-toggle .form-control { padding-right: 48px; }
         .password-toggle {
             position: absolute;
             right: 10px;
@@ -123,81 +186,91 @@
             border-radius: 8px;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .password-toggle:hover {
-            background: rgba(30,136,229,0.08);
-            color: #1565c0;
-        }
-        .password-toggle:focus {
+        .password-toggle:hover, .password-toggle:focus {
             outline: none;
-            background: rgba(30,136,229,0.12);
+            background: rgba(30,136,229,0.08);
             color: #1565c0;
         }
         .btn-login {
             width: 100%;
             height: 50px;
+            margin-top: 6px;
             background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
             border: none;
             border-radius: 10px;
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 15px;
             letter-spacing: 0.3px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(30,136,229,0.35);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(30,136,229,0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
         }
         .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30,136,229,0.45);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(30,136,229,0.4);
         }
         .alert {
             border: none;
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 13px 16px;
             font-size: 13px;
             font-weight: 500;
             margin-bottom: 20px;
         }
-        .alert-danger {
-            background: #ffebee;
-            color: #c62828;
-        }
-        .alert-success {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .alert .close {
-            padding: 0;
-            margin: -4px 0 0;
-            opacity: 0.6;
-        }
-        .login-footer {
-            text-align: center;
-            padding: 0 32px 32px;
-        }
-        .login-footer small {
-            color: #90a4ae;
-            font-size: 12px;
-        }
-        @media (max-width: 480px) {
-            .login-header { padding: 32px 24px 24px; }
-            .login-body { padding: 24px; }
-            .login-footer { padding: 0 24px 24px; }
+        .alert-danger { background: #fdecea; color: #c62828; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; }
+        .alert .close { padding: 0; margin: -4px 0 0; opacity: 0.6; }
+        .error { color: #c62828; font-size: 12.5px; font-weight: 600; margin: -12px 0 16px; }
+        .login-footer { margin-top: 34px; text-align: center; }
+        .login-footer small { color: #9fb0c0; font-size: 12px; }
+
+        /* Compact brand header on small screens */
+        .brand-panel .brand-copy { display: block; }
+        @media (max-width: 820px) {
+            body { padding: 0; }
+            .login-shell { flex-direction: column; min-height: 100vh; border-radius: 0; max-width: none; }
+            .brand-panel { flex: none; padding: 26px 28px; min-height: 0; }
+            .brand-panel::before, .brand-panel::after { display: none; }
+            .brand-copy { margin-top: 0; }
+            .brand-copy h1 { font-size: 19px; margin-bottom: 4px; }
+            .brand-copy p, .brand-feats { display: none; }
+            .form-panel { padding: 34px 26px 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="login-header">
-            <div class="logo-icon">
-                <i class="ph ph-hospital"></i>
+    <div class="login-shell">
+
+        <!-- Brand panel -->
+        <div class="brand-panel">
+            <div class="brand-logo">
+                <span class="mark"><i class="ph ph-hospital"></i></span>
+                <span>Clinic Management</span>
             </div>
-            <h2>Clinic Management</h2>
-            <p>Sign in to your account</p>
+            <div class="brand-copy">
+                <h1>Run your clinic,<br>beautifully simple.</h1>
+                <p>Appointments, patient records, billing and reports — everything in one place.</p>
+                <ul class="brand-feats">
+                    <li><i class="ph ph-calendar-check"></i>Appointments &amp; patient queue</li>
+                    <li><i class="ph ph-stethoscope"></i>Diagnoses &amp; medical history</li>
+                    <li><i class="ph ph-receipt"></i>Billing, receipts &amp; reports</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="login-body">
+        <!-- Form panel -->
+        <div class="form-panel">
+            <div class="heading">
+                <h2>Welcome back</h2>
+                <p>Sign in to your account to continue</p>
+            </div>
+
             <?php if($this->session->flashdata('failed')) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -238,11 +311,12 @@
                     <i class="ph ph-sign-in"></i>Sign In
                 </button>
             </form>
+
+            <div class="login-footer">
+                <small>Clinic Management System &copy; <?= date('Y'); ?></small>
+            </div>
         </div>
 
-        <div class="login-footer">
-            <small>Clinic Management System &copy; <?= date('Y'); ?></small>
-        </div>
     </div>
 
     <script src="<?= base_url(); ?>assets/js/vendor.min.js"></script>

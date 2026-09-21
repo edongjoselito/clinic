@@ -58,15 +58,15 @@ class Page_model extends CI_Model{
         $id = $this->input->post('id');
 
         $data = array(
-        'description' => $this->input->post('description'), 
-        'price' => $this->input->post('price'), 
-        'quantity' => $this->input->post('quantity'), 
-        'purchases_price' => $this->input->post('purchases_price')
-        ); 
-    
+        'company' => $this->input->post('company'),
+        'address' => $this->input->post('address'),
+        'contact' => $this->input->post('contact')
+        );
+
         $this->db->where('id', $id);
+        $this->db->where('clinic_id', current_clinic_id());
     return $this->db->update('referrals', $data);
-        
+
     }
 
     public function insert_expenses(){
@@ -94,6 +94,7 @@ class Page_model extends CI_Model{
         ); 
     
         $this->db->where('id', $id);
+        $this->db->where('clinic_id', current_clinic_id());
     return $this->db->update('expenses', $data);
         
     }
@@ -285,6 +286,9 @@ public function change_pass(){
     );
 
     $this->db->where('id', $id);
+    if (!is_superadmin()) {
+        $this->db->where('clinic_id', current_clinic_id());
+    }
     return $this->db->update('users', $data);
 }
 

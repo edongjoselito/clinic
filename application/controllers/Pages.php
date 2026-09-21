@@ -140,18 +140,22 @@ class Pages extends CI_Controller{
             redirect(base_url().'Pages/users_list');
         }
 
-        // If superadmin, show all users with their clinics
+        $this->db->select('users.*, s.name AS specialty_name');
+        $this->db->from('users');
+        $this->db->join('specialties s', 's.id = users.specialty_id', 'left');
+
+        // Superadmin sees every user across clinics, with the clinic name
         if (is_superadmin()) {
-            $this->db->select('users.*, clinics.name as clinic_name');
-            $this->db->from('users');
+            $this->db->select('clinics.name AS clinic_name');
             $this->db->join('clinics', 'users.clinic_id = clinics.id', 'left');
-            $data['data'] = $this->db->get()->result();
             $data['is_superadmin'] = true;
-            $data['clinics'] = $this->db->get('clinics')->result();
         } else {
-            $data['data'] = $this->Page_model->no_cond_loop('users');
+            $this->db->where('users.clinic_id', current_clinic_id());
             $data['is_superadmin'] = false;
         }
+
+        $this->db->order_by('users.id', 'ASC');
+        $data['data'] = $this->db->get()->result();
 
        $this->load->view('templates/header');
        $this->load->view('templates/menu');
@@ -1146,20 +1150,29 @@ class Pages extends CI_Controller{
 
         $page = "stocks";
         $data['item'] = $this->Page_model->no_cond_loop('items');
-        $data['sales'] = $this->Page_model->one_cond_loop('sales','reciept_code',$_SESSION['sc']);
 
         if($this->input->post('item')){
             $item = $this->input->post('item_id');
-            $a_id = $this->input->post('a_id');
             redirect(base_url().'Pages/stocks/'.$item);
         }
 
         if($this->input->post('submit')){
             $this->Page_model->insert_stocks();
             $this->Page_model->update_item_stock();
-            $this->session->set_flashdata('save', 'Successfully Saved');
+            $this->session->set_flashdata('success', 'Stock recorded.');
             redirect(base_url().'Pages/stocks/');
         }
+
+        // Recent stock-in records for this clinic
+        $this->db->select('s.*, i.description');
+        $this->db->from('stocks s');
+        $this->db->join('items i', 'i.id = s.item_id', 'left');
+        if (table_has_clinic_id('stocks')) {
+            $this->db->where('s.clinic_id', current_clinic_id());
+        }
+        $this->db->order_by('s.id', 'DESC');
+        $this->db->limit(25);
+        $data['recent'] = $this->db->get()->result();
 
     
         $this->load->view('templates/header');

@@ -1368,7 +1368,17 @@ class Pages extends CI_Controller{
             $dt = $this->input->post('dt');
             $data['df'] = $df;
             $data['dt'] = $dt;
-            $data['data'] = $this->Page_model->summary_loop('sales_summary',$df,$dt);
+
+            $this->db->select('ss.*, p.first_name, p.middle_name, p.last_name');
+            $this->db->from('sales_summary ss');
+            $this->db->join('patients p', 'p.id = ss.patient_id', 'left');
+            if (table_has_clinic_id('sales_summary')) {
+                $this->db->where('ss.clinic_id', current_clinic_id());
+            }
+            $this->db->where('ss.date >=', $df);
+            $this->db->where('ss.date <=', $dt);
+            $this->db->order_by('ss.date', 'DESC');
+            $data['data'] = $this->db->get()->result();
         }
 
         $this->load->view('templates/header');
@@ -1376,7 +1386,7 @@ class Pages extends CI_Controller{
         $this->load->view('Pages/'.$page, $data);
         $this->load->view('templates/footer');
     }
-    
+
     public function purchases_summary(){
 
         $page = "purchases_summary";
@@ -1385,7 +1395,7 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Sales Summary";   
+        $data['title'] = "Purchases Summary";
 
         if($this->input->post('submit')){
             $df = $this->input->post('df');
@@ -1393,7 +1403,16 @@ class Pages extends CI_Controller{
             $data['df'] = $df;
             $data['dt'] = $dt;
 
-            $data['data'] = $this->Page_model->summary_loop('stocks',$df,$dt);
+            $this->db->select('s.*, i.description AS item_name');
+            $this->db->from('stocks s');
+            $this->db->join('items i', 'i.id = s.item_id', 'left');
+            if (table_has_clinic_id('stocks')) {
+                $this->db->where('s.clinic_id', current_clinic_id());
+            }
+            $this->db->where('s.date >=', $df);
+            $this->db->where('s.date <=', $dt);
+            $this->db->order_by('s.date', 'DESC');
+            $data['data'] = $this->db->get()->result();
         }
 
         $this->load->view('templates/header');
@@ -1432,14 +1451,28 @@ class Pages extends CI_Controller{
             show_404();
         }
 
-        $data['title'] = "Patient Summary";   
+        $data['title'] = "Patient Summary";
 
         if($this->input->post('submit')){
             $df = $this->input->post('df');
             $dt = $this->input->post('dt');
             $data['df'] = $df;
             $data['dt'] = $dt;
-            $data['data'] = $this->Page_model->app_summary_loop('appointment',$df,$dt);
+
+            $this->db->select('a.*, p.first_name, p.middle_name, p.last_name, p.sitio, p.barangay, p.city_mun, p.province, r.company AS referred_by');
+            $this->db->from('appointment a');
+            $this->db->join('patients p', 'p.id = a.patient_id', 'left');
+            $this->db->join('referrals r', 'r.id = a.referral_id', 'left');
+            if (table_has_clinic_id('appointment')) {
+                $this->db->where('a.clinic_id', current_clinic_id());
+            }
+            $this->db->where('a.visit_date >=', $df);
+            $this->db->where('a.visit_date <=', $dt);
+            if ($this->db->field_exists('cancelled_at', 'appointment')) {
+                $this->db->where('a.cancelled_at IS NULL');
+            }
+            $this->db->order_by('a.visit_date', 'DESC');
+            $data['data'] = $this->db->get()->result();
         }
 
         $this->load->view('templates/header');

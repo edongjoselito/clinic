@@ -1,268 +1,242 @@
+<?php
+$filtered = isset($df) && isset($dt);
+$rows = isset($data) ? $data : array();
+$referred = 0;
+foreach ($rows as $r) {
+    if (!empty($r->referred_by)) $referred++;
+}
+?>
 <style>
-.patient-summary-wrapper {
-    padding-top: 20px;
-}
-.form-hero {
+.admin-wrap { padding-top: 20px; }
+
+/* ===== Hero ===== */
+.mhero {
     background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border-radius: 12px;
-    padding: 25px 30px;
-    color: white;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(30, 136, 229, 0.3);
+    border-radius: 14px;
+    padding: 26px 30px;
+    color: #fff;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 24px rgba(13, 71, 161, 0.28);
+    position: relative;
+    overflow: hidden;
 }
-.form-hero h2 {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 24px;
+.mhero::before {
+    content: '';
+    position: absolute; top: -70px; right: -70px;
+    width: 260px; height: 260px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
 }
-.form-hero p {
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 0;
-}
-.filter-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
-}
-.filter-card .card-header {
-    background: white;
-    border-bottom: 2px solid #e3f2fd;
-    padding: 20px 25px;
-    border-radius: 12px 12px 0 0;
-}
-.filter-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #1565c0;
-    font-size: 16px;
-}
-.filter-card .card-body {
-    padding: 25px;
-}
-.form-group label {
-    font-weight: 500;
-    color: #424242;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-}
-.form-control {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-.form-control:focus {
-    border-color: #1e88e5;
-    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
-}
-.btn-submit {
-    background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
-    border: none;
-    color: white;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(30, 136, 229, 0.4);
-    color: white;
-}
-.table-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
-}
-.table-card .card-header {
-    background: white;
-    border-bottom: 2px solid #e3f2fd;
-    padding: 20px 25px;
-    border-radius: 12px 12px 0 0;
-}
-.table-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #1565c0;
-    font-size: 16px;
-}
-.table-modern {
-    margin-bottom: 0;
-}
-.table-modern thead {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-}
-.table-modern thead th {
-    border: none;
-    font-weight: 600;
-    color: #1565c0;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 12px 15px;
-}
-.table-modern tbody td {
-    border-color: #f1f3f4;
-    padding: 12px 15px;
-    vertical-align: middle;
-}
-.table-modern tbody tr:hover {
-    background: #f8fbff;
-}
-.no-data {
-    text-align: center;
-    padding: 40px;
-    color: #757575;
-}
-.section-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 12px;
-}
-.section-icon i {
-    color: #1565c0;
-    font-size: 20px;
-}
+.mhero-inner { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; position: relative; }
+.mhero h2 { color: #fff; font-weight: 700; font-size: 24px; margin-bottom: 4px; display: flex; align-items: center; gap: 12px; }
+.mhero h2 i { font-size: 26px; }
+.mhero p { color: rgba(255,255,255,0.85); margin: 0; font-size: 14px; }
+.hero-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.hero-stat { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 9px 16px; border-radius: 10px; }
+.hero-stat i { font-size: 17px; color: rgba(255,255,255,0.85); }
+.hero-stat .stat-count { font-size: 17px; font-weight: 700; line-height: 1; }
+.hero-stat .stat-label { font-size: 10.5px; font-weight: 600; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-hero { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 20px; background: #fff; color: #0d47a1; font-weight: 700; font-size: 14px; border-radius: 10px; border: none; text-decoration: none; cursor: pointer; transition: all .2s ease; }
+.btn-hero:hover { background: #e3f2fd; color: #0d47a1; text-decoration: none; }
+
+/* ===== Card & table ===== */
+.data-card { border: none; border-radius: 14px; box-shadow: 0 2px 14px rgba(20,40,70,0.07); margin-bottom: 24px; overflow: hidden; }
+.data-card .card-header { background: #fff; border-bottom: 1px solid #eef2f6; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.data-card .card-header h5 { margin: 0; font-weight: 700; color: #1c2b3a; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+.data-card .card-header h5 i { color: #1e88e5; font-size: 18px; }
+.data-card .card-body { padding: 0; }
+.count-badge { background: #e8f4fd; color: #1565c0; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; }
+.hdr-meta { font-size: 13px; color: #8a9bb0; font-weight: 500; }
+.period-pill { display: inline-flex; align-items: center; gap: 7px; background: #e8f4fd; color: #1565c0; font-size: 12.5px; font-weight: 700; padding: 6px 14px; border-radius: 20px; }
+.period-pill i { font-size: 14px; }
+
+.table-modern { margin-bottom: 0; width: 100% !important; }
+.table-modern thead th { background: #f8fafc; border-bottom: 1px solid #eef2f6; border-top: none; font-weight: 700; color: #5a6b7d; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.6px; padding: 13px 18px; }
+.table-modern td { vertical-align: middle; border-color: #f2f5f8; padding: 14px 18px; font-size: 14px; color: #3d4f63; }
+.table-modern th:first-child, .table-modern td:first-child { padding-left: 24px; }
+.table-modern th:last-child, .table-modern td:last-child { padding-right: 24px; }
+.table-modern tbody tr:hover { background: #fafcfe; }
+.cell-main { font-weight: 700; color: #1c2b3a; }
+.cell-sub { font-size: 12px; color: #8a9bb0; margin-top: 3px; }
+.cell-date { font-weight: 600; color: #1c2b3a; white-space: nowrap; }
+
+.tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 700; }
+.tag.blue { background: #e8f4fd; color: #1565c0; }
+.tag.grey { background: #f1f5f9; color: #5a6b7d; }
+
+.empty-state { text-align: center; padding: 56px 20px; color: #8a9bb0; }
+.empty-state > i { font-size: 42px; color: #cfe3f5; display: block; margin-bottom: 10px; }
+.empty-state p { margin: 0 0 4px; font-weight: 600; color: #5a6b7d; }
+.empty-state span { font-size: 13px; }
+.empty-state .btn-hero-inline { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 16px; margin-top: 14px; background: #e8f4fd; color: #1565c0; font-weight: 600; font-size: 13px; border-radius: 9px; border: none; cursor: pointer; }
+.empty-state .btn-hero-inline:hover { background: #d6ecfc; }
+
+/* ===== Filter modal ===== */
+.modal-content { border: none; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(10,30,60,.25); }
+.modal-header { background: #f8fafc; border-bottom: 1px solid #eef2f6; padding: 18px 24px; }
+.modal-title { font-weight: 700; font-size: 16px; color: #1c2b3a; display: flex; align-items: center; gap: 10px; }
+.modal-title i { color: #1e88e5; font-size: 19px; }
+.modal-header .close { padding: 0; margin: 0; font-size: 24px; color: #8a9bb0; opacity: 1; }
+.modal-body { padding: 22px 24px 10px; }
+.modal-body .form-group label { font-weight: 600; color: #5a6b7d; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; }
+.modal-body .form-control { height: 44px; border: 1px solid #dfe7ee; border-radius: 9px; padding: 0 14px; font-size: 14px; color: #1c2b3a; }
+.modal-body .form-control:focus { border-color: #1e88e5; box-shadow: 0 0 0 3px rgba(30,136,229,.1); }
+.modal-footer { padding: 14px 24px 20px; border-top: none; }
+.btn-m { height: 40px; padding: 0 18px; border-radius: 9px; font-weight: 600; font-size: 13.5px; display: inline-flex; align-items: center; gap: 7px; border: none; }
+.btn-m.cancel { background: #f1f5f9; color: #5a6b7d; }
+.btn-m.cancel:hover { background: #e2e8f0; color: #3d4f63; }
+.btn-m.save { background: linear-gradient(135deg, #1e88e5, #1565c0); color: #fff; }
+.btn-m.save:hover { box-shadow: 0 4px 14px rgba(30,136,229,.35); color: #fff; }
+.quick-ranges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.quick-ranges button { height: 30px; padding: 0 12px; border-radius: 15px; border: 1px solid #dfe7ee; background: #f8fafc; color: #5a6b7d; font-size: 12px; font-weight: 600; cursor: pointer; }
+.quick-ranges button:hover { background: #e8f4fd; color: #1565c0; border-color: #cfe8fa; }
 </style>
 
-<div class="patient-summary-wrapper">
+<div class="admin-wrap">
 
 <!-- Page Header -->
-<div class="row">
-    <div class="col-12">
-        <div class="form-hero">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h2><i class="ph ph-users-three mr-2"></i>Patient Summary</h2>
-                    <p>Generate patient visit reports by date range</p>
-                </div>
-                <div class="col-md-4 text-md-right">
-                    <a href="<?= base_url(); ?>Pages/dashboard" class="btn btn-light">
-                        <i class="ph ph-arrow-left"></i>Back to Dashboard
-                    </a>
-                </div>
-            </div>
+<div class="mhero">
+    <div class="mhero-inner">
+        <div>
+            <h2><i class="ph ph-users-three"></i>Patient Summary</h2>
+            <p>Patient visits report by date range</p>
         </div>
-    </div>
-</div>
-
-<!-- Date Filter -->
-<div class="row">
-    <div class="col-12">
-        <div class="card filter-card">
-            <div class="card-header">
-                <h5><span class="section-icon"><i class="ph ph-funnel"></i></span>Filter by Date Range</h5>
-            </div>
-            <div class="card-body">
-                <?php 
-                    $attributes = array('class' => 'parsley-examples');
-                    echo form_open('Pages/patient_summary/', $attributes);
-                ?>
-                <div class="form-row align-items-end">
-                    <div class="form-group col-md-4">
-                        <label>Date From</label>
-                        <input required type="date" value="" class="form-control" name="df" />
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Date To</label>
-                        <input required type="date" value="" class="form-control" name="dt" />
-                    </div>
-                    <div class="form-group col-md-4">
-                        <button type="submit" name="submit" class="btn-submit w-100">
-                            <i class="ph ph-magnifying-glass"></i>Generate Report
-                        </button>
-                    </div>
+        <div class="hero-right">
+            <?php if($filtered): ?>
+            <div class="hero-stat">
+                <i class="ph ph-users"></i>
+                <div>
+                    <div class="stat-count"><?= number_format(count($rows)); ?></div>
+                    <div class="stat-label">Visits</div>
                 </div>
-                </form>
             </div>
+            <div class="hero-stat">
+                <i class="ph ph-handshake"></i>
+                <div>
+                    <div class="stat-count"><?= number_format($referred); ?></div>
+                    <div class="stat-label">Referred</div>
+                </div>
+            </div>
+            <?php endif; ?>
+            <a data-toggle="modal" href="#filterModal" class="btn-hero"><i class="ph ph-funnel"></i><?= $filtered ? 'Change Range' : 'Generate Report'; ?></a>
         </div>
     </div>
 </div>
 
 <!-- Report Results -->
-<div class="row">
-    <div class="col-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h5><span class="section-icon"><i class="ph ph-file-doc"></i></span>Patient Report</h5>
+<div class="card data-card">
+    <div class="card-header">
+        <h5><i class="ph ph-file-doc"></i>Visit Report <?= $filtered ? '<span class="count-badge">' . number_format(count($rows)) . '</span>' : ''; ?></h5>
+        <?php if($filtered): ?>
+        <span class="period-pill"><i class="ph ph-calendar-dots"></i><?= date('M d, Y', strtotime($df)); ?> &ndash; <?= date('M d, Y', strtotime($dt)); ?></span>
+        <?php else: ?>
+        <span class="hdr-meta">Pick a date range to generate</span>
+        <?php endif; ?>
+    </div>
+    <div class="card-body">
+        <?php if(!$filtered): ?>
+            <div class="empty-state">
+                <i class="ph ph-calendar-dots"></i>
+                <p>No report generated yet</p>
+                <span>Choose a date range to see patient visits.</span><br>
+                <button class="btn-hero-inline" data-toggle="modal" data-target="#filterModal"><i class="ph ph-funnel"></i>Select Date Range</button>
             </div>
-            <div class="card-body">
-                <?php if(!isset($_POST['submit'])): ?>
-
-                    <div class="no-data">
-                        <i class="ph ph-calendar-dots mb-3 d-block" style="font-size: 48px;"></i>
-                        <p>Select a date range and click Generate Report to view patient visits</p>
-                    </div>
-
-                <?php else: ?>
-
-                    <div class="alert alert-info mb-4" style="background: rgba(30, 136, 229, 0.1); border: none; color: #1565c0; border-radius: 8px;">
-                        <i class="ph ph-calendar-dots mr-2"></i>
-                        Report period: <strong><?= isset($df) ? date('F d, Y', strtotime($df)) : ''; ?></strong> to <strong><?= isset($dt) ? date('F d, Y', strtotime($dt)) : ''; ?></strong>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-modern">
-                            <thead>
-                                <tr>
-                                    <th>Patient Name</th>
-                                    <th>Address</th>
-                                    <th>Visit Date</th>
-                                    <th>Referred By</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if(isset($data) && count($data) > 0): ?>
-                                    <?php foreach($data as $row): 
-                                        $p = $this->Page_model->one_cond_get_single_row('patients','id',$row->patient_id); 
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <strong><?= strtoupper($p->first_name.' '.$p->middle_name.' '.$p->last_name); ?></strong>
-                                        </td>
-                                        <td><?= strtoupper($p->sitio.' '.$p->barangay.' '.$p->city_mun.' '.$p->province); ?></td>
-                                        <td><?= date('M d, Y', strtotime($row->visit_date)); ?></td>
-                                        <td>
-                                            <?php 
-                                                if(!empty($row->referral_id)){
-                                                    $ref = $this->Page_model->one_cond_get_single_row('referrals','id',$row->referral_id);
-                                                    echo $ref ? strtoupper($ref->name) : '-';
-                                                } else {
-                                                    echo '-';
-                                                }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="4" class="no-data" style="border: none;">
-                                            <i class="ph ph-users mb-3 d-block" style="font-size: 48px;"></i>
-                                            <p>No patient visits found for the selected date range</p>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                <?php endif; ?>
+        <?php elseif(empty($rows)): ?>
+            <div class="empty-state">
+                <i class="ph ph-users"></i>
+                <p>No visits in this period</p>
+                <span>No appointments between <?= date('M d', strtotime($df)); ?> and <?= date('M d, Y', strtotime($dt)); ?>.</span><br>
+                <button class="btn-hero-inline" data-toggle="modal" data-target="#filterModal"><i class="ph ph-funnel"></i>Try another range</button>
             </div>
+        <?php else: ?>
+        <div class="table-responsive">
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Address</th>
+                        <th>Visit Date</th>
+                        <th>Referred By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($rows as $row):
+                        $pname = trim($row->first_name . ' ' . $row->middle_name . ' ' . $row->last_name);
+                        $addr = trim(implode(', ', array_filter(array($row->sitio, $row->barangay, $row->city_mun, $row->province))));
+                        $ts = strtotime($row->visit_date);
+                    ?>
+                    <tr>
+                        <td><div class="cell-main"><?= $pname !== '' ? htmlentities(strtoupper($pname)) : '<span class="cell-sub">Record removed</span>'; ?></div></td>
+                        <td><?= $addr !== '' ? htmlentities(ucwords(strtolower($addr))) : '<span class="cell-sub">—</span>'; ?></td>
+                        <td><span class="cell-date"><?= $ts !== false ? date('M d, Y', $ts) : htmlentities($row->visit_date); ?></span></td>
+                        <td>
+                            <?php if(!empty($row->referred_by)): ?>
+                                <span class="tag blue"><i class="ph ph-handshake"></i><?= htmlentities($row->referred_by); ?></span>
+                            <?php else: ?>
+                                <span class="tag grey">Walk-in</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 
 </div>
+
+<!-- Filter Modal -->
+<div id="filterModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="ph ph-funnel"></i>Report Date Range</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <?= form_open('Pages/patient_summary/'); ?>
+            <div class="modal-body">
+                <div class="quick-ranges">
+                    <button type="button" data-range="today">Today</button>
+                    <button type="button" data-range="week">This Week</button>
+                    <button type="button" data-range="month">This Month</button>
+                    <button type="button" data-range="year">This Year</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Date From</label>
+                        <input required type="date" id="df" value="<?= $filtered ? htmlentities($df) : date('Y-m-01'); ?>" class="form-control" name="df" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Date To</label>
+                        <input required type="date" id="dt" value="<?= $filtered ? htmlentities($dt) : date('Y-m-d'); ?>" class="form-control" name="dt" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-m cancel" data-dismiss="modal"><i class="ph ph-x"></i>Cancel</button>
+                <button type="submit" name="submit" class="btn-m save"><i class="ph ph-chart-line-up"></i>Generate Report</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function(){
+    var today = new Date();
+    function iso(d){ return d.toISOString().slice(0,10); }
+    $('.quick-ranges button').on('click', function(){
+        var f, t = today;
+        switch($(this).data('range')){
+            case 'today': f = today; break;
+            case 'week':  f = new Date(today); f.setDate(today.getDate() - today.getDay()); break;
+            case 'month': f = new Date(today.getFullYear(), today.getMonth(), 1); break;
+            case 'year':  f = new Date(today.getFullYear(), 0, 1); break;
+        }
+        $('#df').val(iso(f));
+        $('#dt').val(iso(t));
+    });
+});
+</script>
